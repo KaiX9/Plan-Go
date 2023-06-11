@@ -1,10 +1,8 @@
 import { Component, NgZone, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Login } from '../models';
+import { Login, Register } from '../models';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
-
-declare const google: any;
 
 @Component({
   selector: 'app-login',
@@ -13,14 +11,16 @@ declare const google: any;
 })
 export class LoginComponent implements OnInit {
 
-  form!: FormGroup
+  loginForm!: FormGroup
+  signupForm!: FormGroup
   fb = inject(FormBuilder)
   loginSvc = inject(LoginService)
   router = inject(Router)
   ngZone = inject(NgZone)
 
   ngOnInit(): void {
-    this.form = this.createLoginForm();
+    this.loginForm = this.createLoginForm();
+    this.signupForm = this.createSignUpForm();
     (window as any).handleResponse = (response: any) => {
       console.info('handleResponse called with response: ', response);
       fetch('auth/login', {
@@ -43,6 +43,34 @@ export class LoginComponent implements OnInit {
     }
   }
 
+  createSignUpForm(): FormGroup {
+    return this.fb.group({
+      name: this.fb.control<string>('', [ Validators.required ]),
+      email: this.fb.control<string>('', [ Validators.required ]),
+      password: this.fb.control<string>('', [ Validators.required ])
+    });
+  }
+
+  register() {
+    let signupData: Register = {
+      name: this.signupForm.value.name,
+      email: this.signupForm.value.email,
+      password: this.signupForm.value.password,
+    };
+    this.loginSvc.registerUser(signupData).subscribe(
+      result => {
+        alert(JSON.stringify(result));
+        this.router.navigate(['/']).then(() => {
+          location.reload();
+        });
+      },
+      error => {
+        alert(JSON.stringify(error.error));
+        location.reload();
+      }
+    )
+  }
+
   createLoginForm(): FormGroup {
     return this.fb.group({
       email: this.fb.control<string>('', [ Validators.required ]),
@@ -54,8 +82,8 @@ export class LoginComponent implements OnInit {
   login() {
 
       let loginData: Login = {
-        email: this.form.value.email,
-        password: this.form.value.password,
+        email: this.loginForm.value.email,
+        password: this.loginForm.value.password,
       };
       this.loginSvc.authenticateLogin(loginData).subscribe(
         result => {
@@ -69,9 +97,5 @@ export class LoginComponent implements OnInit {
         }
         )      
   };
-
-  signup() {
-    this.router.navigate(['/signup']);
-  }
 
 }

@@ -7,13 +7,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginService } from './services/login.service';
-import { SignupComponent } from './components/signup.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { WithCredentialsInterceptor } from 'src/app/with.credentials.interceptor';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'signup', component: SignupComponent },
   { path: 'dashboard', component:DashboardComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
@@ -22,7 +20,6 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    SignupComponent,
     DashboardComponent
   ],
   imports: [

@@ -5,70 +5,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
+    <link rel="stylesheet" type="text/css" href="login.component.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
+      rel="stylesheet"
+    />
   </head>
   <body>
-    <form [formGroup]="form" (submit)="login()">
-      <table>
-        <tr>
-          <td></td>
-          <td>
-            <input
-              type="email"
-              size="40"
-              formControlName="email"
-              placeholder="Email"
-            />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td></td>
-          <td>
-            <input
-              type="password"
-              size="40"
-              formControlName="password"
-              placeholder="Password"
-            />
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td></td>
-          <td>
-            <span><a href="">Forgot password?</a></span>
-          </td>
-        </tr>
-        <br />
-        <tr>
-          <td></td>
-          <td>
-            <button type="submit" [disabled]="form.invalid">Login</button>&nbsp;&nbsp;
-            <button type="button" (click)="signup()">Sign Up</button>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <div id="g_id_onload"
+    <div class="main">
+      <input type="checkbox" id="chk" aria-hidden="true" />
+      <div class="signup">
+        <form [formGroup]="signupForm" (submit)="register()">
+          <label for="chk" aria-hidden="true">Sign Up</label>
+          <input type="text" placeholder="Name" formControlName="name" />
+          <input type="email" placeholder="Email" formControlName="email" />
+          <input
+            type="password"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <button type="submit" [disabled]="signupForm.invalid">
+            Register!
+          </button>
+        </form>
+      </div>
+
+      <div class="login">
+        <form [formGroup]="loginForm" (submit)="login()">
+          <label for="chk" aria-hidden="true">Login</label>
+          <input type="email" formControlName="email" placeholder="Email" />
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Password"
+          />
+          <button type="submit" [disabled]="loginForm.invalid">Login</button>
+          <div class="google">
+            <div
+              id="g_id_onload"
               data-client_id="40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com"
               data-context="signin"
               data-ux_mode="popup"
               data-callback="handleResponse"
-              data-auto_prompt="false">
-            </div>
+              data-auto_prompt="false"
+            ></div>
 
-            <div class="g_id_signin"
-              data-type="standard"
-              data-shape="rectangular"
+            <div
+              class="g_id_signin"
+              data-type="icon"
+              data-shape="circle"
               data-theme="filled_blue"
-              data-text="signin_with"
+              data-text="continue_with"
               data-size="large"
-              data-logo_alignment="left">
-            </div>
-          </td>
-        </tr>
-      </table>
-    </form>
+            ></div>
+          </div>
+        </form>
+      </div>
+    </div>
   </body>
 </html>
