@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Page</title>
+  </head>
+  <body>
+    <form [formGroup]="form" (submit)="login()">
+      <table>
+        <tr>
+          <td></td>
+          <td>
+            <input
+              type="email"
+              size="40"
+              formControlName="email"
+              placeholder="Email"
+            />
+          </td>
+        </tr>
+        <br />
+        <tr>
+          <td></td>
+          <td>
+            <input
+              type="password"
+              size="40"
+              formControlName="password"
+              placeholder="Password"
+            />
+          </td>
+        </tr>
+        <br />
+        <tr>
+          <td></td>
+          <td>
+            <span><a href="">Forgot password?</a></span>
+          </td>
+        </tr>
+        <br />
+        <tr>
+          <td></td>
+          <td>
+            <button type="submit" [disabled]="form.invalid">Login</button>&nbsp;&nbsp;
+            <button type="button" (click)="signup()">Sign Up</button>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <div id="g_id_onload"
+              data-client_id="40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com"
+              data-context="signin"
+              data-ux_mode="popup"
+              data-callback="handleResponse"
+              data-auto_prompt="false">
+            </div>
+
+            <div class="g_id_signin"
+              data-type="standard"
+              data-shape="rectangular"
+              data-theme="filled_blue"
+              data-text="signin_with"
+              data-size="large"
+              data-logo_alignment="left">
+            </div>
+          </td>
+        </tr>
+      </table>
+    </form>
+  </body>
+</html>
