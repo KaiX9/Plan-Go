@@ -1,0 +1,54 @@
+<!-- <google-map height="400px"
+            width="750px"
+            [center]="center"
+            [zoom]="zoom"
+            (mapClick)="moveMap($event)"
+            (mapMousemove)="move($event)"
+            (mapClick)="addMarker($event)">
+    <map-marker *ngFor="let markerPosition of markerPositions"
+                [position]="markerPosition"
+                [options]="markerOptions"></map-marker>
+</google-map>
+
+<div>Latitude: {{ display?.lat }}</div>
+<div>Longtitude: {{ display?.lng }}</div> -->
+<script
+  async
+  src="https://maps.googleapis.com/maps/api/js?key=API_KEY&libraries=places&callback=initMap"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+/>
+
+<div class="flex-content">
+  <div id="map"></div>
+  <div class="place-details">
+    <ng-container *ngFor="let place of nearbyPlaces">
+      <div class="place">
+        <img
+          *ngIf="place.photos && place.photos.length > 0"
+          [src]="place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 })"
+        />
+        <div class="place-info">
+          <h3>{{ place.name }}</h3>
+          <p>{{ place.formatted_address }}</p>
+          <p>
+            <ng-container *ngIf="place.rating && place.rating >= 0">
+              <span
+                class="rating-star fas fa-star"
+                *ngFor="let i of [].constructor(Math.floor(place.rating))"
+              ></span>
+              <span
+                class="rating-star fas fa-star-half-alt"
+                *ngIf="place.rating % 1 !== 0"
+              ></span>
+            </ng-container>
+            ({{ place.user_ratings_total }})
+          </p>
+        </div>
+      </div>
+      <hr />
+    </ng-container>
+  </div>
+</div>

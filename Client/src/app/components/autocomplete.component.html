@@ -7,8 +7,8 @@
     <title>Document</title>
 </head>
 <body>
-    <a [routerLink]="['/map']">Map</a>&nbsp;&nbsp;<a [routerLink]="['/autocomplete']">Autocomplete</a>
-    <br><br>
-    <button type="button" (click)="signout()">Sign Out</button>
+    <mat-form-field appearance="outline" style="padding: 24px;">
+        <input #inputField matInput [placeholder]="placeholder">
+    </mat-form-field>
 </body>
 </html>

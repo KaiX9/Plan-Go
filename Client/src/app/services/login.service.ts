@@ -1,6 +1,6 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
-import { Login, Register } from "../models";
+import { Login, Register } from "../models/login.models";
 import { Observable } from "rxjs";
 
 const URL_LOGIN = '/auth/login'

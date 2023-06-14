@@ -1,6 +1,6 @@
 import { Component, NgZone, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Login, Register } from '../models';
+import { Login, Register } from '../models/login.models';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 

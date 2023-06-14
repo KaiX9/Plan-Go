@@ -9,10 +9,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { LoginService } from './services/login.service';
 import { DashboardComponent } from './components/dashboard.component';
 import { WithCredentialsInterceptor } from 'src/app/with.credentials.interceptor';
+import { MapComponent } from './components/map.component';
+import { GoogleMapsModule } from '@angular/google-maps';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AutocompleteComponent } from './components/autocomplete.component';
+import { MaterialModule } from './material.module';
+import { PlaceDetailsComponent } from './components/place-details.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
-  { path: 'dashboard', component:DashboardComponent },
+  { path: 'dashboard', component: DashboardComponent },
+  { path: 'map/:location', component: MapComponent },
+  { path: 'autocomplete', component: AutocompleteComponent },
+  { path: 'place_details/:placeId', component: PlaceDetailsComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
 
@@ -20,13 +29,19 @@ const routes: Routes = [
   declarations: [
     AppComponent,
     LoginComponent,
-    DashboardComponent
+    DashboardComponent,
+    MapComponent,
+    AutocompleteComponent,
+    PlaceDetailsComponent
   ],
   imports: [
     BrowserModule, 
     ReactiveFormsModule,
     HttpClientModule,
-    RouterModule.forRoot(routes, { useHash: true })
+    GoogleMapsModule,
+    MaterialModule,
+    RouterModule.forRoot(routes, { useHash: true }),
+    BrowserAnimationsModule
   ],
   providers: [
     LoginService,
