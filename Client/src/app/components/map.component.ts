@@ -1,11 +1,20 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { GM_STYLES } from '../gm.styles';
+import { filter } from 'rxjs';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+import { PlaceDetailsService } from '../services/place-details.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.css']
+  styleUrls: ['./map.component.css'],
+  animations: [
+    trigger('slideInOut', [
+      state('void', style({ transform: 'translateX(-100%)' })),
+      transition('void <=> *', animate(250))
+    ]),
+  ],
 })
 
 export class MapComponent implements OnInit {
@@ -15,17 +24,30 @@ export class MapComponent implements OnInit {
   infowindow!: google.maps.InfoWindow;
   nearbyPlaces: google.maps.places.PlaceResult[] = [];
   Math = Math;
-
-  inputLocation!: string
-  activatedRoute = inject(ActivatedRoute)
+  router = inject(Router);
+  showContent = true;
+  inputLocation!: string;
+  activatedRoute = inject(ActivatedRoute);
+  placeDetailsSvc = inject(PlaceDetailsService);
 
   ngOnInit(): void {
     this.inputLocation = this.activatedRoute.snapshot.params[('location')];
     console.info('location: ', this.inputLocation);
     this.initMap();
+    this.updateShowContent();
+    this.router.events.pipe(
+      filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.updateShowContent();
+      });
   }
 
   constructor() {}
+
+  updateShowContent() {
+    const childRoute = this.activatedRoute.firstChild;
+    this.showContent = !(childRoute && childRoute.outlet === 'placeDetails');
+  }
 
   initMap(): void {
     const sydney = new google.maps.LatLng(-33.867, 151.195);
@@ -120,6 +142,17 @@ export class MapComponent implements OnInit {
         }
       })
     }    
+  }
+
+  viewPlaceDetails(location: string, id?: string) {
+    if (id) {
+      const place = this.nearbyPlaces.find((place) => place.place_id === id);
+      if (place) {
+        this.placeDetailsSvc.setPlaceDetails(place);
+      }
+      this.router.navigate(['/map', location, { outlets: {primary: null, 
+        placeDetails: ['place_details', id]}}]);
+    }
   }
 
   createCustomMarker(place: google.maps.places.PlaceResult) {

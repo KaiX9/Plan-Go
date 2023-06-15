@@ -15,13 +15,23 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AutocompleteComponent } from './components/autocomplete.component';
 import { MaterialModule } from './material.module';
 import { PlaceDetailsComponent } from './components/place-details.component';
+import { PlaceDetailsService } from './services/place-details.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { path: 'map/:location', component: MapComponent },
+  { 
+    path: 'map/:location', 
+    component: MapComponent, 
+    children: [
+      {
+        path: 'place_details/:placeId', 
+        component: PlaceDetailsComponent, 
+        outlet: 'placeDetails'
+      },
+    ], 
+  },
   { path: 'autocomplete', component: AutocompleteComponent },
-  { path: 'place_details/:placeId', component: PlaceDetailsComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' }
 ]
 
@@ -45,6 +55,7 @@ const routes: Routes = [
   ],
   providers: [
     LoginService,
+    PlaceDetailsService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

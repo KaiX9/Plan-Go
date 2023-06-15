@@ -1,1 +1,85 @@
-<p>place-details works!</p>
+<div *ngIf="placeDetails$ | async as place">
+  <div class="container">
+    <div class="toolbar">
+      <button class="back-button" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <button class="add-to-bucket-button" mat-raised-button color="accent" 
+        (click)="savePlace()">
+        <mat-icon>favorite</mat-icon>
+        Add To Bucket
+      </button>
+    </div>
+    <div *ngIf="place.photos && place.photos.length > 0">
+      <img [src]="place.photos[0].getUrl()" class="first-photo" />
+    </div>
+    <div class="photo-format">
+      <ng-container *ngIf="place.photos">
+        <img
+          *ngFor="let photo of place.photos.slice(1)"
+          [src]="photo.getUrl()"
+          class="other-photo"
+        />
+      </ng-container>
+    </div>
+    <div class="place-details">
+      <div class="place-name-rating">
+        <h2>{{ place.name }}</h2>
+        <div class="rating">
+          <ng-container *ngIf="place.rating && place.rating >= 0">
+            <span
+              class="rating-star fas fa-star"
+              *ngFor="let i of [].constructor(Math.floor(place.rating))"
+            ></span>
+            <span
+              class="rating-star fas fa-star-half-alt"
+              *ngIf="place.rating % 1 !== 0"
+            ></span>
+          </ng-container>
+          &nbsp;({{ place.user_ratings_total }})
+        </div>
+      </div>
+      <p>{{ place.formatted_address }}</p>
+      <p>{{ place.formatted_phone_number }}</p>
+      <ng-container *ngIf="place.website; else noWebsite">
+        <a [href]="place.website">{{ place.website }}</a>
+      </ng-container>
+      <hr />
+      <div class="reviews" *ngIf="place.reviews">
+        <h3>Reviews</h3>
+        <div *ngFor="let review of place.reviews" class="review">
+          <div class="review-top">
+            <img
+              [src]="review.profile_photo_url"
+              alt="{{ review.author_name }}"
+              class="review-author-photo"
+              (error)="onImageError($event)"
+            />
+            <div class="review-details">
+              <div class="review-author-name">{{ review.author_name }}</div>
+              <div class="review-rating-time">
+                <ng-container *ngIf="review.rating !== undefined">
+                  <span
+                    class="rating-star fas fa-star"
+                    *ngFor="let i of [].constructor(Math.floor(review.rating))"
+                  ></span>
+                  <span
+                    class="rating-star fas fa-star-half-alt"
+                    *ngIf="review.rating % 1 !== 0"
+                  ></span>
+                </ng-container>
+                &nbsp;{{ review.relative_time_description }}
+              </div>
+            </div>
+          </div>
+          <div class="review-text">{{ review.text }}</div>
+          <hr />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #noWebsite>
+  <em>No website found</em>
+</ng-template>
