@@ -89,6 +89,11 @@
     margin: 0;
 }
 
+.icon {
+    font-size: 16px;
+    vertical-align: middle;
+}
+
 .reviews h3 {
     margin-top: 5px;
     font-family: Georgia, serif;

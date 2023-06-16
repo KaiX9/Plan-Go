@@ -12,6 +12,31 @@
   <div class="place-details">
     <router-outlet name="placeDetails"></router-outlet>
     <div *ngIf="showContent" [@slideInOut]>
+      <div class="filter-buttons">
+        <div class="filter-button-row">
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/restaurant.png" /> Restaurant
+          </button>
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/drinks.png" /> Drinks
+          </button>
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/site.png" /> Attractions
+          </button>
+        </div>
+        <div class="filter-button-row">
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/shop.png" /> Shopping
+          </button>
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/hotel.png" /> Hotel
+          </button>
+          <button class="filter-button" (click)="toggleHighlight($event)">
+            <img src="/assets/icons_type/cafe.png" /> Cafe
+          </button>
+        </div>
+      </div>
+      <hr>
       <ng-container *ngFor="let place of nearbyPlaces">
         <div
           class="place"
