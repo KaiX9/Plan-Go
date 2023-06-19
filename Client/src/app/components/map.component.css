@@ -23,6 +23,7 @@ body,
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
+    overflow: hidden;
 }
 
 .filter-button {
@@ -30,7 +31,6 @@ body,
     font-size: 12px;
     background-color: white;
     display: flex;
-    justify-content: center;
     align-items: center;
     margin-right: 5px;
     border: 1px solid grey;
@@ -43,13 +43,25 @@ body,
 }
 
 .filter-button img {
-    height: 18px;
-    width: 18px;
-    margin-right: 15px;
+    height: 16px;
+    width: 16px;
+    margin-right: 10px;
 }
 
-.highlight {
-    background-color: grey;
+.mat-button-toggle {
+    min-width: 80px;
+    height: 30px;
+    padding: 0 10px;
+    background-color: white;
+    color: black;
+}
+
+.mat-button-toggle-checked {
+    background-color: rgba(41, 129, 244, 0.336);
+}
+
+.mat-button-toggle-group {
+    border: none;
 }
 
 .place-details {
@@ -103,4 +115,26 @@ body,
 
 .rating-star {
     color: orange;
+}
+
+.clickable-element {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
+}
+
+.results-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.results-buttons {
+    display: flex;
+}
+
+.results-count {
+    font-size: 14px;
+    color: #656363;
+    margin-left: 10px;
 }
