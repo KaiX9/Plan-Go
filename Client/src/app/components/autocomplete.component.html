@@ -1,14 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    <mat-form-field appearance="outline" style="padding: 24px;">
-        <input #inputField matInput [placeholder]="placeholder">
-    </mat-form-field>
-</body>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Planning for a new trip?</h1>
+      <mat-form-field appearance="outline" style="padding: 24px">
+        <mat-label>Where to?</mat-label>
+        <input #inputField matInput [placeholder]="placeholder" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="padding: 24px">
+        <mat-label>Start Date:</mat-label>
+        <input
+          matInput
+          [matDatepicker]="startDatePicker"
+          (dateChange)="onStartDateChange($event)"
+          [min]="minStartDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="startDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #startDatePicker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="padding: 24px">
+        <mat-label>End Date:</mat-label>
+        <input
+          matInput
+          [matDatepicker]="endDatePicker"
+          (dateChange)="onEndDateChange($event)"
+          [min]="minEndDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="endDatePicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+      </mat-form-field>
+      <button
+        class="start-exploring-button"
+        mat-raised-button
+        color="warn"
+        (click)="onStartExploring()"
+      >
+        Start Exploring!
+      </button>
+    </div>
+  </body>
 </html>

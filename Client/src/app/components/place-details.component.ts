@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { PlaceDetailsService } from '../services/place-details.service';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
+import { SavedPlacesService } from '../services/saved-places.service';
 
 @Component({
   selector: 'app-place-details',
@@ -13,7 +14,8 @@ export class PlaceDetailsComponent implements OnInit {
   placeDetailsSvc = inject(PlaceDetailsService);
   placeDetails$!: Observable<google.maps.places.PlaceResult | null>;
   Math = Math;
-  location = inject(Location)
+  location = inject(Location);
+  savedPlacesSvc = inject(SavedPlacesService);
 
   constructor() {}
 
@@ -61,7 +63,7 @@ export class PlaceDetailsComponent implements OnInit {
     this.location.back();
   }
 
-  savePlace() {
-
+  savePlace(place_id: string, name: string) {
+    this.savedPlacesSvc.savePlace(place_id, name);
   }
 }

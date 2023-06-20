@@ -1,0 +1,168 @@
+.scrollable-container {
+    width: 320px;
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 0;
+}
+
+.bucket-list {
+    padding: 12px;
+    max-width: 100%;
+    min-width: 90%;
+}
+
+.bucket-list ul mat-toolbar {
+    background-color: rgb(81, 85, 87);
+    padding: 4px;
+    height: 24px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.bucket-list ul mat-toolbar span {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.bucket-list ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 100px;
+    min-width: 280px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.bucket-list li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bucket-list li span {
+    font-size: 11px;
+    margin: 2px 8px;
+}
+
+.bucket-list button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: none;
+}
+
+.bucket-list button img {
+    width: 14px;
+    height: 14px;
+}
+
+.bucket-list button img:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.dates-list {
+    padding: 12px;
+    max-width: 100%;
+    min-width: 90%;
+}
+
+.sub-dates-list {
+    margin-bottom: 20px;
+}
+
+.dates-list li {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dates-list li span {
+    font-size: 11px;
+    margin: 2px 8px;
+}
+
+.dates-list button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background: none;
+}
+
+.dates-list button img {
+    width: 14px;
+    height: 14px;
+}
+
+.dates-list button img:hover {
+    cursor: pointer;
+    background-color: #f0f0f0;
+}
+
+.dates-toolbar {
+    background-color: lightskyblue;
+    padding: 4px;
+    height: 24px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.date-format {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.iti-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-height: 100px;
+    min-width: 280px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 5px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+  
+.cdk-drag-placeholder {
+    opacity: 0.3;
+}
+  
+.cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+  
+.cdk-drop-list-dragging .cdk-drop-list {
+    border: 2px dashed #ccc;
+}
+  
+.cdk-drop-list-dragging .cdk-drop-list.cdk-drop-list-receiving {
+    background: rgba(0, 0, 0, 0.1);
+}
+  
+.cdk-drop-list-dragging .cdk-drag-placeholder {
+    visibility: hidden;
+}
+  
+.cdk-drop-list-dragging .cdk-drag-preview {
+    box-shadow: none;
+}

@@ -16,6 +16,10 @@ import { AutocompleteComponent } from './components/autocomplete.component';
 import { MaterialModule } from './material.module';
 import { PlaceDetailsComponent } from './components/place-details.component';
 import { PlaceDetailsService } from './services/place-details.service';
+import { ItineraryComponent } from './components/itinerary.component';
+import { SavedPlacesService } from './services/saved-places.service';
+import { DatesService } from './services/dates.service';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -42,7 +46,8 @@ const routes: Routes = [
     DashboardComponent,
     MapComponent,
     AutocompleteComponent,
-    PlaceDetailsComponent
+    PlaceDetailsComponent,
+    ItineraryComponent
   ],
   imports: [
     BrowserModule, 
@@ -51,11 +56,14 @@ const routes: Routes = [
     GoogleMapsModule,
     MaterialModule,
     RouterModule.forRoot(routes, { useHash: true }),
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    DragDropModule
   ],
   providers: [
     LoginService,
     PlaceDetailsService,
+    SavedPlacesService,
+    DatesService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

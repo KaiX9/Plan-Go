@@ -1,0 +1,50 @@
+<div class="scrollable-container">
+    <div class="bucket-list">
+      <ul
+        cdkDropList
+        id="bucketList"
+        #bucketList="cdkDropList"
+        [cdkDropListData]="savedPlacesSvc.savedPlaces"
+        [cdkDropListConnectedTo]="datesListsArray.toArray()"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <mat-toolbar color="primary">
+          <span>Bucket List</span>
+        </mat-toolbar>
+        <li *ngFor="let place of savedPlacesSvc.savedPlaces" cdkDrag [cdkDragData]="place">
+          <span>{{ place.name }}</span>
+          <button (click)="deletePlace(place.place_id)">
+            <img src="/assets/trash.png" />
+          </button>
+        </li>
+      </ul>
+    </div>
+    <div class="dates-list">
+      <div
+        *ngFor="let dateWithItems of datesArray; let i = index"
+        class="sub-dates-list"
+      >
+        <ul
+          #datesList="cdkDropList"
+          class="iti-list"
+          cdkDropList
+          [id]="'dates-list-' + i"
+          [cdkDropListData]="dateWithItems.items"
+          [cdkDropListConnectedTo]="getConnectedLists()"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <mat-toolbar class="dates-toolbar" color="primary">
+            <span class="date-format">{{
+              dateWithItems.date | date : "d MMM y"
+            }}</span>
+          </mat-toolbar>
+          <li *ngFor="let item of dateWithItems.items" cdkDrag>
+            <span>{{ item.name }}</span>
+            <button (click)="deleteItemFromDatesList(item.place_id, dateWithItems.items)">
+              <img src="/assets/trash.png" />
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>

@@ -6,6 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatNativeDateModule } from "@angular/material/core";
+import { MatDatepickerModule } from '@angular/material/datepicker';
 
 const matModules: any[] = [
     MatToolbarModule,
@@ -13,7 +15,9 @@ const matModules: any[] = [
     MatIconModule,
     MatInputModule,
     MatFormFieldModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatDatepickerModule,
+    MatNativeDateModule
 ]
 
 @NgModule({
