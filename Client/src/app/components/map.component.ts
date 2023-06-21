@@ -11,6 +11,7 @@ import {
 } from '@angular/animations';
 import { PlaceDetailsService } from '../services/place-details.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
+import { DirectionsService } from '../services/directions.service';
 
 @Component({
   selector: 'app-map',
@@ -20,8 +21,8 @@ import { MatButtonToggleGroup } from '@angular/material/button-toggle';
     trigger('slideInOut', [
       state('void', style({ transform: 'translateX(-100%)' })),
       state('*', style({ transform: 'translateX(0)' })),
-      transition('void <=> *', animate('500ms ease-in')),
-      transition('* => void', animate('500ms ease-out'))
+      transition('void <=> *', animate('300ms ease-in')),
+      transition('* => void', animate('300ms ease-out'))
     ]),
   ],
 })
@@ -39,6 +40,11 @@ export class MapComponent implements OnInit {
   placeDetailsSvc = inject(PlaceDetailsService);
   markers: google.maps.Marker[] = [];
   appliedFilters: string[] = [];
+  directionsService = new google.maps.DirectionsService();
+  directionsRenderer = new google.maps.DirectionsRenderer();
+  directionsSvc = inject(DirectionsService);
+  directionsInstructions: string[] | undefined = [];
+  isToolbarClicked = false;
 
   @ViewChild('group') 
   group!: MatButtonToggleGroup;
@@ -54,6 +60,16 @@ export class MapComponent implements OnInit {
       .subscribe(() => {
         this.updateShowContent();
       });
+    this.directionsSvc.currentRequest.subscribe(request => {
+      console.info('request: ', request);
+      if (request) {
+        this.showDirections(request);
+      }
+    });
+    this.directionsSvc.isToolbarClicked$.subscribe(isClicked => {
+      console.info('isToolbarClicked: ', isClicked);
+      this.isToolbarClicked = isClicked;
+    });
   }
 
   constructor() {}
@@ -88,6 +104,26 @@ export class MapComponent implements OnInit {
     const childRoute = this.activatedRoute.firstChild;
     this.showContent = !(childRoute && childRoute.outlet === 'placeDetails');
     console.info('showContent: ', this.showContent);
+  }
+
+  showDirections(request: any) {
+    this.map = new google.maps.Map(document.getElementById('map')!, {
+      zoom: 15,
+      center: this.map.getCenter(),
+      styles: GM_STYLES.mapStyles,
+    });
+    this.directionsRenderer.setMap(this.map);
+
+    this.directionsService.route(request, (response, status) => {
+      if (status === 'OK') {
+        this.directionsRenderer.setDirections(response);
+        const legs = response?.routes[0].legs;
+        this.directionsInstructions = legs?.flatMap(leg => leg.steps.map(step => 
+          step.instructions));
+        console.info('directionsInstructions: ', this.directionsInstructions);
+        this.directionsSvc.updateDirectionsInstructions(this.directionsInstructions ?? []);
+      }
+    });
   }
 
   initMap(): void {

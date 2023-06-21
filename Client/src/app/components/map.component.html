@@ -10,73 +10,83 @@
 <div class="flex-content">
   <div id="map"></div>
   <div class="place-details">
-    <router-outlet name="placeDetails"></router-outlet>
-    <div *ngIf="showContent" [@slideInOut]>
-      <mat-button-toggle-group #group="matButtonToggleGroup" multiple class="filter-buttons" 
-        (change)="onToggleChange()">
-        <div class="filter-button-row">
-          <mat-button-toggle value="restaurant" class="filter-button">
-            <img src="/assets/icons_type/restaurant.png" /> Restaurant
-          </mat-button-toggle>
-          <mat-button-toggle value="bar" class="filter-button">
-            <img src="/assets/icons_type/drinks.png" /> Drinks
-          </mat-button-toggle>
-          <mat-button-toggle value="tourist_attraction" class="filter-button">
-            <img src="/assets/icons_type/site.png" /> Attractions
-          </mat-button-toggle>
-        </div>
-        <div class="filter-button-row">
-          <mat-button-toggle value="shopping_mall" class="filter-button">
-            <img src="/assets/icons_type/shop.png" /> Shopping
-          </mat-button-toggle>
-          <mat-button-toggle value="lodging" class="filter-button">
-            <img src="/assets/icons_type/hotel.png" /> Hotel
-          </mat-button-toggle>
-          <mat-button-toggle value="cafe" class="filter-button">
-            <img src="/assets/icons_type/cafe.png" /> Cafe
-          </mat-button-toggle>
-        </div>
-      </mat-button-toggle-group>
-      <div class="results-row">
-        <div class="results-buttons">
-          <span class="clickable-element" (click)="applyFilters()">Apply</span>&nbsp;&nbsp;
-          <span class="clickable-element" (click)="removeFilters()">Clear</span>
-        </div>
-        <div class="results-count">
-          {{ filteredPlaces.length }} places
-        </div>
-      </div>
-      <hr>
-      <ng-container *ngFor="let place of filteredPlaces">
-        <div
-          class="place"
-          (click)="viewPlaceDetails(inputLocation, place.place_id)"
+    <ng-container *ngIf="isToolbarClicked; else placeDetails">
+      <app-directions-instructions></app-directions-instructions>
+    </ng-container>
+    <ng-template #placeDetails>
+      <router-outlet name="placeDetails"></router-outlet>
+      <div *ngIf="showContent" [@slideInOut]>
+        <mat-button-toggle-group
+          #group="matButtonToggleGroup"
+          multiple
+          class="filter-buttons"
+          (change)="onToggleChange()"
         >
-          <img
-            *ngIf="place.photos && place.photos.length > 0"
-            [src]="place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 })"
-          />
-          <div class="place-info">
-            <h3>{{ place.name }}</h3>
-            <p>{{ place.formatted_address }}</p>
-            <p>
-              <ng-container *ngIf="place.rating && place.rating >= 0">
-                <span
-                  class="rating-star fas fa-star"
-                  *ngFor="let i of [].constructor(Math.floor(place.rating))"
-                ></span>
-                <span
-                  class="rating-star fas fa-star-half-alt"
-                  *ngIf="place.rating % 1 !== 0"
-                ></span>
-              </ng-container>
-              &nbsp;({{ place.user_ratings_total }})
-            </p>
+          <div class="filter-button-row">
+            <mat-button-toggle value="restaurant" class="filter-button">
+              <img src="/assets/icons_type/restaurant.png" /> Restaurant
+            </mat-button-toggle>
+            <mat-button-toggle value="bar" class="filter-button">
+              <img src="/assets/icons_type/drinks.png" /> Drinks
+            </mat-button-toggle>
+            <mat-button-toggle value="tourist_attraction" class="filter-button">
+              <img src="/assets/icons_type/site.png" /> Attractions
+            </mat-button-toggle>
           </div>
+          <div class="filter-button-row">
+            <mat-button-toggle value="shopping_mall" class="filter-button">
+              <img src="/assets/icons_type/shop.png" /> Shopping
+            </mat-button-toggle>
+            <mat-button-toggle value="lodging" class="filter-button">
+              <img src="/assets/icons_type/hotel.png" /> Hotel
+            </mat-button-toggle>
+            <mat-button-toggle value="cafe" class="filter-button">
+              <img src="/assets/icons_type/cafe.png" /> Cafe
+            </mat-button-toggle>
+          </div>
+        </mat-button-toggle-group>
+        <div class="results-row">
+          <div class="results-buttons">
+            <span class="clickable-element" (click)="applyFilters()">Apply</span
+            >&nbsp;&nbsp;
+            <span class="clickable-element" (click)="removeFilters()"
+              >Clear</span
+            >
+          </div>
+          <div class="results-count">{{ filteredPlaces.length }} places</div>
         </div>
         <hr />
-      </ng-container>
-    </div>
+        <ng-container *ngFor="let place of filteredPlaces">
+          <div
+            class="place"
+            (click)="viewPlaceDetails(inputLocation, place.place_id)"
+          >
+            <img
+              *ngIf="place.photos && place.photos.length > 0"
+              [src]="place.photos[0].getUrl({ maxWidth: 200, maxHeight: 200 })"
+            />
+            <div class="place-info">
+              <h3>{{ place.name }}</h3>
+              <p>{{ place.formatted_address }}</p>
+              <p>
+                <ng-container *ngIf="place.rating && place.rating >= 0">
+                  <span
+                    class="rating-star fas fa-star"
+                    *ngFor="let i of [].constructor(Math.floor(place.rating))"
+                  ></span>
+                  <span
+                    class="rating-star fas fa-star-half-alt"
+                    *ngIf="place.rating % 1 !== 0"
+                  ></span>
+                </ng-container>
+                &nbsp;({{ place.user_ratings_total }})
+              </p>
+            </div>
+          </div>
+          <hr />
+        </ng-container>
+      </div>
+    </ng-template>
   </div>
   <app-itinerary></app-itinerary>
 </div>

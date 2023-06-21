@@ -20,24 +20,33 @@ import { ItineraryComponent } from './components/itinerary.component';
 import { SavedPlacesService } from './services/saved-places.service';
 import { DatesService } from './services/dates.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { DirectionsService } from './services/directions.service';
+import { DirectionsInstructionsComponent } from './components/directions-instructions.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
   { path: 'dashboard', component: DashboardComponent },
-  { 
-    path: 'map/:location', 
-    component: MapComponent, 
+  {
+    path: 'map/:location',
+    component: MapComponent,
     children: [
       {
-        path: 'place_details/:placeId', 
-        component: PlaceDetailsComponent, 
-        outlet: 'placeDetails'
+        path: 'place_details/:placeId',
+        component: PlaceDetailsComponent,
+        outlet: 'placeDetails',
       },
-    ], 
+      {
+        path: 'direct/instructions',
+        component: DirectionsInstructionsComponent,
+        outlet: 'directionsInstructions',
+      },
+    ],
   },
   { path: 'autocomplete', component: AutocompleteComponent },
-  { path: '**', redirectTo: '/', pathMatch: 'full' }
-]
+  // { path: '**', redirectTo: '/', pathMatch: 'full' },
+];
+
+console.info(routes);
 
 @NgModule({
   declarations: [
@@ -47,7 +56,8 @@ const routes: Routes = [
     MapComponent,
     AutocompleteComponent,
     PlaceDetailsComponent,
-    ItineraryComponent
+    ItineraryComponent,
+    DirectionsInstructionsComponent
   ],
   imports: [
     BrowserModule, 
@@ -64,6 +74,7 @@ const routes: Routes = [
     PlaceDetailsService,
     SavedPlacesService,
     DatesService,
+    DirectionsService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

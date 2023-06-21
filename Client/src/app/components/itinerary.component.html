@@ -37,7 +37,12 @@
         [cdkDropListConnectedTo]="getConnectedLists()"
         (cdkDropListDropped)="drop($event)"
       >
-        <mat-toolbar class="dates-toolbar" color="primary">
+        <mat-toolbar
+          class="dates-toolbar"
+          [class.clicked]="clickedDate === dateWithItems.date.toISOString()"
+          color="primary"
+          (click)="showDirections(dateWithItems.items, dateWithItems.date)"
+        >
           <span class="date-format">{{
             dateWithItems.date | date : "d MMM y"
           }}</span>

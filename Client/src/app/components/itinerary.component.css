@@ -43,6 +43,11 @@
     align-items: center;
 }
 
+.bucket-list li:hover {
+    background-color: lightgrey;
+    cursor: grab;
+}
+
 .bucket-list li span {
     font-size: 11px;
     margin: 2px 8px;
@@ -90,6 +95,11 @@
     margin: 2px 8px;
 }
 
+.dates-list li:hover {
+    background-color: lightgrey;
+    cursor: move; 
+}
+
 .dates-list li div {
     display: flex;
 }
@@ -120,6 +130,14 @@
     height: 24px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+}
+
+.dates-toolbar:hover {
+    cursor: pointer;
+}
+
+.dates-toolbar.clicked {
+    background-color: darkred;
 }
 
 .date-format {

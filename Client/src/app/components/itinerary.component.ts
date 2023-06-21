@@ -4,6 +4,8 @@ import { Subscription } from 'rxjs';
 import { CdkDragDrop, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
 import { DateWithItems, Place } from '../models/map.models';
 import { SavedPlacesService } from '../services/saved-places.service';
+import { DirectionsService } from '../services/directions.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-itinerary',
@@ -18,6 +20,11 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   endDateSub$!: Subscription;
   datesList!: CdkDropList;
   changeDetector = inject(ChangeDetectorRef);
+  directionsSvc = inject(DirectionsService);
+  clickedDate!: string;
+  isToolbarClicked = false;
+  router = inject(Router);
+  activatedRoute = inject(ActivatedRoute);
 
   @ViewChild('bucketList') bucketList!: CdkDropList;
 
@@ -124,6 +131,23 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
+    }
+  }
+
+  showDirections(items: any[], date: Date) {
+    this.directionsSvc.updateIsToolbarClicked(true);
+    this.isToolbarClicked = true;
+    this.clickedDate = date.toISOString();
+    if (items.length > 1) {
+      const request = {
+        origin: { placeId: items[0].place_id },
+        destination: { placeId: items[items.length - 1].place_id },
+        waypoints: items.slice(1, -1).map(item => ({ location: { placeId: item.place_id } 
+      })),
+        travelMode: 'DRIVING',
+        optimizeWaypoints: true
+      };
+      this.directionsSvc.changeRequest(request);
     }
   }
 }
