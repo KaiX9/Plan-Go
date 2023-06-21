@@ -1,1 +1,6 @@
-<button (click)="goBack()">Back</button>
+<ol>
+  <button (click)="goBack()">Back</button>
+  <li *ngFor="let instruction of directionsInstructions">
+    <span [innerHTML]="instruction"></span>
+  </li>
+</ol>

@@ -1,0 +1,30 @@
+ol {
+    list-style-position: inside;
+}
+
+ol li {
+    font-size: 0.8em;
+    overflow: hidden;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+ol li:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc(100% - 30px);
+    height: 1px;
+    background-color: lightgrey;
+}
+
+ol li span {
+    vertical-align: middle;
+}
+
+ol li span div {
+    font-size: 0.9em;
+    padding-left: 20px;
+}
