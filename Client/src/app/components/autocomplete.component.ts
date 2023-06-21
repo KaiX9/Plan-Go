@@ -14,7 +14,7 @@ export class AutocompleteComponent implements AfterViewInit {
   inputField!: ElementRef;
 
   @Input()
-  placeholder = '';
+  placeholder = 'example...Paris, London, Barcelona';
 
   router = inject(Router);
   autocomplete: google.maps.places.Autocomplete | undefined;

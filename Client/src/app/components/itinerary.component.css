@@ -90,6 +90,10 @@
     margin: 2px 8px;
 }
 
+.dates-list li div {
+    display: flex;
+}
+
 .dates-list button {
     width: 24px;
     height: 24px;

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
 import { DatesService } from '../services/dates.service';
 import { Subscription } from 'rxjs';
 import { CdkDragDrop, CdkDropList, transferArrayItem } from '@angular/cdk/drag-drop';
@@ -10,13 +10,14 @@ import { SavedPlacesService } from '../services/saved-places.service';
   templateUrl: './itinerary.component.html',
   styleUrls: ['./itinerary.component.css']
 })
-export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit {
+export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked {
   savedPlacesSvc = inject(SavedPlacesService);
   datesSvc = inject(DatesService);
   datesArray: DateWithItems[] = [];
   startDateSub$!: Subscription;
   endDateSub$!: Subscription;
   datesList!: CdkDropList;
+  changeDetector = inject(ChangeDetectorRef);
 
   @ViewChild('bucketList') bucketList!: CdkDropList;
 
@@ -49,6 +50,10 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngAfterViewInit(): void {
       console.info('datesListsArray: ', this.datesListsArray.toArray());
+  }
+
+  ngAfterViewChecked(): void {
+    this.changeDetector.detectChanges();
   }
 
   filteredDatesListsArray(): CdkDropList[] {
@@ -87,12 +92,21 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   deleteItemFromDatesList(place_id: string, datesListData: any[]) {
-    console.info('place_id: ', place_id);
-    console.info('datesListData: ', datesListData);
     const index = datesListData.findIndex((item) => item.place_id === place_id);
     if (index !== -1) {
       datesListData.splice(index, 1);
     }
+    console.info('datesListData: ', datesListData);
+    console.info('datesArray: ', this.datesArray);
+  }
+
+  addItemToDatesList(place_id: string, datesListData: any[]) {
+    const index = datesListData.findIndex((item) => item.place_id === place_id);
+    if (index !== -1) {
+      datesListData.push(datesListData[index]);
+    }
+    console.info('datesListData: ', datesListData);
+    console.info('datesArray: ', this.datesArray);
   }
 
   drop(event: CdkDragDrop<Place[]>) {
