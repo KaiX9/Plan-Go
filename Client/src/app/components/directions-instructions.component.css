@@ -1,8 +1,9 @@
-ol {
-    list-style-position: inside;
+ul {
+    list-style: none;
+    padding: 0;
 }
 
-ol li {
+ul li {
     font-size: 0.8em;
     overflow: hidden;
     padding-bottom: 10px;
@@ -10,21 +11,39 @@ ol li {
     position: relative;
 }
 
-ol li:before {
+ul li span[innerHTML]::before {
     content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: calc(100% - 30px);
-    height: 1px;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+ul li div {
+    border-bottom: 1px solid lightgrey;
+    margin-top: 5px;
+}
+
+.address-section {
     background-color: lightgrey;
+    padding: 10px;
 }
 
-ol li span {
-    vertical-align: middle;
+.address-header {
+    display: flex;
+    align-items: center;
 }
 
-ol li span div {
-    font-size: 0.9em;
-    padding-left: 20px;
+.place-name {
+    font-weight: bold;
+}
+
+.place-address {
+    font-size: 0.8em;
+}
+
+.distance-duration {
+    margin-top: 10px;
 }

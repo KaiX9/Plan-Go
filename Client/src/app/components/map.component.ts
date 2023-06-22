@@ -43,8 +43,13 @@ export class MapComponent implements OnInit {
   directionsService = new google.maps.DirectionsService();
   directionsRenderer = new google.maps.DirectionsRenderer();
   directionsSvc = inject(DirectionsService);
-  directionsInstructions: string[] | undefined = [];
+  directionsInstructions: Array<
+   | { maneuver: string; instruction: string; distance: string | undefined }
+   | { name: string; address: string }
+  > = [];
   isToolbarClicked = false;
+  distanceMatrixResponse: google.maps.DistanceMatrixResponse | null = null;
+  placeNames: string[] = [];
 
   @ViewChild('group') 
   group!: MatButtonToggleGroup;
@@ -70,6 +75,14 @@ export class MapComponent implements OnInit {
       console.info('isToolbarClicked: ', isClicked);
       this.isToolbarClicked = isClicked;
     });
+    this.directionsSvc.distanceMatrixRequest$.subscribe((request) => {
+      if (request) {
+        this.getDistances(request.origins, request.destinations);
+      }
+    });
+    this.directionsSvc.currentPlaceNames.subscribe((placeNames) => {
+      this.placeNames = placeNames;
+    })
   }
 
   constructor() {}
@@ -118,11 +131,65 @@ export class MapComponent implements OnInit {
       if (status === 'OK') {
         this.directionsRenderer.setDirections(response);
         const legs = response?.routes[0].legs;
-        this.directionsInstructions = legs?.flatMap(leg => leg.steps.map(step => 
-          step.instructions));
-        console.info('directionsInstructions: ', this.directionsInstructions);
-        this.directionsSvc.updateDirectionsInstructions(this.directionsInstructions ?? []);
+        if (legs) {
+          this.directionsInstructions = legs?.flatMap((leg, index) => [
+            { name: this.placeNames[index], address: leg.start_address },
+            ...leg.steps.map((step) => ({
+              maneuver: step.maneuver,
+              instruction: step.instructions,
+              distance: step.distance?.text,
+            })),
+            { name: this.placeNames[index + 1], address: leg.end_address },
+          ]);
+          console.info('directionsInstructions: ', this.directionsInstructions);
+          this.directionsSvc.updateDirectionsInstructions(
+            this.directionsInstructions ?? []
+          );
+        }
       }
+    });
+  }
+
+  getDistances(origins: string[], destinations: string[]) {
+    console.info('getDistances origins: ', origins);
+    console.info('getDistances destinations: ', destinations);
+    const locations = [...origins, ...destinations];
+    const distMatrixService = new google.maps.DistanceMatrixService();
+    const distancesAndDurations = new Array<{ originName: string; destinationName: string; 
+      distance: string; duration: string }>(locations.length - 1);
+    let responsesReceived = 0;
+    locations.forEach((originName, index) => {
+      if (index < locations.length - 1) {
+        const destinationName = locations[index + 1];
+        distMatrixService.getDistanceMatrix(
+          {
+            origins: [originName],
+            destinations: [destinationName],
+            travelMode: google.maps.TravelMode.DRIVING,
+          },
+          (response, status) => {
+            console.info(`Received response for distance from ${originName} to 
+              ${destinationName}`);
+            responsesReceived++;
+            if (status === 'OK' && response) {
+              const element = response.rows[0].elements[0];
+              if (element.status === 'OK') {
+                const distance = element.distance.text;
+                const duration = element.duration.text;
+                console.info(`The distance from ${originName} to ${destinationName} is ${distance} and 
+                  will take approximately ${duration}.`);
+                distancesAndDurations[index] = { originName, destinationName, distance, duration };
+              } else {
+                console.warn(`Failed to calculate distance from ${originName} to 
+                  ${destinationName}: ${element.status}`);
+              }
+            }
+            if (responsesReceived === locations.length - 1) {
+              this.directionsSvc.updateDistanceAndDuration(distancesAndDurations);
+            }
+          }
+        );
+      }       
     });
   }
 

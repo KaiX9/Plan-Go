@@ -135,6 +135,9 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   }
 
   showDirections(items: any[], date: Date) {
+    console.info('showDirections items: ', items);
+    const placeNames = items.map((item) => item.name);
+    this.directionsSvc.updatePlaceNames(placeNames);
     this.directionsSvc.updateIsToolbarClicked(true);
     this.isToolbarClicked = true;
     this.clickedDate = date.toISOString();
@@ -148,6 +151,9 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         optimizeWaypoints: true
       };
       this.directionsSvc.changeRequest(request);
+      const origins = [items[0].name];
+      const destinations = items.slice(1).map((item) => item.name);
+      this.directionsSvc.updateDistanceMatrixRequest({ origins, destinations });
     }
   }
 }
