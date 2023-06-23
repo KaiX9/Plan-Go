@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { DirectionsService } from '../services/directions.service';
+import { combineLatest } from 'rxjs';
 
 @Component({
   selector: 'app-directions-instructions',
@@ -24,18 +25,17 @@ export class DirectionsInstructionsComponent implements OnInit {
     distance?: string;
     duration?: string;
   }> = [];
+  currentInstructionIndex = 0;
+  instructionsByLocation: any[][] = [];
 
   ngOnInit(): void {
-    this.directionsSvc.dirInstructions$.subscribe(instructions => {
-      (this.directionsInstructions = instructions);
-      console.info('instructions: ', instructions);
-    }
-    );
-    this.directionsSvc.distanceMatrix$.subscribe((response) => {
-      this.distanceMatrix = response;
-      console.info('distanceMatrix: ', this.distanceMatrix);
-    })
-    this.directionsSvc.distAndDur$.subscribe(data => {
+    combineLatest([
+      this.directionsSvc.dirInstructions$,
+      this.directionsSvc.distanceMatrix$,
+      this.directionsSvc.distAndDur$
+    ]).subscribe(([instructions, distanceMatrix, data]) => {
+      this.directionsInstructions = instructions;
+      this.distanceMatrix = distanceMatrix;
       if (data) {
         this.placeNames = [];
         this.distances = [];
@@ -44,13 +44,12 @@ export class DirectionsInstructionsComponent implements OnInit {
           this.placeNames.push(item.originName);
           this.distances.push(item.distance);
           this.durations.push(item.duration);
-          console.info('placeNames: ', this.placeNames);
-          console.info('distances: ', this.distances);
-          console.info('durations: ', this.durations);
         });
       }
       this.locations = [];
       this.generateLocations();
+      this.currentInstructionIndex = 0;
+      this.generateInstructionsByLocation();
     });
   }
 
@@ -101,18 +100,43 @@ export class DirectionsInstructionsComponent implements OnInit {
       | { address: string }
   ): instruction is { maneuver: string; instruction: string; distance: string | undefined 
   } {
-    return (instruction as any).maneuver !== undefined;
+    const result = (instruction as any).maneuver !== undefined;
+    return result;
   }
 
-  isFirstOccurrence(instruction: any, index: number): boolean {
-    return (
-      index === 
-      this.directionsInstructions.findIndex(
-        (item) => 
-        !this.isInstruction(item) && 
-        item.name === instruction.name && 
-        item.address === instruction.address
-      )
-    );
+  getNextInstructions(): any[] {
+    if (this.currentInstructionIndex >= this.directionsInstructions.length) {
+      return [];
+    }
+    const instructions = [];
+    while (
+      this.currentInstructionIndex < this.directionsInstructions.length && 
+      ('name' in this.directionsInstructions[this.currentInstructionIndex])
+    ) {
+      this.currentInstructionIndex++;
+    }
+    while (
+      this.currentInstructionIndex < this.directionsInstructions.length && 
+      !('name' in this.directionsInstructions[this.currentInstructionIndex])
+    ) {
+      if (this.isInstruction(this.directionsInstructions[this.currentInstructionIndex])) {
+        instructions.push(this.directionsInstructions[this.currentInstructionIndex]);
+      }
+      this.currentInstructionIndex++;
+    }
+    if (instructions.length === 0) {
+      return instructions;
+    }
+    return instructions;
+  }
+
+  generateInstructionsByLocation(): void {
+    this.instructionsByLocation = [];
+    for (let i = 0; i < this.locations.length; i++) {
+      const instructions = this.getNextInstructions();
+      if (instructions.length > 0) {
+        this.instructionsByLocation.push(instructions);
+      }
+    }
   }
 }

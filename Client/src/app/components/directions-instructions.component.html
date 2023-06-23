@@ -1,62 +1,69 @@
 <button (click)="goBack()">Back</button>
 <ul>
-  <li *ngFor="let location of locations">
-    <div class="address-section">
-      <div class="address-header">
-        <mat-icon>place</mat-icon>
-        <div>
-          <div class="place-name">{{ location.originName }}</div>
-          <div class="place-address">{{ location.originAddress }}</div>
+  <li *ngFor="let location of locations; let i = index">
+    <ng-container
+      *ngIf="
+        i < locations.length"
+    >
+      <div class="address-section">
+        <div class="address-header">
+          <mat-icon>place</mat-icon>
+          <div>
+            <div class="place-name">{{ location.originName }}</div>
+            <div class="place-address">{{ location.originAddress }}</div>
+          </div>
+        </div>
+        <div class="distance-duration">
+          Approximately {{ location.duration }} ({{ location.distance }})
+          <mat-icon>directions_car</mat-icon>
         </div>
       </div>
-      <div class="distance-duration">
-        Approximately {{ location.duration }}
-        <mat-icon>directions_car</mat-icon> ({{ location.distance }})
-      </div>
-      <div class="address-header">
-        <mat-icon>place</mat-icon>
-        <div>
-          <div class="place-name">{{ location.destinationName }}</div>
-          <div class="place-address">{{ location.destinationAddress }}</div>
+      <ng-container *ngFor="let instruction of instructionsByLocation[i]">
+        <div class="instructions">
+          <hr />
+          <ng-container [ngSwitch]="instruction.maneuver">
+            <mat-icon *ngSwitchCase="'turn-slight-left'">
+              turn_slight_left
+            </mat-icon>
+            <mat-icon *ngSwitchCase="'turn-sharp-left'">
+              turn_sharp_left
+            </mat-icon>
+            <mat-icon *ngSwitchCase="'uturn-left'"> u_turn_left </mat-icon>
+            <mat-icon *ngSwitchCase="'turn-left'"> turn_left </mat-icon>
+            <mat-icon *ngSwitchCase="'turn-slight-right'">
+              turn_slight_right
+            </mat-icon>
+            <mat-icon *ngSwitchCase="'turn-sharp-right'">
+              turn_sharp_right
+            </mat-icon>
+            <mat-icon *ngSwitchCase="'uturn-right'"> u_turn_right </mat-icon>
+            <mat-icon *ngSwitchCase="'turn-right'"> turn_right </mat-icon>
+            <mat-icon *ngSwitchCase="'straight'"> straight </mat-icon>
+            <mat-icon *ngSwitchCase="'ramp-left'"> ramp_left </mat-icon>
+            <mat-icon *ngSwitchCase="'ramp-right'"> ramp_right </mat-icon>
+            <mat-icon *ngSwitchCase="'merge'"> merge </mat-icon>
+            <mat-icon *ngSwitchCase="'fork-left'"> fork_left </mat-icon>
+            <mat-icon *ngSwitchCase="'fork-right'"> fork_right </mat-icon>
+          </ng-container>
+          <span
+            *ngIf="instruction.instruction"
+            [innerHTML]="instruction.instruction"
+          >
+          </span>
+          <span *ngIf="instruction.distance">({{ instruction.distance }})</span>
         </div>
-      </div>
-    </div>
-  </li>
-  <li *ngFor="let instruction of directionsInstructions; let i = index">
-    <ng-container *ngIf="isInstruction(instruction)">
-      <div class="instructions">
-        <hr />
-        <ng-container [ngSwitch]="instruction.maneuver">
-          <mat-icon *ngSwitchCase="'turn-slight-left'">
-            turn_slight_left
-          </mat-icon>
-          <mat-icon *ngSwitchCase="'turn-sharp-left'">
-            turn_sharp_left
-          </mat-icon>
-          <mat-icon *ngSwitchCase="'uturn-left'"> u_turn_left </mat-icon>
-          <mat-icon *ngSwitchCase="'turn-left'"> turn_left </mat-icon>
-          <mat-icon *ngSwitchCase="'turn-slight-right'">
-            turn_slight_right
-          </mat-icon>
-          <mat-icon *ngSwitchCase="'turn-sharp-right'">
-            turn_sharp_right
-          </mat-icon>
-          <mat-icon *ngSwitchCase="'uturn-right'"> u_turn_right </mat-icon>
-          <mat-icon *ngSwitchCase="'turn-right'"> turn_right </mat-icon>
-          <mat-icon *ngSwitchCase="'straight'"> straight </mat-icon>
-          <mat-icon *ngSwitchCase="'ramp-left'"> ramp_left </mat-icon>
-          <mat-icon *ngSwitchCase="'ramp-right'"> ramp_right </mat-icon>
-          <mat-icon *ngSwitchCase="'merge'"> merge </mat-icon>
-          <mat-icon *ngSwitchCase="'fork-left'"> fork_left </mat-icon>
-          <mat-icon *ngSwitchCase="'fork-right'"> fork_right </mat-icon>
-        </ng-container>
-        <span
-          *ngIf="instruction.instruction"
-          [innerHTML]="instruction.instruction"
-        >
-        </span>
-        <span *ngIf="instruction.distance">({{ instruction.distance }})</span>
-      </div>
+      </ng-container>
+      <ng-container *ngIf="i === locations.length - 1">
+        <div class="address-section">
+          <div class="address-header">
+            <mat-icon>place</mat-icon>
+            <div>
+              <div class="place-name">{{ location.destinationName }}</div>
+              <div class="place-address">{{ location.destinationAddress }}</div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </ng-container>
   </li>
 </ul>
