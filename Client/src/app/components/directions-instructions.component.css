@@ -22,13 +22,16 @@ ul li span[innerHTML]::before {
 }
 
 ul li div {
-    border-bottom: 1px solid lightgrey;
     margin-top: 5px;
 }
 
-.address-section {
+.location-wrapper {
     background-color: lightgrey;
-    padding: 10px;
+    padding: 1px;
+}
+
+.address-section {
+    padding-bottom: 1px;
 }
 
 .address-header {
@@ -40,10 +43,53 @@ ul li div {
     font-weight: bold;
 }
 
+.place-name mat-icon {
+    vertical-align: middle;
+}
+
 .place-address {
-    font-size: 0.8em;
+    font-size: 0.9em;
+    margin-left: 27px;
 }
 
 .distance-duration {
-    margin-top: 10px;
+    margin-top: 1px;
+    font-weight: bold;
+}
+
+.distance-duration mat-icon {
+    font-size: 18px;
+    vertical-align: middle;
+}
+
+.instruction-container {
+    display: flex;
+    align-items: center;
+}
+
+.arrow-symbol {
+    margin-right: 10px;
+    width: 24px;
+    min-height: 24px;
+}
+
+.instructions mat-icon {
+    width: 24px;
+}
+
+.instruction-text {
+    margin-left: 20px;
+}
+
+.distance-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.horizontal-line {
+    border-bottom: 1px solid lightgrey;
+    width: 90%;
+    display: inline-block;
+    vertical-align: middle;
 }

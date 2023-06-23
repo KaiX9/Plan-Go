@@ -1,14 +1,18 @@
 <div *ngIf="placeDetails$ | async as place">
   <div class="container">
     <div class="toolbar">
-      <button class="back-button" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i>
+      <button class="back-button" role="button" (click)="goBack()">
+        <span class="text"><mat-icon>arrow_back</mat-icon></span>
       </button>
       <button
         class="add-to-bucket-button"
         mat-raised-button
         color="accent"
-        (click)="place.place_id && place.name ? savePlace(place.place_id, place.name) : null"
+        (click)="
+          place.place_id && place.name
+            ? savePlace(place.place_id, place.name)
+            : null
+        "
       >
         <mat-icon>favorite</mat-icon>
         Add To Bucket

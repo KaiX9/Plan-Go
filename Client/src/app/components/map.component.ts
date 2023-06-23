@@ -136,7 +136,7 @@ export class MapComponent implements OnInit {
             { name: this.placeNames[index], address: leg.start_address },
             ...leg.steps.map((step) => ({
               maneuver: step.maneuver,
-              instruction: step.instructions,
+              instruction: step.instructions.replace(/<b>/g, '').replace(/<\/b>/g, ''),
               distance: step.distance?.text,
             })),
             { name: this.placeNames[index + 1], address: leg.end_address },

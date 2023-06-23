@@ -47,11 +47,9 @@
         </mat-button-toggle-group>
         <div class="results-row">
           <div class="results-buttons">
-            <span class="clickable-element" (click)="applyFilters()">Apply</span
-            >&nbsp;&nbsp;
-            <span class="clickable-element" (click)="removeFilters()"
-              >Clear</span
-            >
+            <button class="filter-button" (click)="applyFilters()" role="button">Apply</button>
+            &nbsp;&nbsp;
+            <button class="filter-button" (click)="removeFilters()" role="button">Clear</button>
           </div>
           <div class="results-count">{{ filteredPlaces.length }} places</div>
         </div>
