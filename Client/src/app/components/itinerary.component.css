@@ -147,7 +147,6 @@
 }
 
 .iti-list {
-    list-style: none;
     margin: 0;
     padding: 0;
     border: 1px solid #ccc;
@@ -155,6 +154,22 @@
     min-height: 100px;
     min-width: 280px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+    counter-reset: alpha-counter;
+}
+
+.alpha-list-item:before {
+    counter-increment: alpha-counter;
+    content: counter(alpha-counter, upper-alpha) ". ";
+    display: inline-block;
+    width: 20px;
+    text-align: right;
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 12px;
+}
+
+.alpha-list-item span {
+    flex: 1;
 }
 
 .cdk-drag-preview {

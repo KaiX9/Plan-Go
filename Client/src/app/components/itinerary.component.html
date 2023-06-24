@@ -47,7 +47,7 @@
             dateWithItems.date | date : "d MMM y"
           }}</span>
         </mat-toolbar>
-        <li *ngFor="let item of dateWithItems.items" cdkDrag>
+        <li *ngFor="let item of dateWithItems.items" cdkDrag class="alpha-list-item">
           <span>{{ item.name }}</span>
           <div>
             <button

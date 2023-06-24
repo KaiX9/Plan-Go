@@ -202,7 +202,7 @@ export class MapComponent implements OnInit {
       document.getElementById('map') as HTMLElement,
       {
         center: sydney,
-        zoom: 10,
+        zoom: 15,
         styles: GM_STYLES.mapStyles,
       }
     );
@@ -317,17 +317,44 @@ export class MapComponent implements OnInit {
     }
   }
 
+  createMarkerIcon(iconText: string, color: string): string {
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = 28;
+    canvas.height = 28;
+  
+    
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return '';
+  
+    ctx.font = '28px Material Icons';
+    ctx.fillStyle ='grey';
+  
+    const textWidth = ctx.measureText(iconText).width;
+    const textX = (canvas.width - textWidth) / 2;
+    const textY = canvas.height - (canvas.height - 28) / 2;
+  
+    ctx.fillText(iconText, textX, textY);
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+      <path d="M24,4C16.26,4,10,10.26,10,18c0,10.5,14,26,14,26s14-15.5,14-26C38,10.26,31.74,4,24,4z" fill="${color}"/>
+      <image href="${canvas.toDataURL()}" x="16" y="16" width="16" height="16"/>
+    </svg>`;
+ 
+    return `data:image/svg+xml;charset=UTF-8;base64,${btoa(svg)}`;
+  }
+
   createCustomMarker(place: google.maps.places.PlaceResult): google.maps.Marker | undefined {
       console.info('createCustomMarker called with place: ', place);
       if (!place.geometry || !place.geometry.location) return undefined;
   
       const icons: { [key: string]: string } = {
-        restaurant: '/assets/icons_type/restaurant.png',
-        bar: '/assets/icons_type/drinks.png',
-        tourist_attraction: '/assets/icons_type/site.png',
-        shopping_mall: '/assets/icons_type/shop.png',
-        lodging: '/assets/icons_type/hotel.png',
-        cafe: '/assets/icons_type/cafe.png',
+        restaurant: this.createMarkerIcon('restaurant', '#ffa500'),
+        bar: this.createMarkerIcon('local_bar', '#ffff00'),
+        tourist_attraction: this.createMarkerIcon('photo_camera', '#f08080'),
+        shopping_mall: this.createMarkerIcon('shopping_bag', '#800080'),
+        lodging: this.createMarkerIcon('bed', '#0000ff'),
+        cafe: this.createMarkerIcon('local_cafe', '#90ee90'),
       };
   
       const matchingType = place.types?.find(type => icons.hasOwnProperty(type));
@@ -338,7 +365,7 @@ export class MapComponent implements OnInit {
         position: place.geometry.location,
         icon: {
           url: iconUrl,
-          scaledSize: new google.maps.Size(24, 24),
+          scaledSize: new google.maps.Size(48, 48),
         },
         animation: google.maps.Animation.DROP,
         });
@@ -366,12 +393,12 @@ export class MapComponent implements OnInit {
       styles: GM_STYLES.mapStyles,
     });
     const icons: { [key: string]: string } = {
-      restaurant: '/assets/icons_type/restaurant.png',
-      bar: '/assets/icons_type/drinks.png',
-      tourist_attraction: '/assets/icons_type/site.png',
-      shopping_mall: '/assets/icons_type/shop.png',
-      lodging: '/assets/icons_type/hotel.png',
-      cafe: '/assets/icons_type/cafe.png',
+      restaurant: this.createMarkerIcon('restaurant', '#ffa500'),
+      bar: this.createMarkerIcon('local_bar', '#ffff00'),
+      tourist_attraction: this.createMarkerIcon('photo_camera', '#f08080'),
+      shopping_mall: this.createMarkerIcon('shopping_bag', '#800080'),
+      lodging: this.createMarkerIcon('bed', '#0000ff'),
+      cafe: this.createMarkerIcon('local_cafe', '#90ee90'),
     };
 
     const newMarkers: google.maps.Marker[] = [];
@@ -388,7 +415,7 @@ export class MapComponent implements OnInit {
         position: place.geometry.location!,
         icon: {
           url: iconUrl,
-          scaledSize: new google.maps.Size(24, 24),
+          scaledSize: new google.maps.Size(48, 48),
         },
         animation: google.maps.Animation.DROP,
       });

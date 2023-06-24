@@ -42,7 +42,8 @@ body,
     margin-right: 0;
 }
 
-.filter-button img {
+.filter-button mat-icon {
+    font-size: 16px;
     height: 16px;
     width: 16px;
     margin-right: 10px;
@@ -52,16 +53,34 @@ body,
     min-width: 80px;
     height: 30px;
     padding: 0 10px;
-    background-color: white;
-    color: black;
-}
-
-.mat-button-toggle-checked {
-    background-color: rgba(41, 129, 244, 0.336);
 }
 
 .mat-button-toggle-group {
     border: none;
+}
+
+.filter-buttons .filter-button[value='restaurant'].mat-button-toggle-checked {
+    background-color: orange;
+}
+
+.filter-buttons .filter-button[value='bar'].mat-button-toggle-checked {
+    background-color: yellow;
+}
+
+.filter-buttons .filter-button[value='tourist_attraction'].mat-button-toggle-checked {
+    background-color: lightcoral;
+}
+
+.filter-buttons .filter-button[value='shopping_mall'].mat-button-toggle-checked {
+    background-color: purple;
+}
+
+.filter-buttons .filter-button[value='lodging'].mat-button-toggle-checked {
+    background-color: blue;
+}
+
+.filter-buttons .filter-button[value='cafe'].mat-button-toggle-checked {
+    background-color: lightgreen;
 }
 
 .place-details {
