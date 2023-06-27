@@ -1,0 +1,19 @@
+h2 {
+    margin: 16px 0;
+    text-align: center;
+}
+
+#comment-textarea {
+    width: 100%;
+    max-width: none;
+}
+
+textarea.mat-input-element {
+    padding: 8px;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}

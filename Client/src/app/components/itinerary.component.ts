@@ -6,6 +6,10 @@ import { DateWithItems, Place } from '../models/map.models';
 import { SavedPlacesService } from '../services/saved-places.service';
 import { DirectionsService } from '../services/directions.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { NotesDialogComponent } from './notes-dialog.component';
+import { SaveItineraryService } from '../services/save-itinerary.service';
+import { Merged } from '../models/save.models';
 
 @Component({
   selector: 'app-itinerary',
@@ -25,6 +29,11 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   isToolbarClicked = false;
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
+  isExpanded: boolean[][] = [];
+  comments: { place_id: string, comment: string }[] = [];
+  dialog = inject(MatDialog);
+  mergedArray: Merged[] = [];
+  saveItinerarySvc = inject(SaveItineraryService);
 
   @ViewChild('bucketList') bucketList!: CdkDropList;
 
@@ -155,5 +164,40 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       const destinations = items.slice(1).map((item) => item.name);
       this.directionsSvc.updateDistanceMatrixRequest({ origins, destinations });
     }
+  }
+
+  openNotesDialog(place_id: string) {
+    const comment = this.comments.find(c => c.place_id === place_id);
+    const currentNotes = comment ? comment.comment : '';
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = '500px';
+    dialogConfig.height = '350px';
+    dialogConfig.data = { notes: currentNotes };
+    const dialogRef = this.dialog.open(NotesDialogComponent, dialogConfig);
+    dialogRef.afterClosed().subscribe(notes => {
+      if (comment) {
+        comment.comment = notes;
+      } else {
+        this.comments.push({ place_id, comment: notes });
+      }
+    });
+  }
+
+  savePlan() {
+    console.info('datesArray: ', this.datesArray);
+    console.info('comments ', this.comments);
+    this.mergedArray = this.datesArray.map(date => ({
+      ...date, 
+      items: date.items.map(item => ({
+        ...item, 
+        comment: this.comments.find(c => c.place_id === item.place_id)?.comment || ''
+      }))
+    }));
+    console.info('mergedArray: ', this.mergedArray);
+    this.saveItinerarySvc.saveItinerary(this.mergedArray).subscribe(
+      response => {
+        console.info('resp: ', response);
+      }
+    );
   }
 }

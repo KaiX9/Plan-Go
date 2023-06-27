@@ -1,5 +1,11 @@
 <div class="scrollable-container">
   <div class="bucket-list">
+    <div class="button-wrapper">
+      <button class="back-button" role="button" (click)="savePlan()">
+        <span class="text"><mat-icon>save</mat-icon>Save</span>
+      </button>
+    </div>
+    <br />
     <ul
       cdkDropList
       id="bucketList"
@@ -47,7 +53,12 @@
             dateWithItems.date | date : "d MMM y"
           }}</span>
         </mat-toolbar>
-        <li *ngFor="let item of dateWithItems.items" cdkDrag class="alpha-list-item">
+        <li
+          *ngFor="let item of dateWithItems.items; 
+          let j = index"
+          cdkDrag
+          class="alpha-list-item"
+        >
           <span>{{ item.name }}</span>
           <div>
             <button
@@ -61,6 +72,9 @@
               (click)="addItemToDatesList(item.place_id, dateWithItems.items)"
             >
               <img src="/assets/add.png" />
+            </button>
+            <button (click)="openNotesDialog(item.place_id)">
+              <img src="/assets/notes.png">
             </button>
           </div>
         </li>

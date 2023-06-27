@@ -22,6 +22,9 @@ import { DatesService } from './services/dates.service';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DirectionsService } from './services/directions.service';
 import { DirectionsInstructionsComponent } from './components/directions-instructions.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { NotesDialogComponent } from './components/notes-dialog.component';
+import { SaveItineraryService } from './services/save-itinerary.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -43,10 +46,8 @@ const routes: Routes = [
     ],
   },
   { path: 'autocomplete', component: AutocompleteComponent },
-  // { path: '**', redirectTo: '/', pathMatch: 'full' },
+  { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
-
-console.info(routes);
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ console.info(routes);
     AutocompleteComponent,
     PlaceDetailsComponent,
     ItineraryComponent,
-    DirectionsInstructionsComponent
+    DirectionsInstructionsComponent,
+    NotesDialogComponent
   ],
   imports: [
     BrowserModule, 
@@ -67,7 +69,8 @@ console.info(routes);
     MaterialModule,
     RouterModule.forRoot(routes, { useHash: true }),
     BrowserAnimationsModule,
-    DragDropModule
+    DragDropModule,
+    MatDialogModule
   ],
   providers: [
     LoginService,
@@ -75,6 +78,7 @@ console.info(routes);
     SavedPlacesService,
     DatesService,
     DirectionsService,
+    SaveItineraryService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

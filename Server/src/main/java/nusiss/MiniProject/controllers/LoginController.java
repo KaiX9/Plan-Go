@@ -73,7 +73,7 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
-    @PostMapping(path = "/auth/login")
+    @PostMapping(path="/auth/login")
     @ResponseBody
     public ResponseEntity<?> authenticateLogin(@RequestBody String payload, 
         HttpServletResponse response) throws FileNotFoundException, IOException, 

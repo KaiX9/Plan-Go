@@ -1,0 +1,7 @@
+<h2>Add Notes/Comments</h2>
+<mat-form-field id="comment-textarea">
+  <textarea matInput cols="50" rows="6" [formControl]="notesControl"></textarea>
+</mat-form-field>
+<div class="button-wrapper">
+  <button mat-button color="primary" (click)="save()">Save</button>
+</div>

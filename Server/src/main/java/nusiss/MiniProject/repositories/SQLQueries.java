@@ -14,4 +14,9 @@ public class SQLQueries {
         values (?, ?);        
     """;
     
+    public static final String SAVE_ITINERARY = """
+        insert into itineraries(date, placeId, name, userId, uuid)
+        values (?, ?, ?, ?, ?);     
+    """;
+
 }

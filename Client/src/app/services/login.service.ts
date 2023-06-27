@@ -3,10 +3,10 @@ import { Injectable, inject } from "@angular/core";
 import { Login, Register } from "../models/login.models";
 import { Observable } from "rxjs";
 
-const URL_LOGIN = '/auth/login'
-const URL_REGISTER = '/register'
-const URL_DASHBOARD = '/dashboard'
-const URL_SIGNOUT = '/signout'
+const URL_LOGIN = '/auth/login';
+const URL_REGISTER = '/register';
+const URL_DASHBOARD = '/dashboard';
+const URL_SIGNOUT = '/signout';
 
 @Injectable()
 export class LoginService {
