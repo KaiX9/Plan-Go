@@ -25,6 +25,7 @@ import { DirectionsInstructionsComponent } from './components/directions-instruc
 import { MatDialogModule } from '@angular/material/dialog';
 import { NotesDialogComponent } from './components/notes-dialog.component';
 import { SaveItineraryService } from './services/save-itinerary.service';
+import { SavedDialogComponent } from './components/saved-dialog.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -59,7 +60,8 @@ const routes: Routes = [
     PlaceDetailsComponent,
     ItineraryComponent,
     DirectionsInstructionsComponent,
-    NotesDialogComponent
+    NotesDialogComponent,
+    SavedDialogComponent
   ],
   imports: [
     BrowserModule, 

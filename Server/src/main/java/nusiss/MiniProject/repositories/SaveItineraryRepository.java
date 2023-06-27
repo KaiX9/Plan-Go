@@ -4,9 +4,11 @@ import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,18 +30,43 @@ public class SaveItineraryRepository {
 
     public String saveItinerary(String payload, String userId) throws JsonMappingException, 
         JsonProcessingException {
-        JsonNode data = new ObjectMapper().readTree(payload);
+        JsonNode rootNode = new ObjectMapper().readTree(payload);
+        JsonNode detailsNode = rootNode.get("details");
+        if (detailsNode == null || !detailsNode.isArray()) {
+            throw new IllegalArgumentException("Missing or invalid details property");
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String uuid = UUID.randomUUID().toString().substring(0, 8);
 
-        for (JsonNode d : data) {
-            String dateString = d.get("date").asText();
+        for (JsonNode detailNode : detailsNode) {
+            JsonNode dateNode = detailNode.get("date");
+            if (dateNode == null) {
+                throw new IllegalArgumentException("Missing date property");
+            }
+            String dateString = dateNode.asText();
             OffsetDateTime dateTime = OffsetDateTime.parse(dateString);
             String formattedDate = dateTime.format(formatter);
-            for (JsonNode item : d.get("items")) {
-                String placeId = item.get("place_id").asText();
-                String name = item.get("name").asText();
-                String comment = item.get("comment").asText();
+            JsonNode itemsNode = detailNode.get("items");
+            if (itemsNode == null || !itemsNode.isArray()) {
+                throw new IllegalArgumentException("Missing or invalid items property");
+            }
+
+            for (JsonNode itemNode : itemsNode) {
+                JsonNode placeIdNode = itemNode.get("place_id");
+                if (placeIdNode == null) {
+                    throw new IllegalArgumentException("Missing place_id property");
+                }
+                String placeId = placeIdNode.asText();
+
+                JsonNode nameNode = itemNode.get("name");
+                if (nameNode == null) {
+                    throw new IllegalArgumentException("Missing name property");
+                }
+                String name = nameNode.asText();
+
+                JsonNode commentNode = itemNode.get("comment");
+                String comment = commentNode != null ? commentNode.asText() : "";
 
                 boolean isSaved = jdbcTemplate.update(SAVE_ITINERARY,
                         formattedDate,
@@ -49,16 +76,50 @@ public class SaveItineraryRepository {
                         uuid) > 0;
                 
                 if (isSaved) {
-                    Document doc = new Document();
-                    doc.put("uuid", uuid);
-                    doc.put("placeId", placeId);
-                    doc.put("comment", comment);
-                    mongoTemplate.insert(doc, "itineraries");
+                    Update update = new Update()
+                        .setOnInsert("uuid", uuid)
+                        .setOnInsert("placeId", placeId)
+                        .setOnInsert("comment", comment);
+
+                    mongoTemplate.upsert(
+                        new Query(Criteria
+                        .where("uuid").is(uuid)
+                        .and("placeId").is(placeId)
+                        .and("comment").is(comment))
+                    ,
+                        update,
+                        "itineraries"
+                    );
                 } else {
                     throw new RuntimeException("Failed to save data");
                 }                
             }
         }
         return uuid;
+    }
+
+    public void saveToItineraryList(String payload, String uuid) throws JsonMappingException, 
+        JsonProcessingException {
+        JsonNode rootNode = new ObjectMapper().readTree(payload);
+        JsonNode listNode = rootNode.get("list");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (listNode == null) {
+            throw new IllegalArgumentException("Missing list property");
+        }
+        JsonNode locationNode = listNode.get("location");
+        String location = locationNode.asText();
+        JsonNode startDateNode = listNode.get("startDate");
+        String startDateString = startDateNode.asText();
+        OffsetDateTime startDateTime = OffsetDateTime.parse(startDateString);
+        String formattedStartDate = startDateTime.format(formatter);
+        JsonNode endDateNode = listNode.get("endDate");
+        String endDateString = endDateNode.asText();
+        OffsetDateTime endDateTime = OffsetDateTime.parse(endDateString);
+        String formattedEndDate = endDateTime.format(formatter);
+        this.jdbcTemplate.update(ITINERARY_LIST,
+                uuid,
+                location,
+                formattedStartDate,
+                formattedEndDate);
     }
 }

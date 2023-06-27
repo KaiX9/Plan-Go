@@ -37,55 +37,56 @@ public class SaveItineraryController {
     @ResponseBody
     public ResponseEntity<String> saveItinerary(@RequestBody String payload, 
         HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
-        // Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
-        // Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
-        // String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
-        // System.out.println("authUser: " + authUser);
-        // if (authUser == null || authUser.isEmpty() || jwt == null) {
-        //     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-        //         .contentType(MediaType.APPLICATION_JSON)
-        //         .body(Json.createObjectBuilder()
-        //             .add("error", "User is not authenticated, please login")
-        //             .build()
-        //             .toString()
-        //         );
-        // }
+        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
+        System.out.println("authUser: " + authUser);
+        if (authUser == null || authUser.isEmpty() || jwt == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Json.createObjectBuilder()
+                    .add("error", "User is not authenticated, please login")
+                    .build()
+                    .toString()
+                );
+        }
         System.out.println("payload: " + payload);
-        // String userId = authUser.get().getId();
-        String userId = "1";
+        String userId = authUser.get().getId();
+        // String userId = "1";
         String uuid = this.saveItineraryRepo.saveItinerary(payload, userId);
+        this.saveItineraryRepo.saveToItineraryList(payload, uuid);
+        
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(Json.createObjectBuilder()
-            .add("message", "Server received itinerary successfully with uuid: %s".formatted(uuid))
+            .add("UUID", "Server received itinerary successfully with uuid: %s".formatted(uuid))
             .build()
             .toString()
         );
     }
 }
 
-// payload: [
-// {"date":"2023-06-26T16:00:00.000Z",
-// "items":[
+// payload: 
 //     {
-//         "place_id":"ChIJw4em5_OipBIReRhjzZwr0JU",
-//         "name":"BeTendency - Gestion de apartmentos turisticos",
-//         "comment":"test 1"
-//     },
-//     {
-//         "place_id":"ChIJxy8AX3GjpBIR7n4XRQsVQQE",
-//         "name":"Casa Pich i Pon",
-//         "comment":"test 2"
-//    }
-// ]
-// },
-// {"date":"2023-06-27T16:00:00.000Z",
-// "items":[
-//     {
-//         "place_id":"ChIJU_Om6vOipBIRMhUPOeGgdEY",
-//         "name":"Txapela, Plaça de Catalunya 8",
-//         "comment":"test 3"
+//         "details":
+//         [
+//             {
+//                 "date":"2023-06-26T16:00:00.000Z",
+//                 "items":[{"place_id":"ChIJw4em5_OipBIReRhjzZwr0JU",
+//                 "name":"BeTendency - Gestion de apartmentos turisticos",
+//                 "comment":"2"}]
+//             },
+//             {
+//                 "date":"2023-06-27T16:00:00.000Z",
+//                 "items":[{"place_id":"ChIJCWnbwfOipBIRUIfjsQvUQJ0",
+//                 "name":"H10 Catalunya Plaça Boutique Hotel",
+//                 "comment":"1"}]
+//             }
+//         ],
+//         "list":
+//         {
+//             "location":"Barcelona, Spain",
+//             "startDate":"2023-06-26T16:00:00.000Z",
+//             "endDate":"2023-06-27T16:00:00.000Z"
+//         }
 //     }
-// ]
-// }
-// ]

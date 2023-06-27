@@ -8,3 +8,15 @@ export interface SavedDetails {
     name: string
     comment: string
 }
+
+export interface Itinerary {
+    date: Date
+    items: SavedDetails[]
+    uuid: string
+}
+
+export interface ItiList {
+    location: string
+    startDate: Date
+    endDate: Date
+}

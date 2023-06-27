@@ -9,7 +9,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NotesDialogComponent } from './notes-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
-import { Merged } from '../models/save.models';
+import { ItiList, Merged } from '../models/save.models';
+import { SavedDialogComponent } from './saved-dialog.component';
 
 @Component({
   selector: 'app-itinerary',
@@ -22,6 +23,8 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   datesArray: DateWithItems[] = [];
   startDateSub$!: Subscription;
   endDateSub$!: Subscription;
+  startDate!: Date;
+  endDate!: Date;
   datesList!: CdkDropList;
   changeDetector = inject(ChangeDetectorRef);
   directionsSvc = inject(DirectionsService);
@@ -34,6 +37,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   dialog = inject(MatDialog);
   mergedArray: Merged[] = [];
   saveItinerarySvc = inject(SaveItineraryService);
+  uuid: string = '';
 
   @ViewChild('bucketList') bucketList!: CdkDropList;
 
@@ -45,6 +49,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
       (startDate) => {
         if (startDate) {
+          this.startDate = startDate;
           const endDate = this.datesSvc.endDate.value;
           if (endDate) {
             this.generateDatesArray(startDate, endDate);
@@ -55,6 +60,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     this.endDateSub$ = this.datesSvc.getEndDate().subscribe(
       (endDate) => {
         if (endDate) {
+          this.endDate = endDate;
           const startDate = this.datesSvc.startDate.value;
           if (startDate) {
             this.generateDatesArray(startDate, endDate);
@@ -194,9 +200,22 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       }))
     }));
     console.info('mergedArray: ', this.mergedArray);
-    this.saveItinerarySvc.saveItinerary(this.mergedArray).subscribe(
+    const location = this.activatedRoute.snapshot.params['location'];
+    console.info('location: ', location);
+    console.info('start date: ', this.startDate);
+    console.info('end date: ', this.endDate);
+    const list: ItiList = {
+      location: location,
+      startDate: this.startDate,
+      endDate: this.endDate
+    }
+    this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(
       response => {
         console.info('resp: ', response);
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.width = '300px';
+        dialogConfig.height = '150px';
+        this.dialog.open(SavedDialogComponent, dialogConfig);
       }
     );
   }

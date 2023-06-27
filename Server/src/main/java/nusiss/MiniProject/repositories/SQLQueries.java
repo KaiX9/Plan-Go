@@ -19,4 +19,9 @@ public class SQLQueries {
         values (?, ?, ?, ?, ?);     
     """;
 
+    public static final String ITINERARY_LIST = """
+        insert into itinerary_list(uuid, city, startDate, endDate)
+        values (?, ?, ?, ?);        
+    """;
+
 }
