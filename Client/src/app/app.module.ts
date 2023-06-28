@@ -23,9 +23,10 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { DirectionsService } from './services/directions.service';
 import { DirectionsInstructionsComponent } from './components/directions-instructions.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { NotesDialogComponent } from './components/notes-dialog.component';
+import { NotesDialogComponent } from './components/dialogs/notes-dialog.component';
 import { SaveItineraryService } from './services/save-itinerary.service';
-import { SavedDialogComponent } from './components/saved-dialog.component';
+import { SavedDialogComponent } from './components/dialogs/saved-dialog.component';
+import { ItineraryListComponent } from './components/dialogs/itinerary-list.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -61,7 +62,8 @@ const routes: Routes = [
     ItineraryComponent,
     DirectionsInstructionsComponent,
     NotesDialogComponent,
-    SavedDialogComponent
+    SavedDialogComponent,
+    ItineraryListComponent
   ],
   imports: [
     BrowserModule, 

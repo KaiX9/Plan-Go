@@ -2,14 +2,19 @@ package nusiss.MiniProject.repositories;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,10 +22,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import nusiss.MiniProject.models.Itinerary;
+import nusiss.MiniProject.models.ItineraryDetails;
+
 import static nusiss.MiniProject.repositories.SQLQueries.*;
 
 @Repository
-public class SaveItineraryRepository {
+public class ItineraryRepository {
     
     @Autowired
     private MongoTemplate mongoTemplate;
@@ -121,5 +129,40 @@ public class SaveItineraryRepository {
                 location,
                 formattedStartDate,
                 formattedEndDate);
+    }
+
+    public List<Itinerary> getItineraryListByUserId(String userId) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_ITINERARY_LIST, userId);
+        List<Itinerary> itiList = new ArrayList<Itinerary>();
+
+        while (rs.next()) {
+            itiList.add(Itinerary.createFromRs(rs));
+        }
+        return itiList;
+    }
+
+    public List<String> getUniqueUuidForUser(String userId) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_UNIQUE_UUID_FOR_USER, userId);
+        List<String> uuidList = new ArrayList<String>();
+
+        while (rs.next()) {
+            uuidList.add(rs.getString("uuid"));
+        }
+        return uuidList;
+    }
+
+    public Optional<ItineraryDetails> getItineraryDetails(String uuid) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_ITINERARY_DETAILS, uuid);
+
+        if (rs.first()) {
+            return Optional.of(ItineraryDetails.createFromRs(rs));
+        }
+        return Optional.empty();
+    }
+
+    public List<Document> getCommentsByUuid(String uuid) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("uuid").is(uuid));
+        return mongoTemplate.find(query, Document.class, "itineraries");
     }
 }

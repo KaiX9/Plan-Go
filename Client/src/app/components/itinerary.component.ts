@@ -7,10 +7,11 @@ import { SavedPlacesService } from '../services/saved-places.service';
 import { DirectionsService } from '../services/directions.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { NotesDialogComponent } from './notes-dialog.component';
+import { NotesDialogComponent } from './dialogs/notes-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { ItiList, Merged } from '../models/save.models';
-import { SavedDialogComponent } from './saved-dialog.component';
+import { SavedDialogComponent } from './dialogs/saved-dialog.component';
+import { ItineraryListComponent } from './dialogs/itinerary-list.component';
 
 @Component({
   selector: 'app-itinerary',
@@ -216,6 +217,17 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         dialogConfig.width = '300px';
         dialogConfig.height = '150px';
         this.dialog.open(SavedDialogComponent, dialogConfig);
+      }
+    );
+  }
+
+  getItiList() {
+    this.saveItinerarySvc.getItineraryList().subscribe(
+      response => {
+        console.info('list: ', response);
+        this.dialog.open(ItineraryListComponent, {
+          data: { itineraries: response }
+        });
       }
     );
   }

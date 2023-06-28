@@ -24,4 +24,16 @@ public class SQLQueries {
         values (?, ?, ?, ?);        
     """;
 
+    public static final String GET_ITINERARY_LIST = """
+        select * from itineraries where userId = ?;        
+    """;
+
+    public static final String GET_UNIQUE_UUID_FOR_USER = """
+        select distinct uuid from itineraries where userId = ?;        
+    """;
+
+    public static final String GET_ITINERARY_DETAILS = """
+        select * from itinerary_list where uuid = ?;        
+    """;
+
 }

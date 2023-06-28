@@ -8,12 +8,12 @@
 .bucket-list {
     padding: 12px;
     max-width: 100%;
-    min-width: 90%;
+    min-width: 85%;
 }
 
 .button-wrapper {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
 }
 

@@ -1,0 +1,7 @@
+<h1 class="mat-dialog-title">Itinerary List</h1>
+<mat-dialog-content class="mat-dialog-content">
+    <div *ngFor="let itinerary of itineraries">
+        {{ itinerary.city }} | {{ itinerary.startDate }} to {{ itinerary.endDate }}
+    </div>
+    <a mat-dialog-close>Back</a>
+</mat-dialog-content>
