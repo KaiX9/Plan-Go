@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { GM_STYLES } from '../gm.styles';
 import { filter } from 'rxjs';
@@ -27,7 +27,7 @@ import { SaveItineraryService } from '../services/save-itinerary.service';
     ]),
   ],
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
   map!: google.maps.Map;
   service!: google.maps.places.PlacesService;
   infowindow!: google.maps.InfoWindow;
@@ -93,6 +93,12 @@ export class MapComponent implements OnInit {
     this.directionsSvc.currentPlaceNames.subscribe((placeNames) => {
       this.placeNames = placeNames;
     })
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.removeFilters();
+    }, 1000);
   }
 
   constructor() {}
@@ -208,6 +214,7 @@ export class MapComponent implements OnInit {
 
     this.infowindow = new google.maps.InfoWindow();
 
+    console.info('initializing map');
     this.map = new google.maps.Map(
       document.getElementById('map') as HTMLElement,
       {
@@ -217,12 +224,13 @@ export class MapComponent implements OnInit {
       }
     );
 
-    console.info(this.inputLocation);
+    console.info('location: ', this.inputLocation);
 
     const request = {
       query: this.inputLocation,
       fields: ['name', 'geometry', 'formatted_address', 'types'],
     };
+    console.info('request: ', request);
 
     this.service = new google.maps.places.PlacesService(this.map);
 
@@ -232,13 +240,14 @@ export class MapComponent implements OnInit {
         results: google.maps.places.PlaceResult[] | null,
         status: google.maps.places.PlacesServiceStatus
       ) => {
+        console.info('status: ', status);
         if (status === google.maps.places.PlacesServiceStatus.OK && results) {
           for (let i = 0; i < results.length; i++) {
             this.createMarker(results[i]);
           }
 
           this.map.setCenter(results[0].geometry!.location!);
-          console.info(results);
+          console.info('results: ', results);
           this.searchNearbyPlaces(results[0].geometry!.location!);
         }
       }
