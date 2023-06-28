@@ -12,6 +12,7 @@ import {
 import { PlaceDetailsService } from '../services/place-details.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { DirectionsService } from '../services/directions.service';
+import { SaveItineraryService } from '../services/save-itinerary.service';
 
 @Component({
   selector: 'app-map',
@@ -50,13 +51,22 @@ export class MapComponent implements OnInit {
   isToolbarClicked = false;
   distanceMatrixResponse: google.maps.DistanceMatrixResponse | null = null;
   placeNames: string[] = [];
+  saveItinerarySvc = inject(SaveItineraryService);
 
   @ViewChild('group') 
   group!: MatButtonToggleGroup;
 
   ngOnInit(): void {
-    this.inputLocation = this.activatedRoute.snapshot.params['location'];
-    console.info('location: ', this.inputLocation);
+    if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
+      const location = this.saveItinerarySvc.city;
+      if (location) {
+        this.inputLocation = location;
+        console.info('location: ', this.inputLocation);
+      }
+    } else {
+      this.inputLocation = this.activatedRoute.snapshot.params['location'];
+      console.info('location: ', this.inputLocation);
+    }
     this.initMap();
     this.filteredPlaces = this.nearbyPlaces;
     this.updateShowContent();

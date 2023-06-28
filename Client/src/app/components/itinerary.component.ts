@@ -46,29 +46,46 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     QueryList<CdkDropList>();
 
   ngOnInit(): void {
-    console.info('ngOnInit called');
-    this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
-      (startDate) => {
-        if (startDate) {
-          this.startDate = startDate;
-          const endDate = this.datesSvc.endDate.value;
-          if (endDate) {
-            this.generateDatesArray(startDate, endDate);
-          }
-        }
+    if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
+      if (this.saveItinerarySvc.startDate) {
+        var startDateString = this.saveItinerarySvc.startDate;
+        var startTimestamp = Date.parse(startDateString);
+        this.startDate = new Date(startTimestamp);
+        console.info('start date: ', this.startDate);
       }
-    );
-    this.endDateSub$ = this.datesSvc.getEndDate().subscribe(
-      (endDate) => {
-        if (endDate) {
-          this.endDate = endDate;
-          const startDate = this.datesSvc.startDate.value;
+      if (this.saveItinerarySvc.endDate) {
+        var endDateString = this.saveItinerarySvc.endDate;
+        var endTimestamp = Date.parse(endDateString);
+        this.endDate = new Date(endTimestamp);
+        console.info('end date: ', this.endDate);
+      }
+      const itineraryDetails = this.saveItinerarySvc.itineraryDetails;
+      console.info('itineraryDetails: ', itineraryDetails);
+      this.generateSavedDatesArray(this.startDate, this.endDate, itineraryDetails);
+    } else {
+      this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
+        (startDate) => {
           if (startDate) {
-            this.generateDatesArray(startDate, endDate);
+            this.startDate = startDate;
+            const endDate = this.datesSvc.endDate.value;
+            if (endDate) {
+              this.generateDatesArray(startDate, endDate);
+            }
           }
         }
-      }
-    );
+      );
+      this.endDateSub$ = this.datesSvc.getEndDate().subscribe(
+        (endDate) => {
+          if (endDate) {
+            this.endDate = endDate;
+            const startDate = this.datesSvc.startDate.value;
+            if (startDate) {
+              this.generateDatesArray(startDate, endDate);
+            }
+          }
+        }
+      );
+    }
   }
 
   ngAfterViewInit(): void {
@@ -102,10 +119,31 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     }
   }
 
+  generateSavedDatesArray(startDate: Date, endDate: Date, itineraryDetails: any[]) {
+    if (startDate && endDate) {
+      this.datesArray = [];
+      for (
+        let date = new Date(startDate);
+        date <= endDate;
+        date.setDate(date.getDate() + 1)
+      ) {
+        let items = itineraryDetails.filter(detail => detail.date === date.toISOString()
+          .slice(0,10)).map(detail => ({place_id: detail.placeId, name: detail.name, 
+          comment: detail.comment}));
+        this.datesArray.push({ date: new Date(date), items: items });
+      }
+    }
+  }
+  
+
   ngOnDestroy(): void {
     console.info('ngOnDestroy called');
-    this.startDateSub$.unsubscribe();
-    this.endDateSub$.unsubscribe();
+    if (this.startDateSub$){
+      this.startDateSub$.unsubscribe();
+    }
+    if (this.endDateSub$) {
+      this.endDateSub$.unsubscribe();
+    }
   }
 
   deletePlace(place_id: string) {
@@ -174,7 +212,12 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   }
 
   openNotesDialog(place_id: string) {
-    const comment = this.comments.find(c => c.place_id === place_id);
+    let comment: any;
+    if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
+      comment = this.saveItinerarySvc.itineraryDetails.find(detail => detail.placeId === place_id);
+    } else {
+      comment = this.comments.find(c => c.place_id === place_id);
+    }
     const currentNotes = comment ? comment.comment : '';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '500px';

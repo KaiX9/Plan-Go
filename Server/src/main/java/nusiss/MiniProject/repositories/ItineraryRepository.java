@@ -131,8 +131,8 @@ public class ItineraryRepository {
                 formattedEndDate);
     }
 
-    public List<Itinerary> getItineraryListByUserId(String userId) {
-        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_ITINERARY_LIST, userId);
+    public List<Itinerary> getItineraryListByUserIdAndUuid(String userId, String uuid) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_ITINERARY_LIST, userId, uuid);
         List<Itinerary> itiList = new ArrayList<Itinerary>();
 
         while (rs.next()) {

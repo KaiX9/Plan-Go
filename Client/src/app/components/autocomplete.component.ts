@@ -48,12 +48,14 @@ export class AutocompleteComponent implements AfterViewInit {
   onStartDateChange(event: MatDatepickerInputEvent<Date>){
     this.minEndDate = event.value;
     if (event.value) {
+      console.info('start date: ', event.value);
       this.datesSvc.setStartDate(event.value);
     }
   }
 
   onEndDateChange(event: MatDatepickerInputEvent<Date>) {
     if (event.value) {
+      console.info('end date: ', event.value);
       this.datesSvc.setEndDate(event.value);
     }
   }

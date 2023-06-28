@@ -25,7 +25,7 @@ public class SQLQueries {
     """;
 
     public static final String GET_ITINERARY_LIST = """
-        select * from itineraries where userId = ?;        
+        select * from itineraries where userId = ? and uuid = ?;        
     """;
 
     public static final String GET_UNIQUE_UUID_FOR_USER = """

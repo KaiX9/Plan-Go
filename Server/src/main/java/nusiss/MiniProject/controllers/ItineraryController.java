@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
@@ -22,6 +23,7 @@ import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import nusiss.MiniProject.models.FullItinerary;
 import nusiss.MiniProject.models.ItineraryDetails;
 import nusiss.MiniProject.models.Login;
 import nusiss.MiniProject.repositories.ItineraryRepository;
@@ -95,6 +97,35 @@ public class ItineraryController {
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (ItineraryDetails d : itiList) {
             arrBuilder.add(d.toJSON());
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(arrBuilder.build().toString());
+    }
+
+    @GetMapping(path="/full/iti")
+    @ResponseBody
+    public ResponseEntity<String> getFullItinerary(@RequestParam String uuid, 
+        HttpServletRequest request) {
+        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
+        System.out.println("authUser: " + authUser);
+        if (authUser == null || authUser.isEmpty() || jwt == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Json.createObjectBuilder()
+                    .add("error", "User is not authenticated, please login")
+                    .build()
+                    .toString()
+                );
+        }
+        String userId = authUser.get().getId();
+        // String userId = "1";
+        List<FullItinerary> fullItinerary = this.itinerarySvc.getFullItinerary(userId, uuid);
+        JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
+        for (FullItinerary fullIti : fullItinerary) {
+            arrBuilder.add(fullIti.toJSON());
         }
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
