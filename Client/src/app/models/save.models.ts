@@ -19,4 +19,5 @@ export interface ItiList {
     location: string
     startDate: Date
     endDate: Date
+    uuid?: string | undefined;
 }

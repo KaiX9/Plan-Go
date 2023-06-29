@@ -10,6 +10,7 @@ const URL_FULL_ITI = '/full/iti'
 @Injectable()
 export class SaveItineraryService {
 
+    uuid?: string;
     city?: string;
     startDate?: string;
     endDate?: string;

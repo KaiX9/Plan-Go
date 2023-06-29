@@ -36,7 +36,7 @@ public class ItineraryRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public String saveItinerary(String payload, String userId) throws JsonMappingException, 
+    public String saveItinerary(String payload, String userId, String uuid) throws JsonMappingException, 
         JsonProcessingException {
         JsonNode rootNode = new ObjectMapper().readTree(payload);
         JsonNode detailsNode = rootNode.get("details");
@@ -45,7 +45,13 @@ public class ItineraryRepository {
         }
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        String uuid = UUID.randomUUID().toString().substring(0, 8);
+        if (uuid == null) {
+            uuid = UUID.randomUUID().toString().substring(0, 8);
+        } else {
+            jdbcTemplate.update(DELETE_ITINERARY_LIST, uuid);
+            jdbcTemplate.update(DELETE_ITINERARY, userId, uuid);
+            // mongoTemplate.remove(new Query(Criteria.where("uuid").is(uuid)), "itineraries");
+        }
 
         for (JsonNode detailNode : detailsNode) {
             JsonNode dateNode = detailNode.get("date");
@@ -76,12 +82,13 @@ public class ItineraryRepository {
                 JsonNode commentNode = itemNode.get("comment");
                 String comment = commentNode != null ? commentNode.asText() : "";
 
-                boolean isSaved = jdbcTemplate.update(SAVE_ITINERARY,
-                        formattedDate,
-                        placeId,
-                        name,
-                        userId,
-                        uuid) > 0;
+                boolean isSaved;
+                isSaved = jdbcTemplate.update(SAVE_ITINERARY,
+                    formattedDate,
+                    placeId,
+                    name,
+                    userId,
+                    uuid) > 0;
                 
                 if (isSaved) {
                     Update update = new Update()
@@ -92,25 +99,22 @@ public class ItineraryRepository {
                     mongoTemplate.upsert(
                         new Query(Criteria
                         .where("uuid").is(uuid)
-                        .and("placeId").is(placeId)
-                        .and("comment").is(comment))
+                        .and("placeId").is(placeId))
                     ,
                         update,
                         "itineraries"
                     );
+                    // Document doc = new Document()
+                    //     .append("uuid", uuid)
+                    //     .append("placeId", placeId)
+                    //     .append("comment", comment);
+                    // mongoTemplate.insert(doc, "itineraries");
                 } else {
                     throw new RuntimeException("Failed to save data");
-                }                
+                }             
             }
         }
-        return uuid;
-    }
-
-    public void saveToItineraryList(String payload, String uuid) throws JsonMappingException, 
-        JsonProcessingException {
-        JsonNode rootNode = new ObjectMapper().readTree(payload);
         JsonNode listNode = rootNode.get("list");
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (listNode == null) {
             throw new IllegalArgumentException("Missing list property");
         }
@@ -129,6 +133,8 @@ public class ItineraryRepository {
                 location,
                 formattedStartDate,
                 formattedEndDate);
+
+        return uuid;
     }
 
     public List<Itinerary> getItineraryListByUserIdAndUuid(String userId, String uuid) {

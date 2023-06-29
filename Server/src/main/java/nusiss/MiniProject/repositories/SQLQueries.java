@@ -13,6 +13,14 @@ public class SQLQueries {
         insert into registered(name, email)
         values (?, ?);        
     """;
+
+    public static final String DELETE_ITINERARY_LIST = """
+        delete from itinerary_list where uuid = ?;
+    """;
+
+    public static final String DELETE_ITINERARY = """
+        delete from itineraries where userId = ? and uuid = ?;        
+    """;
     
     public static final String SAVE_ITINERARY = """
         insert into itineraries(date, placeId, name, userId, uuid)

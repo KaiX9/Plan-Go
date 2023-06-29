@@ -38,7 +38,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   dialog = inject(MatDialog);
   mergedArray: Merged[] = [];
   saveItinerarySvc = inject(SaveItineraryService);
-  uuid: string = '';
+  uuid: string | undefined;
 
   @ViewChild('bucketList') bucketList!: CdkDropList;
 
@@ -59,6 +59,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         this.endDate = new Date(endTimestamp);
         console.info('end date: ', this.endDate);
       }
+      this.uuid = this.saveItinerarySvc.uuid;
       const itineraryDetails = this.saveItinerarySvc.itineraryDetails;
       console.info('itineraryDetails: ', itineraryDetails);
       this.generateSavedDatesArray(this.startDate, this.endDate, itineraryDetails);
@@ -251,7 +252,8 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     const list: ItiList = {
       location: location,
       startDate: this.startDate,
-      endDate: this.endDate
+      endDate: this.endDate,
+      uuid: this.uuid
     }
     this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(
       response => {

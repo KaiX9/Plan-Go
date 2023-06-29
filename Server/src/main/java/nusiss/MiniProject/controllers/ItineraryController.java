@@ -18,6 +18,8 @@ import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
@@ -63,9 +65,15 @@ public class ItineraryController {
         System.out.println("payload: " + payload);
         String userId = authUser.get().getId();
         // String userId = "1";
-        String uuid = this.itineraryRepo.saveItinerary(payload, userId);
-        this.itineraryRepo.saveToItineraryList(payload, uuid);
-        
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode payloadJson = objectMapper.readTree(payload);
+        JsonNode list = payloadJson.get("list");
+        String uuid = null;
+        if (list.has("uuid")) {
+            uuid = list.get("uuid").asText();
+            System.out.println("uuid received from client: " + uuid);
+        }
+        uuid = this.itineraryRepo.saveItinerary(payload, userId, uuid);
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(Json.createObjectBuilder()
