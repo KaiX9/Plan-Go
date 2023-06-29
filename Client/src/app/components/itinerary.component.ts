@@ -214,11 +214,12 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
 
   openNotesDialog(place_id: string) {
     let comment: any;
-    if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
+    comment = this.comments.find(c => c.place_id === place_id);
+    if (!comment && this.saveItinerarySvc.itineraryDetails && 
+      this.saveItinerarySvc.itineraryDetails.length > 0) {
       comment = this.saveItinerarySvc.itineraryDetails.find(detail => detail.placeId === place_id);
-    } else {
-      comment = this.comments.find(c => c.place_id === place_id);
     }
+    console.info('comment: ', comment);
     const currentNotes = comment ? comment.comment : '';
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = '500px';
@@ -226,11 +227,14 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     dialogConfig.data = { notes: currentNotes };
     const dialogRef = this.dialog.open(NotesDialogComponent, dialogConfig);
     dialogRef.afterClosed().subscribe(notes => {
-      if (comment) {
-        comment.comment = notes;
+      console.info('notes: ', notes);
+      const existingComment = this.comments.find(c => c.place_id === place_id);
+      if (existingComment) {
+        existingComment.comment = notes;
       } else {
         this.comments.push({ place_id, comment: notes });
       }
+      console.info('comments: ', this.comments);
     });
   }
 

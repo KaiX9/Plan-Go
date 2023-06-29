@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
@@ -50,7 +49,7 @@ public class ItineraryRepository {
         } else {
             jdbcTemplate.update(DELETE_ITINERARY_LIST, uuid);
             jdbcTemplate.update(DELETE_ITINERARY, userId, uuid);
-            // mongoTemplate.remove(new Query(Criteria.where("uuid").is(uuid)), "itineraries");
+            mongoTemplate.remove(new Query(Criteria.where("uuid").is(uuid)), "itineraries");
         }
 
         for (JsonNode detailNode : detailsNode) {
@@ -91,24 +90,15 @@ public class ItineraryRepository {
                     uuid) > 0;
                 
                 if (isSaved) {
-                    Update update = new Update()
-                        .setOnInsert("uuid", uuid)
-                        .setOnInsert("placeId", placeId)
-                        .setOnInsert("comment", comment);
-
-                    mongoTemplate.upsert(
-                        new Query(Criteria
-                        .where("uuid").is(uuid)
-                        .and("placeId").is(placeId))
-                    ,
-                        update,
-                        "itineraries"
-                    );
-                    // Document doc = new Document()
-                    //     .append("uuid", uuid)
-                    //     .append("placeId", placeId)
-                    //     .append("comment", comment);
-                    // mongoTemplate.insert(doc, "itineraries");
+                    Document doc = new Document()
+                        .append("uuid", uuid)
+                        .append("placeId", placeId)
+                        .append("comment", comment);
+                    Query query = new Query();
+                    query.addCriteria(Criteria.where("uuid").is(uuid).and("placeId").is(placeId));
+                    if (!mongoTemplate.exists(query, "itineraries")) {
+                        mongoTemplate.insert(doc, "itineraries");
+                    }
                 } else {
                     throw new RuntimeException("Failed to save data");
                 }             
