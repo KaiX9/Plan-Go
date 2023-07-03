@@ -1,9 +1,17 @@
 package nusiss.MiniProject.controllers;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,17 +22,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.WebUtils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.auth.oauth2.TokenResponse;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.CalendarScopes;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import com.google.api.services.calendar.Calendar;
 
 import jakarta.json.Json;
 import jakarta.json.JsonArrayBuilder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import nusiss.MiniProject.models.FullItinerary;
 import nusiss.MiniProject.models.ItineraryDetails;
 import nusiss.MiniProject.models.Login;
@@ -44,11 +66,73 @@ public class ItineraryController {
 
     @Autowired
     private ItineraryService itinerarySvc;
-    
+
+    @Value("${client.secret}")
+    private String clientSecret;
+
+    private static final String APPLICATION_NAME = "angular login";
+    private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
+    private static final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+    private static final String redirectUri = "http://localhost:8080/save/calendar";
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    @GetMapping(path="/save/calendar")
+    public RedirectView saveCalendar(@RequestParam("code") String code, @RequestParam("state") String state, 
+        HttpServletResponse response) throws IOException {
+        Map<String, Object> stateData = objectMapper.readValue(state, new
+            TypeReference<Map<String, Object>>() {});
+        String location = (String) stateData.get("location");
+        String startDate = (String) stateData.get("startDate");
+        String endDate = (String) stateData.get("endDate");
+        String uuid = (String) stateData.get("uuid");
+        System.out.println("uuid: " + uuid);
+        GoogleClientSecrets clientSecrets = new GoogleClientSecrets()
+            .setInstalled(new GoogleClientSecrets.Details()
+            .setClientId("40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com")
+            .setClientSecret(clientSecret));
+        AuthorizationCodeFlow flow = new GoogleAuthorizationCodeFlow.Builder(
+            HTTP_TRANSPORT, 
+            JSON_FACTORY, 
+            clientSecrets, 
+            Collections.singleton(CalendarScopes.CALENDAR)
+        ).build();
+        TokenResponse tokenResponse = flow.newTokenRequest(code)
+            .setRedirectUri(redirectUri).execute();
+        Credential credential = flow.createAndStoreCredential(tokenResponse, null);
+        Calendar service = new Calendar.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
+            .setApplicationName(APPLICATION_NAME)
+            .build();
+        Event event = new Event()
+            .setSummary("Trip to " + location)
+            .setLocation(location)
+            .setDescription("Planning to travel to " + location);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        OffsetDateTime startDateTime = OffsetDateTime.parse(startDate);
+        String formattedStartDate = startDateTime.format(formatter);
+        LocalDate correctStartDate = LocalDate.parse(formattedStartDate);
+        EventDateTime start = new EventDateTime()
+            .setDate(new DateTime(true, correctStartDate.toEpochDay() * 86400000L, 0));
+        event.setStart(start);
+        OffsetDateTime endDateTime = OffsetDateTime.parse(endDate);
+        String formattedEndDate = endDateTime.format(formatter);
+        LocalDate correctEndDate = LocalDate.parse(formattedEndDate);
+        EventDateTime end = new EventDateTime()
+            .setDate(new DateTime(true, correctEndDate.toEpochDay() * 86400000L, 0));
+        event.setEnd(end);
+        String calendarId = "primary";
+        event = service.events().insert(calendarId, event).execute();
+        System.out.printf("Event created: %s\n", event.getHtmlLink());
+        Cookie cookie = new Cookie("showSavedDialog", "true");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        String frontendUrl = "http://localhost:4200/#/map/" + location;
+        return new RedirectView(frontendUrl);
+    }
+
     @PostMapping(path="/save")
     @ResponseBody
-    public ResponseEntity<String> saveItinerary(@RequestBody String payload, 
-        HttpServletRequest request) throws JsonMappingException, JsonProcessingException {
+    public ResponseEntity<?> saveItinerary(@RequestBody String payload, 
+        HttpServletRequest request) throws GeneralSecurityException, IOException {
         Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
         String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
@@ -76,10 +160,9 @@ public class ItineraryController {
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(Json.createObjectBuilder()
-            .add("UUID", "Server received itinerary successfully with uuid: %s".formatted(uuid))
+            .add("uuid", uuid)
             .build()
-            .toString()
-        );
+            .toString());
     }
 
     @GetMapping(path="/get/list")

@@ -1,5 +1,6 @@
 package nusiss.MiniProject.repositories;
 
+import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -16,8 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -35,8 +34,8 @@ public class ItineraryRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public String saveItinerary(String payload, String userId, String uuid) throws JsonMappingException, 
-        JsonProcessingException {
+    public String saveItinerary(String payload, String userId, String uuid) 
+        throws IOException {
         JsonNode rootNode = new ObjectMapper().readTree(payload);
         JsonNode detailsNode = rootNode.get("details");
         if (detailsNode == null || !detailsNode.isArray()) {

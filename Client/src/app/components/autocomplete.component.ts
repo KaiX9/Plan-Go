@@ -36,6 +36,7 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     const emailSent = this.getCookie('emailSent');
     if (emailSent === 'true') {
+      document.cookie = 'emailSent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
       const resultString = localStorage.getItem('result');
       if (resultString) {
         const result = JSON.parse(resultString);

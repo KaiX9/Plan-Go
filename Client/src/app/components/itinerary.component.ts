@@ -10,7 +10,6 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NotesDialogComponent } from './dialogs/notes-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { ItiList, Merged } from '../models/save.models';
-import { SavedDialogComponent } from './dialogs/saved-dialog.component';
 import { ItineraryListComponent } from './dialogs/itinerary-list.component';
 
 @Component({
@@ -67,11 +66,9 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       const startDateString = localStorage.getItem('startDate');
       const endDateString = localStorage.getItem('endDate');
       if (startDateString && endDateString) {
-        const startDate = new Date(startDateString);
-        const endDate = new Date(endDateString);
-        this.generateDatesArray(startDate, endDate);
-        localStorage.removeItem('startDate');
-        localStorage.removeItem('endDate');
+        this.startDate = new Date(startDateString);
+        this.endDate = new Date(endDateString);
+        this.generateDatesArray(this.startDate, this.endDate);
       } else {
         this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
           (startDate) => {
@@ -249,6 +246,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   }
 
   savePlan() {
+    this.authorize();
     console.info('datesArray: ', this.datesArray);
     console.info('comments ', this.comments);
     this.mergedArray = this.datesArray.map(date => ({
@@ -272,10 +270,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(
       response => {
         console.info('resp: ', response);
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.width = '300px';
-        dialogConfig.height = '150px';
-        this.dialog.open(SavedDialogComponent, dialogConfig);
+        this.authorize();
       }
     );
   }
@@ -289,5 +284,29 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         });
       }
     );
+  }
+
+  authorize = () => {
+    const clientId = '40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com';
+    const redirectUri = 'http://localhost:8080/save/calendar';
+    const scope = 'https://www.googleapis.com/auth/calendar';
+    const location = this.activatedRoute.snapshot.params['location'];
+    const state = JSON.stringify({
+      location: location,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      uuid: this.uuid
+    });
+  
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?` +
+      `scope=${encodeURIComponent(scope)}&` +
+      `access_type=offline&` +
+      `include_granted_scopes=true&` +
+      `response_type=code&` +
+      `state=${encodeURIComponent(state)}&` +
+      `redirect_uri=${encodeURIComponent(redirectUri)}&` +
+      `client_id=${encodeURIComponent(clientId)}`;
+  
+    window.location.href = url;
   }
 }

@@ -13,6 +13,8 @@ import { PlaceDetailsService } from '../services/place-details.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { DirectionsService } from '../services/directions.service';
 import { SaveItineraryService } from '../services/save-itinerary.service';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SavedDialogComponent } from './dialogs/saved-dialog.component';
 
 @Component({
   selector: 'app-map',
@@ -52,11 +54,21 @@ export class MapComponent implements OnInit, AfterViewInit {
   distanceMatrixResponse: google.maps.DistanceMatrixResponse | null = null;
   placeNames: string[] = [];
   saveItinerarySvc = inject(SaveItineraryService);
+  dialog = inject(MatDialog);
 
   @ViewChild('group') 
   group!: MatButtonToggleGroup;
 
   ngOnInit(): void {
+    const showSavedDialog = this.getCookie('showSavedDialog');
+    console.info('showSavedDialog: ', showSavedDialog);
+    if (showSavedDialog === 'true') {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.width = '300px';
+      dialogConfig.height = '150px';
+      this.dialog.open(SavedDialogComponent, dialogConfig);
+      document.cookie = 'showSavedDialog=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    }
     if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
       const location = this.saveItinerarySvc.city;
       if (location) {
@@ -102,6 +114,17 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   constructor() {}
+
+  getCookie(name: string): string | null {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [key, value] = cookie.trim().split('=');
+      if (key === name) {
+        return value;
+      }
+    }
+    return null;
+  }
 
   onToggleChange() {
     if (this.group.value.length === 0) {
