@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-
   loginSvc = inject(LoginService)
   router = inject(Router)
 
@@ -35,5 +34,4 @@ export class DashboardComponent implements OnInit {
       }
     );
   }
-
 }

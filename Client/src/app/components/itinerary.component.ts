@@ -64,28 +64,38 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       console.info('itineraryDetails: ', itineraryDetails);
       this.generateSavedDatesArray(this.startDate, this.endDate, itineraryDetails);
     } else {
-      this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
-        (startDate) => {
-          if (startDate) {
-            this.startDate = startDate;
-            const endDate = this.datesSvc.endDate.value;
-            if (endDate) {
-              this.generateDatesArray(startDate, endDate);
-            }
-          }
-        }
-      );
-      this.endDateSub$ = this.datesSvc.getEndDate().subscribe(
-        (endDate) => {
-          if (endDate) {
-            this.endDate = endDate;
-            const startDate = this.datesSvc.startDate.value;
+      const startDateString = localStorage.getItem('startDate');
+      const endDateString = localStorage.getItem('endDate');
+      if (startDateString && endDateString) {
+        const startDate = new Date(startDateString);
+        const endDate = new Date(endDateString);
+        this.generateDatesArray(startDate, endDate);
+        localStorage.removeItem('startDate');
+        localStorage.removeItem('endDate');
+      } else {
+        this.startDateSub$ = this.datesSvc.getStartDate().subscribe(
+          (startDate) => {
             if (startDate) {
-              this.generateDatesArray(startDate, endDate);
+              this.startDate = startDate;
+              const endDate = this.datesSvc.endDate.value;
+              if (endDate) {
+                this.generateDatesArray(startDate, endDate);
+              }
             }
           }
-        }
-      );
+        );
+        this.endDateSub$ = this.datesSvc.getEndDate().subscribe(
+          (endDate) => {
+            if (endDate) {
+              this.endDate = endDate;
+              const startDate = this.datesSvc.startDate.value;
+              if (startDate) {
+                this.generateDatesArray(startDate, endDate);
+              }
+            }
+          }
+        );
+      }
     }
   }
 

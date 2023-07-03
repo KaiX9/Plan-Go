@@ -64,7 +64,6 @@ public class ItineraryController {
         }
         System.out.println("payload: " + payload);
         String userId = authUser.get().getId();
-        // String userId = "1";
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode payloadJson = objectMapper.readTree(payload);
         JsonNode list = payloadJson.get("list");
@@ -100,7 +99,6 @@ public class ItineraryController {
                 );
         }
         String userId = authUser.get().getId();
-        // String userId = "4";
         List<ItineraryDetails> itiList = this.itinerarySvc.getItineraryList(userId);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (ItineraryDetails d : itiList) {
@@ -129,7 +127,6 @@ public class ItineraryController {
                 );
         }
         String userId = authUser.get().getId();
-        // String userId = "1";
         List<FullItinerary> fullItinerary = this.itinerarySvc.getFullItinerary(userId, uuid);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (FullItinerary fullIti : fullItinerary) {
@@ -140,28 +137,3 @@ public class ItineraryController {
             .body(arrBuilder.build().toString());
     }
 }
-
-// payload: 
-//     {
-//         "details":
-//         [
-//             {
-//                 "date":"2023-06-26T16:00:00.000Z",
-//                 "items":[{"place_id":"ChIJw4em5_OipBIReRhjzZwr0JU",
-//                 "name":"BeTendency - Gestion de apartmentos turisticos",
-//                 "comment":"2"}]
-//             },
-//             {
-//                 "date":"2023-06-27T16:00:00.000Z",
-//                 "items":[{"place_id":"ChIJCWnbwfOipBIRUIfjsQvUQJ0",
-//                 "name":"H10 Catalunya Plaça Boutique Hotel",
-//                 "comment":"1"}]
-//             }
-//         ],
-//         "list":
-//         {
-//             "location":"Barcelona, Spain",
-//             "startDate":"2023-06-26T16:00:00.000Z",
-//             "endDate":"2023-06-27T16:00:00.000Z"
-//         }
-//     }

@@ -20,6 +20,22 @@ h1 {
     font-size: 42px;
 }
 
+.add-friends {
+    display: inline-block;    
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.add-friends:hover {
+    color: #3f51b5;
+}
+
+.add-friends-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-right: 210px;
+}
+
 .start-exploring-button {
     border-radius: 999px;
     padding: 24px 32px;

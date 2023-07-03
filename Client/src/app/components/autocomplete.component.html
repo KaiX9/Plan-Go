@@ -9,11 +9,11 @@
   <body>
     <div class="container">
       <h1>Planning for a new trip?</h1>
-      <mat-form-field appearance="outline" style="padding: 24px">
+      <mat-form-field appearance="outline" style="margin-top: 10px;">
         <mat-label>Where to?</mat-label>
         <input #inputField matInput [placeholder]="placeholder" />
       </mat-form-field>
-      <mat-form-field appearance="outline" style="padding: 24px">
+      <mat-form-field appearance="outline">
         <mat-label>Start Date:</mat-label>
         <input
           matInput
@@ -27,7 +27,7 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #startDatePicker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="outline" style="padding: 24px">
+      <mat-form-field appearance="outline">
         <mat-label>End Date:</mat-label>
         <input
           matInput
@@ -41,6 +41,31 @@
         ></mat-datepicker-toggle>
         <mat-datepicker #endDatePicker></mat-datepicker>
       </mat-form-field>
+      <mat-form-field appearance="outline" *ngIf="showInput">
+        <mat-label>Invite friends:</mat-label>
+        <input 
+          #inviteInput 
+          matInput 
+          placeholder="Email address here"
+          [matAutocomplete]="auto"
+          (input)="onInput(inviteInput.value)"
+          (keyup.enter)="onInvite(inviteInput.value)"/>
+          <mat-autocomplete #auto="matAutocomplete"
+            (optionSelected)="onOptionSelected($event.option.value)">
+            <mat-option *ngIf="inviteInputValue" [value]="inviteInputValue">
+              Send email to {{ inviteInputValue }}
+            </mat-option>
+          </mat-autocomplete>
+      </mat-form-field>
+      <div class="add-friends-container">
+        <span class="add-friends" (click)="showInput = true">+ Add friends</span>
+      </div>
+      <div *ngFor="let email of invitees; let i = index" style="margin-bottom: 8px;">
+        {{ email }}
+        <button mat-icon-button (click)="onRemoveInvitee(i)">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
       <button
         class="start-exploring-button"
         mat-raised-button
