@@ -2,9 +2,9 @@ package nusiss.MiniProject.controllers;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
-import java.time.LocalDate;
 import java.time.OffsetDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -85,8 +85,11 @@ public class ItineraryController {
         String startDate = (String) stateData.get("startDate");
         String endDate = (String) stateData.get("endDate");
         String uuid = (String) stateData.get("uuid");
+        System.out.println("startDate: " + startDate);
+        System.out.println("endDate: " + endDate);
         System.out.println("uuid: " + uuid);
-        GoogleClientSecrets clientSecrets = new GoogleClientSecrets()
+        if (uuid == null) {
+            GoogleClientSecrets clientSecrets = new GoogleClientSecrets()
             .setInstalled(new GoogleClientSecrets.Details()
             .setClientId("40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com")
             .setClientSecret(clientSecret));
@@ -106,22 +109,23 @@ public class ItineraryController {
             .setSummary("Trip to " + location)
             .setLocation(location)
             .setDescription("Planning to travel to " + location);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         OffsetDateTime startDateTime = OffsetDateTime.parse(startDate);
-        String formattedStartDate = startDateTime.format(formatter);
-        LocalDate correctStartDate = LocalDate.parse(formattedStartDate);
-        EventDateTime start = new EventDateTime()
-            .setDate(new DateTime(true, correctStartDate.toEpochDay() * 86400000L, 0));
-        event.setStart(start);
+        ZoneId singaporeZone = ZoneId.of("Asia/Singapore");
+        ZonedDateTime startSingaporeDateTime = startDateTime.atZoneSameInstant(singaporeZone).plusDays(1);
         OffsetDateTime endDateTime = OffsetDateTime.parse(endDate);
-        String formattedEndDate = endDateTime.format(formatter);
-        LocalDate correctEndDate = LocalDate.parse(formattedEndDate);
+        ZonedDateTime endSingaporeDateTime = endDateTime.atZoneSameInstant(singaporeZone).plusDays(2);
+        EventDateTime start = new EventDateTime()
+            .setDate(new DateTime(true, startSingaporeDateTime.toInstant().toEpochMilli(), 0));
+        event.setStart(start);
+        System.out.println("start date: " + start);
         EventDateTime end = new EventDateTime()
-            .setDate(new DateTime(true, correctEndDate.toEpochDay() * 86400000L, 0));
+            .setDate(new DateTime(true, endSingaporeDateTime.toInstant().toEpochMilli(), 0));
         event.setEnd(end);
+        System.out.println("end date: " + end);
         String calendarId = "primary";
         event = service.events().insert(calendarId, event).execute();
         System.out.printf("Event created: %s\n", event.getHtmlLink());
+        }
         Cookie cookie = new Cookie("showSavedDialog", "true");
         cookie.setPath("/");
         response.addCookie(cookie);

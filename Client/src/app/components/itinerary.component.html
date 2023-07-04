@@ -4,7 +4,9 @@
       <button class="back-button" role="button" (click)="savePlan()">
         <span class="text"><mat-icon>save</mat-icon>Save</span>
       </button>
-      <button class="iti-list-button" role="button" (click)="getItiList()">Saved Itineraries</button>
+      <button class="iti-list-button" role="button" (click)="getItiList()">
+        Saved Itineraries
+      </button>
     </div>
     <br />
     <ul
@@ -48,15 +50,17 @@
           class="dates-toolbar"
           [class.clicked]="clickedDate === dateWithItems.date.toISOString()"
           color="primary"
-          (click)="showDirections(dateWithItems.items, dateWithItems.date)"
+          (click)="
+            dateWithItems.items.length > 0 &&
+              toggleDirections(dateWithItems.items, dateWithItems.date)
+          "
         >
           <span class="date-format">{{
             dateWithItems.date | date : "d MMM y"
           }}</span>
         </mat-toolbar>
         <li
-          *ngFor="let item of dateWithItems.items; 
-          let j = index"
+          *ngFor="let item of dateWithItems.items; let j = index"
           cdkDrag
           class="alpha-list-item"
         >
@@ -75,7 +79,7 @@
               <img src="/assets/add.png" />
             </button>
             <button (click)="openNotesDialog(item.place_id)">
-              <img src="/assets/notes.png">
+              <img src="/assets/notes.png" />
             </button>
           </div>
         </li>

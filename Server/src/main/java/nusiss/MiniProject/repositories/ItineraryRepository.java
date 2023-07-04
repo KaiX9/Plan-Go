@@ -2,6 +2,8 @@ package nusiss.MiniProject.repositories;
 
 import java.io.IOException;
 import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +60,9 @@ public class ItineraryRepository {
             }
             String dateString = dateNode.asText();
             OffsetDateTime dateTime = OffsetDateTime.parse(dateString);
-            String formattedDate = dateTime.format(formatter);
+            ZoneId singaporeZone = ZoneId.of("Asia/Singapore");
+            ZonedDateTime singaporeDateTime = dateTime.atZoneSameInstant(singaporeZone);
+            String formattedDate = singaporeDateTime.format(formatter);
             JsonNode itemsNode = detailNode.get("items");
             if (itemsNode == null || !itemsNode.isArray()) {
                 throw new IllegalArgumentException("Missing or invalid items property");
@@ -112,11 +116,14 @@ public class ItineraryRepository {
         JsonNode startDateNode = listNode.get("startDate");
         String startDateString = startDateNode.asText();
         OffsetDateTime startDateTime = OffsetDateTime.parse(startDateString);
-        String formattedStartDate = startDateTime.format(formatter);
+        ZoneId singaporeZone = ZoneId.of("Asia/Singapore");
+        ZonedDateTime singaporeStartDateTime = startDateTime.atZoneSameInstant(singaporeZone);
+        String formattedStartDate = singaporeStartDateTime.format(formatter);
         JsonNode endDateNode = listNode.get("endDate");
         String endDateString = endDateNode.asText();
         OffsetDateTime endDateTime = OffsetDateTime.parse(endDateString);
-        String formattedEndDate = endDateTime.format(formatter);
+        ZonedDateTime singaporeEndDateTime = endDateTime.atZoneSameInstant(singaporeZone);
+        String formattedEndDate = singaporeEndDateTime.format(formatter);
         this.jdbcTemplate.update(ITINERARY_LIST,
                 uuid,
                 location,

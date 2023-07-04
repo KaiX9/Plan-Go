@@ -157,3 +157,9 @@ body,
     color: #656363;
     margin-left: 10px;
 }
+
+.no-photos {
+    display: flex;
+    align-items: center;
+    height: 200px;
+}

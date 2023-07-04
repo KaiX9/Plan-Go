@@ -33,7 +33,7 @@
     <div class="place-details">
       <div class="place-name-rating">
         <h2>{{ place.name }}</h2>
-        <div class="rating">
+        <div class="rating" *ngIf="place.rating">
           <ng-container *ngIf="place.rating && place.rating >= 0">
             <span
               class="rating-star fas fa-star"
@@ -46,14 +46,18 @@
           </ng-container>
           &nbsp;({{ place.user_ratings_total }})
         </div>
+        <div *ngIf="!place.rating"><em>No rating found</em></div>
       </div>
       <p>
         <mat-icon class="icon">location_on</mat-icon>
         {{ place.formatted_address }}
       </p>
-      <p>
+      <p *ngIf="place.formatted_phone_number">
         <mat-icon class="icon">call</mat-icon>
         {{ place.formatted_phone_number }}
+      </p>
+      <p *ngIf="!place.formatted_phone_number">
+        <mat-icon class="icon">call</mat-icon><em>No phone found</em>
       </p>
       <ng-container *ngIf="place.website; else noWebsite">
         <mat-icon class="icon">language</mat-icon
@@ -91,6 +95,7 @@
           <hr />
         </div>
       </div>
+      <div *ngIf="!place.reviews"><em>No reviews found</em></div>
     </div>
   </div>
 </div>

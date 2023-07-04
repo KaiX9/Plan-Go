@@ -28,7 +28,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   datesList!: CdkDropList;
   changeDetector = inject(ChangeDetectorRef);
   directionsSvc = inject(DirectionsService);
-  clickedDate!: string;
+  clickedDate!: string | null;
   isToolbarClicked = false;
   router = inject(Router);
   activatedRoute = inject(ActivatedRoute);
@@ -167,6 +167,11 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     }
     console.info('datesListData: ', datesListData);
     console.info('datesArray: ', this.datesArray);
+    const dateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
+      === datesListData);
+    if (dateWithItems && this.clickedDate === dateWithItems.date.toISOString()) {
+      this.showDirections(dateWithItems.items, dateWithItems.date);
+    }
   }
 
   addItemToDatesList(place_id: string, datesListData: any[]) {
@@ -176,6 +181,11 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     }
     console.info('datesListData: ', datesListData);
     console.info('datesArray: ', this.datesArray);
+    const dateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
+      === datesListData);
+    if (dateWithItems && this.clickedDate === dateWithItems.date.toISOString()) {
+      this.showDirections(dateWithItems.items, dateWithItems.date);
+    }
   }
 
   drop(event: CdkDragDrop<Place[]>) {
@@ -188,11 +198,38 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       console.info('savedPlaces: ', this.savedPlacesSvc.savedPlaces);
       const datesListData = event.container.data;
       datesListData.push(item);
+      const dateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
+        === datesListData);
+      if (dateWithItems && this.clickedDate === dateWithItems.date.toISOString()) {
+        this.showDirections(dateWithItems.items, dateWithItems.date);
+      }
     } else {
       transferArrayItem(event.previousContainer.data,
                         event.container.data,
                         event.previousIndex,
                         event.currentIndex);
+    }
+    const prevDatesListData = event.previousContainer.data;
+    const prevDateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
+      === prevDatesListData);
+    if (prevDateWithItems && this.clickedDate === prevDateWithItems.date.toISOString()) {
+      this.showDirections(prevDateWithItems.items, prevDateWithItems.date);
+    }
+    const currDatesListData = event.container.data;
+    const currDateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
+      === currDatesListData);
+    if (currDateWithItems && this.clickedDate === currDateWithItems.date.toISOString()) {
+      this.showDirections(currDateWithItems.items, currDateWithItems.date);
+    }
+  }
+
+  toggleDirections(items: any[], date: Date) {
+    if (this.clickedDate === date.toISOString()) {
+      this.clickedDate = null;
+      this.directionsSvc.updateIsToolbarClicked(false);
+      this.isToolbarClicked = false;
+    } else {
+      this.showDirections(items, date);
     }
   }
 
@@ -246,7 +283,6 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   }
 
   savePlan() {
-    this.authorize();
     console.info('datesArray: ', this.datesArray);
     console.info('comments ', this.comments);
     this.mergedArray = this.datesArray.map(date => ({
@@ -270,7 +306,7 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(
       response => {
         console.info('resp: ', response);
-        this.authorize();
+        this.authorize(list);
       }
     );
   }
@@ -286,18 +322,16 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
     );
   }
 
-  authorize = () => {
+  authorize = (list: ItiList) => {
     const clientId = '40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com';
     const redirectUri = 'http://localhost:8080/save/calendar';
     const scope = 'https://www.googleapis.com/auth/calendar';
-    const location = this.activatedRoute.snapshot.params['location'];
     const state = JSON.stringify({
-      location: location,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      uuid: this.uuid
-    });
-  
+      location: list.location,
+      startDate: list.startDate,
+      endDate: list.endDate,
+      uuid: list.uuid
+    });  
     const url = `https://accounts.google.com/o/oauth2/v2/auth?` +
       `scope=${encodeURIComponent(scope)}&` +
       `access_type=offline&` +
