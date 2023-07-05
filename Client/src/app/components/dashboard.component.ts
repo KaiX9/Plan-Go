@@ -17,11 +17,13 @@ export class DashboardComponent implements OnInit {
         console.info(JSON.stringify(result));
       },
       error => {
-        this.router.navigate(['/']).then(() => {
-          alert(JSON.stringify(error.error));
-        });
+        if (error) {
+          this.router.navigate(['/']).then(() => {
+            alert(JSON.stringify(error.error));
+          });
+        }
       }
-    )
+    );
   }
 
   signout() {
