@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    box-sizing: border-box;
+}
+
+.banner {
+    width: 100%;
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(70, 70, 70, 0.4),rgba(70, 70, 70, 0.4));
+    background-position: center;
+    background-size: center;
+}
+
+.navbar {
+    width: 90%;
+    height: 80px;
+    padding: 30px;
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    width: 60px;
+    cursor: pointer;
+    color: white;
+    font-size: 24px;
+    font-family: 'Brush Script MT', cursive;
+    font-style: italic;
+}
+
+.navbar ul li {
+    list-style: none;
+    display: inline-block;
+    margin: 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    text-transform: uppercase;
+    color: white;
+    font-weight: 600;
+    padding: 15px;
+}
+
+li a:hover {
+    background: white;
+    transition: 0.5s;
+}
+
+.navbar ul li a:hover {
+    color: black;
+}

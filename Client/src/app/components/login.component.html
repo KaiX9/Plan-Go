@@ -5,14 +5,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login Page</title>
-    <link rel="stylesheet" type="text/css" href="login.component.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="login.component.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Jost:wght@500&display=swap"
       rel="stylesheet"
-    />
+    /> -->
   </head>
   <body>
-    <div class="main">
+    <!-- <div class="main">
       <input type="checkbox" id="chk" aria-hidden="true" />
       <div class="signup">
         <form [formGroup]="signupForm" (submit)="register()">
@@ -60,6 +60,92 @@
             ></div>
           </div>
         </form>
+      </div>
+    </div> -->
+    <div class="video-container">
+      <video autoplay loop muted plays-inline>
+        <source src="/assets/plane.mp4" type="video/mp4" />
+      </video>
+    </div>
+    <div class="container">
+      <div class=wrapper>
+        <span class="icon-close"><mat-icon>close</mat-icon></span>
+        <div class="form-box login">
+            <h2>Login</h2>
+            <form [formGroup]="loginForm" (submit)="login()">
+                <div class="input-box">
+                    <span class="icon">
+                        <mat-icon>mail</mat-icon>
+                    </span>
+                    <input type="email" required formControlName="email">
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><mat-icon>
+                        lock</mat-icon></span>
+                    <input type="password" required formControlName="password">
+                    <label>Password</label>
+                </div>
+                <button type="submit" class="btn" [disabled]="loginForm.invalid">Login</button>
+                <div class="google">
+                  <div
+                    id="g_id_onload"
+                    data-client_id="40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com"
+                    data-context="signin"
+                    data-ux_mode="popup"
+                    data-callback="handleResponse"
+                    data-auto_prompt="false"
+                  ></div>
+      
+                  <div
+                    class="g_id_signin"
+                    data-type="icon"
+                    data-shape="circle"
+                    data-theme="filled_blue"
+                    data-text="continue_with"
+                    data-size="large"
+                  ></div>
+                </div>
+                <div class="login-register">
+                    <p>Don't have an account? <a href="#" class="register-link">Register</a></p>
+                </div>
+            </form>
+        </div>
+        <div class="form-box register">
+            <h2>Registration</h2>
+            <form [formGroup]="signupForm" (submit)="register()">
+                <div class="input-box">
+                    <span class="icon">
+                        <mat-icon>person_outline</mat-icon>
+                    </span>
+                    <input type="text" required formControlName="name">
+                    <label>Name</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon">
+                        <mat-icon>mail</mat-icon>
+                    </span>
+                    <input type="email" required formControlName="email">
+                    <label>Email</label>
+                </div>
+                <div class="input-box">
+                    <span class="icon"><mat-icon>
+                        lock</mat-icon></span>
+                    <input type="password" required formControlName="password">
+                    <label>Password</label>
+                </div>
+                <button type="submit" class="btn" [disabled]="signupForm.invalid">Register</button>
+                <div class="login-register">
+                    <p>Already have an account? <a href="#" class="login-link">Login</a></p>
+                </div>
+            </form>
+        </div>
+      </div>
+    </div>
+    <div class="content">
+      <h1>READY TO TRAVEL?</h1>
+      <div>
+        <button type="button" class="btnLogin-popup">Login</button>
       </div>
     </div>
   </body>

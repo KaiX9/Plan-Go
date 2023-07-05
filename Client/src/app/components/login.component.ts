@@ -19,6 +19,30 @@ export class LoginComponent implements OnInit {
   ngZone = inject(NgZone)
 
   ngOnInit(): void {
+    const wrapper = document.querySelector('.wrapper') as HTMLElement;
+    const loginLink = document.querySelector('.login-link') as HTMLElement;
+    const registerLink = document.querySelector('.register-link') as HTMLElement;
+    const btnPopup = document.querySelector('.btnLogin-popup') as HTMLElement;
+    const iconClose = document.querySelector('.icon-close') as HTMLElement;
+    const contentDiv = document.querySelector('.content') as HTMLElement;
+
+    registerLink.addEventListener('click', () => {
+      wrapper.classList.add('active');
+    });
+
+    loginLink.addEventListener('click', () => {
+      wrapper.classList.remove('active');
+    });
+
+    btnPopup?.addEventListener('click', () => {
+      wrapper.classList.add('active-popup');
+      contentDiv.classList.add('show');
+    })
+
+    iconClose.addEventListener('click', () => {
+      wrapper.classList.remove('active-popup');
+      contentDiv.classList.remove('show');
+    })
     this.loginForm = this.createLoginForm();
     this.signupForm = this.createSignUpForm();
     (window as any).handleResponse = (response: any) => {

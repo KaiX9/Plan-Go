@@ -1,1 +1,23 @@
-<router-outlet></router-outlet>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Travel App</title>
+  </head>
+  <body>
+    <div class="banner">
+      <div class="navbar">
+        <span class="logo" (click)="clickHome()">TRAVELAPP</span>
+        <ul>
+          <li><a href="#" (click)="clickHome()">Home</a></li>
+          <li><a href="#">Guides</a></li>
+          <li><a href="#">Plan an itinerary</a></li>
+          <li><a href="#">Contact us</a></li>
+        </ul>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </body>
+</html>
