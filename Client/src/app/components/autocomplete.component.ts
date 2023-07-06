@@ -4,6 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { DatesService } from '../services/dates.service';
 import { HttpClient } from '@angular/common/http';
+import { LoginService } from '../services/login.service';
+import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-autocomplete',
@@ -32,8 +35,25 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
   invitees: string[] = [];
   inviteInputValue = '';
   http = inject(HttpClient);
+  loginSvc = inject(LoginService);
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    this.loginSvc.autocomplete().subscribe(
+      result => {
+        console.info(JSON.stringify(result));
+      },
+      error => {
+        if (error) {
+          this.router.navigate(['/']).then(() => {
+            const errorMessage = error.error.error;
+            this.dialog.open(AuthenticateErrorComponent, {
+              data: { message: errorMessage }
+            });
+          });
+        }
+      }
+    );
     const emailSent = this.getCookie('emailSent');
     if (emailSent === 'true') {
       document.cookie = 'emailSent=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';

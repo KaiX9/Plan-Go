@@ -1,0 +1,9 @@
+.dialog-title,
+.dialog-content {
+    text-align: center;
+}
+
+.dialog-actions {
+    display: flex;
+    justify-content: center;
+}

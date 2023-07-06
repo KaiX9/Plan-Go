@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Writing a travel guide?</h1>
+      <p>Share with others by writing up a past itinerary.</p>
+      <mat-form-field appearance="outline" style="margin-top: 10px">
+        <mat-label>For where?</mat-label>
+        <mat-select (selectionChange)="onSelectionChange($event)">
+          <mat-option
+            *ngFor="let itinerary of itineraryList$ | async"
+            [value]="itinerary.uuid"
+          >
+            {{ itinerary.city }} ({{ itinerary.startDate }} to
+            {{ itinerary.endDate }})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button
+        class="start-writing-button"
+        mat-raised-button
+        color="warn"
+        (click)="onWriting(selectedItineraryUuid)"
+        [disabled]="!selectedItineraryUuid"
+      >
+        Start Writing!
+      </button>
+    </div>
+  </body>
+</html>

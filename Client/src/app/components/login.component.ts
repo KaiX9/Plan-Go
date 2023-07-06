@@ -57,6 +57,7 @@ export class LoginComponent implements OnInit {
       .then(response => response.json())
       .then(data => {
         console.info('data from /auth/login: ', data);
+        document.cookie = 'userAuthenticated=true; path=/; expires=Tue, 19 Jan 2038 03:14:07 UTC';
         this.ngZone.run(() => {
           this.router.navigate(['/dashboard']);
         })
@@ -112,6 +113,7 @@ export class LoginComponent implements OnInit {
       this.loginSvc.authenticateLogin(loginData).subscribe(
         result => {
           alert(JSON.stringify(result));
+          document.cookie = 'userAuthenticated=true; path=/; expires=Tue, 19 Jan 2038 03:14:07 UTC';
           this.router.navigate(['/dashboard']);
         },
         error => {

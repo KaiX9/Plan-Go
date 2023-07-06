@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
+import { LoginService } from './services/login.service';
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,10 @@ import { filter } from 'rxjs';
 })
 export class AppComponent implements OnInit{  
   router = inject(Router);
+  loginSvc = inject(LoginService);
 
   ngOnInit(): void {
+    const logoutButton = document.querySelector('.logout-button') as HTMLElement;
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: Event) => {
@@ -19,6 +22,16 @@ export class AppComponent implements OnInit{
         const logoElement = document.querySelector('.logo') as HTMLElement;
         const navbarLinks = document.querySelectorAll('.navbar ul li a') as 
           NodeListOf<HTMLAnchorElement>;
+        const isLoggedIn = this.isUserLoggedIn();
+        if (isLoggedIn) {
+          if (logoutButton) {
+            logoutButton.style.display = 'block';
+          }
+        } else {
+          if (logoutButton) {
+            logoutButton.style.display = 'none';
+          }
+        }
         if (bannerElement) {
           if (navigationEndEvent.url === '/') {
             bannerElement.style.backgroundImage = 'linear-gradient(rgba(70, 70, 70, 0.4),rgba(70, 70, 70, 0.4))';
@@ -51,10 +64,29 @@ export class AppComponent implements OnInit{
                 link.style.transition = '0.5s';
                 link.style.color = 'black';
               });
-            })
+            });
           }
         }
-      })
+      });
+  }
+
+  isUserLoggedIn() {
+    const allCookies = document.cookie;
+    const cookiesArray = allCookies.split('; ');
+    const authCookie = cookiesArray.find(cookie => cookie.startsWith('userAuthenticated='));
+    return authCookie && authCookie.split('=')[1] === 'true';
+  }
+
+  signout() {
+    this.loginSvc.signout().subscribe(
+      result => {
+        console.info(JSON.stringify(result));
+        document.cookie = 'userAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+        this.router.navigate(['/']).then(() => {
+          location.reload();
+        });
+      }
+    );
   }
 
   clickLogo() {
@@ -73,5 +105,9 @@ export class AppComponent implements OnInit{
 
   toAutocomplete() {
     this.router.navigate(['/autocomplete']);
+  }
+
+  toGuides() {
+    this.router.navigate(['/guide']);
   }
 }

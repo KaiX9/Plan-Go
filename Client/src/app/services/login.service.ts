@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 const URL_LOGIN = '/auth/login';
 const URL_REGISTER = '/register';
 const URL_DASHBOARD = '/dashboard';
+const URL_AUTOCOMPLETE = '/autocomplete';
 const URL_SIGNOUT = '/signout';
 
 @Injectable()
@@ -29,4 +30,8 @@ export class LoginService {
         return this.http.delete<any>(URL_SIGNOUT);
     }
     
+    autocomplete(): Observable<any> {
+        return this.http.get<any>(URL_AUTOCOMPLETE);
+    }
+
 }

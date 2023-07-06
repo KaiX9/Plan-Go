@@ -1,0 +1,36 @@
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh - 10px;
+}
+
+.container p {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 15px;
+    color: grey;
+    font-style: italic;
+}
+
+mat-form-field {
+    width: 300px;
+}
+
+h1 {
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 42px;
+}
+
+.start-writing-button {
+    margin-top: 20px;
+    border-radius: 999px;
+    padding: 24px 32px;
+    font-size: 18px;
+}

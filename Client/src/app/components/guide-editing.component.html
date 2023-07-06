@@ -1,0 +1,40 @@
+<form [formGroup]="guideForm">
+  <mat-form-field appearance="fill">
+    <mat-label>Title</mat-label>
+    <input matInput type="text" formControlName="name" />
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <textarea
+      matInput
+      cols="30"
+      rows="3"
+      formControlName="summary"
+      placeholder="Give readers a short summary"
+    ></textarea>
+  </mat-form-field>
+  <div formGroupName="comments">
+    <div *ngFor="let date of dates; let i = index">
+      <div class="comment-container">
+        <div class="day-number">Day {{ i + 1 }}</div>
+        <div class="place-names">
+          <div>Places to go:</div>
+          <ul>
+            <li *ngFor="let place of getPlacesForDate(date)">
+              {{ place.name }}
+            </li>
+          </ul>
+        </div>
+        <mat-form-field appearance="fill" class="comment-field">
+          <mat-label>Notes for Day {{ i + 1 }}</mat-label>
+          <textarea
+            matInput
+            cols="30"
+            rows="2"
+            [formControlName]="date"
+          ></textarea>
+        </mat-form-field>
+      </div>
+      <hr><br>
+    </div>
+  </div>
+</form>

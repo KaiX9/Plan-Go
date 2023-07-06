@@ -14,6 +14,7 @@
 }
 
 .navbar {
+    position: relative;
     width: 90%;
     height: 60px;
     padding: 30px;
@@ -53,4 +54,22 @@ li a:hover {
 
 .navbar ul li a:hover {
     color: black;
+}
+
+.logout-button {
+    display: none;
+}
+
+.logout-button button {
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.logout-button button:hover {
+    background-color: #303f9f;
 }

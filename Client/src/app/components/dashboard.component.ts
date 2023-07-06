@@ -1,6 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -8,8 +10,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  loginSvc = inject(LoginService)
-  router = inject(Router)
+  loginSvc = inject(LoginService);
+  router = inject(Router);
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
     this.loginSvc.dashboard().subscribe(
@@ -19,20 +22,12 @@ export class DashboardComponent implements OnInit {
       error => {
         if (error) {
           this.router.navigate(['/']).then(() => {
-            alert(JSON.stringify(error.error));
+            const errorMessage = error.error.error;
+            this.dialog.open(AuthenticateErrorComponent, {
+              data: { message: errorMessage }
+            });
           });
         }
-      }
-    );
-  }
-
-  signout() {
-    this.loginSvc.signout().subscribe(
-      result => {
-        alert(JSON.stringify(result));
-        this.router.navigate(['/']).then(() => {
-          location.reload();
-        });
       }
     );
   }

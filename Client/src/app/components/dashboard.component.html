@@ -7,8 +7,35 @@
     <title>Document</title>
 </head>
 <body>
-    <a [routerLink]="['/map']">Map</a>&nbsp;&nbsp;<a [routerLink]="['/autocomplete']">Autocomplete</a>
-    <br><br>
-    <button type="button" (click)="signout()">Sign Out</button>
+    <h2>Explore</h2>
+    <h3>Popular Destinations</h3>
+    <table>
+        <tr>
+            <td>
+                <div class="image-container">
+                    <img src="/assets/venice.jpg">
+                </div>
+                <div>Venice</div>
+                <div>Great place!</div>
+                <div>John Lim</div>
+            </td>
+            <td>
+                <div class="image-container">
+                    <img src="/assets/sydney.jpg">
+                </div>
+                <div>Sydney</div>
+                <div>Amazing views!</div>
+                <div>Jane Seah</div>
+            </td>
+            <td>
+                <div class="image-container">
+                    <img src="/assets/san_francisco.jpg">
+                </div>
+                <div>San Francisco</div>
+                <div>Must visit!</div>
+                <div>Bob Smith</div>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

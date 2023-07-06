@@ -27,6 +27,10 @@ import { NotesDialogComponent } from './components/dialogs/notes-dialog.componen
 import { SaveItineraryService } from './services/save-itinerary.service';
 import { SavedDialogComponent } from './components/dialogs/saved-dialog.component';
 import { ItineraryListComponent } from './components/dialogs/itinerary-list.component';
+import { AuthenticateErrorComponent } from './components/dialogs/authenticate-error.component';
+import { GuideComponent } from './components/guide.component';
+import { GuideEditingComponent } from './components/guide-editing.component';
+import { GuidesService } from './services/guides.service';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -47,6 +51,8 @@ const routes: Routes = [
       },
     ],
   },
+  { path: 'guide', component: GuideComponent },
+  { path: 'guide/edit', component: GuideEditingComponent },
   { path: 'autocomplete', component: AutocompleteComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
@@ -63,7 +69,10 @@ const routes: Routes = [
     DirectionsInstructionsComponent,
     NotesDialogComponent,
     SavedDialogComponent,
-    ItineraryListComponent
+    ItineraryListComponent,
+    AuthenticateErrorComponent,
+    GuideComponent,
+    GuideEditingComponent
   ],
   imports: [
     BrowserModule, 
@@ -83,6 +92,7 @@ const routes: Routes = [
     DatesService,
     DirectionsService,
     SaveItineraryService,
+    GuidesService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]

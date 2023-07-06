@@ -252,6 +252,30 @@ public class LoginController {
         );
     }
 
+    @GetMapping(path="/autocomplete")
+    public ResponseEntity<?> goToAutocomplete(HttpServletRequest request) {
+        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
+        System.out.println("authUser: " + authUser);
+        if (authUser == null || authUser.isEmpty() || jwt == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Json.createObjectBuilder()
+                    .add("error", "User is not authenticated, please login")
+                    .build()
+                    .toString()
+                );
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Json.createObjectBuilder()
+            .add("message", "User is authenticated")
+            .build()
+            .toString()
+        );
+    }
+
     @DeleteMapping(path="/signout")
     public ResponseEntity<?> logoutUser(HttpServletRequest request, 
         HttpServletResponse response) {

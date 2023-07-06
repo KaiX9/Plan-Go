@@ -1,0 +1,59 @@
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+mat-form-field {
+    width: 50%;
+}
+
+input[formControlName='name'] {
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    font-size: 42px;
+    font-weight: bold;
+    width: 100%;
+    height: 70px;
+}
+
+.comment-container {
+    display: flex;
+    align-items: center;
+}
+
+.day-number {
+    flex: 1;
+    margin-right: 80px;
+    font-weight: bold;
+    font-size: 48px;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.place-names {
+    flex: 1;
+    margin-right: 80px;
+}
+
+.place-names div {
+    font-weight: bold;
+    font-size: 28px;
+    color: lightslategray;
+}
+
+.place-names li {
+    list-style: upper-alpha;
+    font-family: "Arial", sans-serif;
+}
+
+.comment-field textarea {
+    width: 100%;
+    height: 100px;
+}
+
+.comment-field {
+    flex: 1;
+}
+
+hr {
+    border-color: #d3d3d3;
+}
