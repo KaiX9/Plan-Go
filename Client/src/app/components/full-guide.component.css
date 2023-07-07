@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+}
+  
+.left-section {
+    flex-basis: 50%;
+    border-right: 1px solid black;
+}
+  
+.top-left-section {
+    height: 30%;
+    border-bottom: 1px solid black;
+}
+  
+.bottom-left-section {
+    height: 70%;
+}
+  
+.right-section {
+    flex-basis: 50%;
+    overflow-y: auto;
+}

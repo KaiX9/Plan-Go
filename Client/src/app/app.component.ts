@@ -2,6 +2,9 @@ import { Component, OnInit, inject } from '@angular/core';
 import { Event, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { LoginService } from './services/login.service';
+import { SaveItineraryService } from './services/save-itinerary.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ItineraryListComponent } from './components/dialogs/itinerary-list.component';
 
 @Component({
   selector: 'app-root',
@@ -11,6 +14,8 @@ import { LoginService } from './services/login.service';
 export class AppComponent implements OnInit{  
   router = inject(Router);
   loginSvc = inject(LoginService);
+  saveItinerarySvc = inject(SaveItineraryService);
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
     const logoutButton = document.querySelector('.logout-button') as HTMLElement;
@@ -109,5 +114,20 @@ export class AppComponent implements OnInit{
 
   toGuides() {
     this.router.navigate(['/guide']);
+  }
+
+  savedItineraries() {
+    this.saveItinerarySvc.getItineraryList().subscribe(
+      response => {
+        console.info('list: ', response);
+        this.dialog.open(ItineraryListComponent, {
+          data: { itineraries: response }
+        });
+      }
+    );
+  }
+
+  viewGuides() {
+    this.router.navigate(['/guide/list']);
   }
 }

@@ -11,16 +11,16 @@ import { GuidesService } from '../services/guides.service';
   styleUrls: ['./guide.component.css']
 })
 export class GuideComponent implements OnInit, OnDestroy {
-  saveItinerarySvc = inject(SaveItineraryService);
-  itineraryList$!: Observable<any[]>;
+  guidesSvc = inject(GuidesService);
+  writeGuideList$!: Observable<any[]>;
   selectedItineraryUuid!: string;
   selectedCity!: string;
   fullItinerary$!: Subscription;
   router = inject(Router);
-  guidesSvc = inject(GuidesService);
+  saveItinerarySvc = inject(SaveItineraryService);
 
   ngOnInit(): void {
-    this.itineraryList$ = this.saveItinerarySvc.getItineraryList();
+    this.writeGuideList$ = this.guidesSvc.getWriteGuideList();
   }
 
   ngOnDestroy(): void {
@@ -31,8 +31,8 @@ export class GuideComponent implements OnInit, OnDestroy {
 
   onSelectionChange(event: MatSelectChange) {
     this.selectedItineraryUuid = event.value;
-    this.itineraryList$.subscribe(itineraryList => {
-      const selectedItinerary = itineraryList.find(
+    this.writeGuideList$.subscribe(writeGuideList => {
+      const selectedItinerary = writeGuideList.find(
         itinerary => itinerary.uuid === event.value
       );
       if (selectedItinerary) {
@@ -43,6 +43,7 @@ export class GuideComponent implements OnInit, OnDestroy {
 
   onWriting(uuid: string) {
     console.info('uuid: ', uuid);
+    this.guidesSvc.setSelectedUuid(uuid);
     this.fullItinerary$ = this.saveItinerarySvc.getFullItinerary(uuid).subscribe(
       response => {
         console.info('response: ', response);

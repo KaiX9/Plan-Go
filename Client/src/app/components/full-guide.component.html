@@ -1,0 +1,21 @@
+<div class="container">
+  <div class="left-section">
+    <div class="top-left-section">
+      <h2>{{ guide.title }}</h2>
+    </div>
+    <div class="bottom-left-section">
+      <p>{{ guide.summary }}</p>
+      <p>By {{ authorName }}</p>
+    </div>
+  </div>
+  <div class="right-section">
+    <div *ngFor="let day of guide.guideData | keyvalue">
+      <h3>{{ day.key }}</h3>
+      <ul>
+        <li *ngFor="let place of getDayData(day).places">{{ place }}</li>
+      </ul>
+      <p>{{ getDayData(day).comment }}</p>
+      <hr />
+    </div>
+  </div>
+</div>

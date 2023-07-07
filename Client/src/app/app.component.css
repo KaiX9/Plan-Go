@@ -36,7 +36,8 @@
 .navbar ul li {
     list-style: none;
     display: inline-block;
-    margin: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
 }
 
 .navbar ul li a {
@@ -72,4 +73,30 @@ li a:hover {
 
 .logout-button button:hover {
     background-color: #303f9f;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    font-size: 12px;
+    left: -30%;
+    width: 200px;
+}
+
+.dropdown-content li {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2;
+    padding: 5px;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }

@@ -2,6 +2,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GuidesService } from '../services/guides.service';
 import { Place } from '../models/map.models';
+import { Router } from '@angular/router';
+import { GuideData, TransformedData } from '../models/guides.models';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SavedGuideComponent } from './dialogs/saved-guide.component';
 
 @Component({
   selector: 'app-guide-editing',
@@ -15,10 +19,15 @@ export class GuideEditingComponent implements OnInit {
   itineraryData: any;
   selectedCity!: string;
   dates!: string[];
+  router = inject(Router);
+  selectedUuid!: string;
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
+    this.selectedUuid = this.guidesSvc.getSelectedUuid();
     this.selectedCity = this.guidesSvc.getSelectedCity();
     this.itineraryData = this.guidesSvc.getItineraryData();
+    console.info('itineraryData: ', this.itineraryData);
     this.dates = [
       ...new Set(this.itineraryData.map((item: any) => item.date))
     ] as string[];
@@ -44,5 +53,50 @@ export class GuideEditingComponent implements OnInit {
 
   getPlacesForDate(date: string): Place[] {
     return this.itineraryData.filter((item: any) => item.date === date);
+  }
+
+  goBack() {
+    this.router.navigate(['/guide']);
+  }
+
+  shareGuide() {
+    const title = this.guideForm.get('name')?.value;
+    const summary = this.guideForm.get('summary')?.value;
+    const comments = this.guideForm.get('comments')?.value;
+    console.info('title', title);
+    console.info('summary', summary);
+    console.info('comments', comments);
+    const result = this.transformData(this.dates, comments, this.getPlacesForDate.bind(this));
+    const data: GuideData = {
+      uuid: this.selectedUuid,
+      title: title,
+      summary: summary,
+      guideData: result
+    };
+    this.guidesSvc.saveGuide(data).subscribe(
+      response => {
+        console.info('response after saving guide: ', response);
+        if (response.message === 'guide saved') {
+          const dialogConfig = new MatDialogConfig();
+          dialogConfig.width = '300px';
+          dialogConfig.height = '150px';
+          this.dialog.open(SavedGuideComponent, dialogConfig);
+        }
+      }
+    );
+  }
+
+  transformData(dates: string[], comments: any, getPlacesForDate: (date: string) 
+    => Place[]): TransformedData {
+    const result: TransformedData = {};
+    dates.forEach((date, index) => {
+      const day = `Day ${index + 1}`;
+      result[day] = {
+        places: getPlacesForDate(date).map(place => place.name),
+        comment: comments[date]
+      };
+    });
+    console.info('result', result);
+    return result;
   }
 }

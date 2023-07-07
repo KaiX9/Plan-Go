@@ -31,6 +31,9 @@ import { AuthenticateErrorComponent } from './components/dialogs/authenticate-er
 import { GuideComponent } from './components/guide.component';
 import { GuideEditingComponent } from './components/guide-editing.component';
 import { GuidesService } from './services/guides.service';
+import { GuideListComponent } from './components/guide-list.component';
+import { SavedGuideComponent } from './components/dialogs/saved-guide.component';
+import { FullGuideComponent } from './components/full-guide.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -54,6 +57,8 @@ const routes: Routes = [
   { path: 'guide', component: GuideComponent },
   { path: 'guide/edit', component: GuideEditingComponent },
   { path: 'autocomplete', component: AutocompleteComponent },
+  { path: 'guide/list', component: GuideListComponent },
+  { path: 'guide/:uuid', component: FullGuideComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
@@ -72,7 +77,10 @@ const routes: Routes = [
     ItineraryListComponent,
     AuthenticateErrorComponent,
     GuideComponent,
-    GuideEditingComponent
+    GuideEditingComponent,
+    GuideListComponent,
+    SavedGuideComponent,
+    FullGuideComponent,
   ],
   imports: [
     BrowserModule, 

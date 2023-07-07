@@ -14,7 +14,7 @@
         <mat-label>For where?</mat-label>
         <mat-select (selectionChange)="onSelectionChange($event)">
           <mat-option
-            *ngFor="let itinerary of itineraryList$ | async"
+            *ngFor="let itinerary of writeGuideList$ | async"
             [value]="itinerary.uuid"
           >
             {{ itinerary.city }} ({{ itinerary.startDate }} to

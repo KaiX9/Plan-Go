@@ -1,3 +1,14 @@
+<div class="button-container">
+  <button class="guide-edit-button" role="button" (click)="shareGuide()">
+    <img src="/assets/share.png">
+    Share
+</button>
+  &nbsp;&nbsp;
+  <button class="guide-edit-button" role="button" (click)="goBack()">
+    <img src="/assets/back.png">
+    Back
+</button>
+</div>
 <form [formGroup]="guideForm">
   <mat-form-field appearance="fill">
     <mat-label>Title</mat-label>
@@ -34,7 +45,8 @@
           ></textarea>
         </mat-form-field>
       </div>
-      <hr><br>
+      <hr />
+      <br />
     </div>
   </div>
 </form>

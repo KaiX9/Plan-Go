@@ -13,8 +13,22 @@
         <ul>
           <li><a href="#" (click)="clickHome()">Home</a></li>
           <li><a href="javascript:void(0)" (click)="toDashboard()">Dashboard</a></li>
-          <li><a href="javascript:void(0)" (click)="toGuides()">Write a guide</a></li>
-          <li><a href="javascript:void(0)" (click)="toAutocomplete()">Plan an itinerary</a></li>
+          <li class="dropdown">
+            <a href="javascript:void(0)">Itinerary &#x25BE;</a>
+            <ul class="dropdown-content">
+              <br>
+              <li><a href="javascript:void(0)" (click)="toAutocomplete()">Plan an itinerary</a></li>
+              <li><a href="javascript:void(0)" (click)="savedItineraries()">Saved itineraries</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="javascript:void(0)">Guide &#x25BE;</a>
+            <ul class="dropdown-content">
+              <br>
+              <li><a href="javascript:void(0)" (click)="toGuides()">Write guide</a></li>
+              <li><a href="javascript:void(0)" (click)="viewGuides()">View guides</a></li>
+            </ul>
+          </li>
           <li>
             <div class="logout-button">
                 <button (click)="signout()">Log out</button>
