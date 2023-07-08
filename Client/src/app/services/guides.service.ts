@@ -1,7 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { GuideData } from "../models/guides.models";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 const URL_SAVE_GUIDE = '/save/guide';
 const URL_WRITE_GUIDE_LIST = '/writeguidelist';
@@ -15,6 +15,13 @@ export class GuidesService {
     selectedUuid!: string;
     selectedGuide!: any;
     authorName!: string;
+
+    private isEditingSource = new BehaviorSubject<boolean>(false);
+    isEditing = this.isEditingSource.asObservable();
+
+    setIsEditing(isEditing: boolean) {
+        this.isEditingSource.next(isEditing);
+    }
 
     setItineraryData(data: any, city: string) {
         this.itineraryData = data;
