@@ -1,13 +1,13 @@
 <div class="button-container">
   <button class="guide-edit-button" role="button" (click)="shareGuide()">
-    <img src="/assets/share.png">
+    <img src="/assets/share.png" />
     Share
-</button>
+  </button>
   &nbsp;&nbsp;
   <button class="guide-edit-button" role="button" (click)="goBack()">
-    <img src="/assets/back.png">
+    <img src="/assets/back.png" />
     Back
-</button>
+  </button>
 </div>
 <form [formGroup]="guideForm">
   <mat-form-field appearance="fill">
@@ -24,29 +24,57 @@
     ></textarea>
   </mat-form-field>
   <div formGroupName="comments">
-    <div *ngFor="let date of dates; let i = index">
-      <div class="comment-container">
-        <div class="day-number">Day {{ i + 1 }}</div>
-        <div class="place-names">
-          <div>Places to go:</div>
-          <ul>
-            <li *ngFor="let place of getPlacesForDate(date)">
-              {{ place.name }}
-            </li>
-          </ul>
+    <ng-container *ngIf="guide; else newGuide">
+      <div *ngFor="let day of getCommentDays(); let i = index">
+        <div class="comment-container">
+          <div class="day-number">{{ day }}</div>
+          <div class="place-names">
+            <div>Places to go:</div>
+            <ul>
+              <li *ngFor="let place of getPlacesForDay(day)">
+                {{ place }}
+              </li>
+            </ul>
+          </div>
+          <mat-form-field appearance="fill" class="comment-field">
+            <mat-label>Notes for {{ day }}</mat-label>
+            <textarea
+              matInput
+              cols="30"
+              rows="2"
+              [formControlName]="day"
+            ></textarea>
+          </mat-form-field>
         </div>
-        <mat-form-field appearance="fill" class="comment-field">
-          <mat-label>Notes for Day {{ i + 1 }}</mat-label>
-          <textarea
-            matInput
-            cols="30"
-            rows="2"
-            [formControlName]="date"
-          ></textarea>
-        </mat-form-field>
+        <hr />
+        <br />
       </div>
-      <hr />
-      <br />
-    </div>
+    </ng-container>
+    <ng-template #newGuide>
+      <div *ngFor="let date of dates; let i = index">
+        <div class="comment-container">
+          <div class="day-number">Day {{ i + 1 }}</div>
+          <div class="place-names">
+            <div>Places to go:</div>
+            <ul>
+              <li *ngFor="let place of getPlacesForDate(date)">
+                {{ place.name }}
+              </li>
+            </ul>
+          </div>
+          <mat-form-field appearance="fill" class="comment-field">
+            <mat-label>Notes for Day {{ i + 1 }}</mat-label>
+            <textarea
+              matInput
+              cols="30"
+              rows="2"
+              [formControlName]="date"
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <hr />
+        <br />
+      </div>
+    </ng-template>
   </div>
 </form>

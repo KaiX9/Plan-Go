@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { ItiList, Merged } from "../models/save.models";
-import { Observable } from "rxjs";
+import { Observable, tap } from "rxjs";
 
 const URL_SAVE = '/save';
 const URL_ITI_LIST = '/get/list';
@@ -34,6 +34,8 @@ export class SaveItineraryService {
 
     getFullItinerary(uuid: string): Observable<any> {
         const params = new HttpParams().set('uuid', uuid);
-        return this.http.get<any>(URL_FULL_ITI, { params });
+        return this.http.get<any>(URL_FULL_ITI, { params }).pipe(
+            tap(response => console.info('getFullItinerary response: ', response))
+        );
     }
 }

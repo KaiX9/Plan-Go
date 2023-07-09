@@ -28,8 +28,8 @@ export class FullGuideComponent implements OnInit {
   }
 
   onEditClick() {
-    this.guidesSvc.setIsEditing(true);
-    this.router.navigate(['/guide/edit']);
+    console.info('guide', this.guide);
+    this.router.navigate(['/guide/edit'], { state: { guide: this.guide } });
   }
 
   onBackClick() {

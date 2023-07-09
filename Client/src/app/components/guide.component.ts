@@ -48,7 +48,6 @@ export class GuideComponent implements OnInit, OnDestroy {
       response => {
         console.info('response: ', response);
         this.guidesSvc.setItineraryData(response, this.selectedCity);
-        this.guidesSvc.setIsEditing(false);
         this.router.navigate(['/guide/edit']);
       }
     );

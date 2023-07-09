@@ -1,11 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GuidesService } from '../services/guides.service';
 import { Place } from '../models/map.models';
 import { Router } from '@angular/router';
 import { GuideData, TransformedData } from '../models/guides.models';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SavedGuideComponent } from './dialogs/saved-guide.component';
+import { SaveItineraryService } from '../services/save-itinerary.service';
 
 @Component({
   selector: 'app-guide-editing',
@@ -22,37 +23,97 @@ export class GuideEditingComponent implements OnInit {
   router = inject(Router);
   selectedUuid!: string;
   dialog = inject(MatDialog);
+  guide: any;
+  saveItinerarySvc = inject(SaveItineraryService);
 
   ngOnInit(): void {
-    this.selectedUuid = this.guidesSvc.getSelectedUuid();
-    this.selectedCity = this.guidesSvc.getSelectedCity();
-    this.itineraryData = this.guidesSvc.getItineraryData();
-    console.info('itineraryData: ', this.itineraryData);
-    this.dates = [
-      ...new Set(this.itineraryData.map((item: any) => item.date))
-    ] as string[];
-    console.info('dates: ', this.dates);
-    this.guideForm = this.createGuideForm();
+    const guide = history.state.guide;
+    console.info('guide', guide);
+    if (guide) {
+      this.guide = guide;
+      const defaultValues = this.transformGuideDataToDefaultValues(guide);
+      this.guideForm = this.createGuideForm(defaultValues);
+    } else {
+      this.selectedUuid = this.guidesSvc.getSelectedUuid();
+      this.selectedCity = this.guidesSvc.getSelectedCity();
+      this.itineraryData = this.guidesSvc.getItineraryData();
+      console.info('itineraryData: ', this.itineraryData);
+      this.dates = [
+        ...new Set(this.itineraryData.map((item: any) => item.date))
+      ] as string[];
+      console.info('dates: ', this.dates);
+      this.guide = null;
+      this.guideForm = this.createGuideForm();
+      console.info('guideForm: ', this.guideForm);
+    }
   }
 
-  createGuideForm(): FormGroup {
+  createGuideForm(defaultValues: any = {}): FormGroup {
+    console.info('createGuideForm called');
     const cityName = this.selectedCity 
       ? this.selectedCity.split(',')[0].trim()
       : '';
+      console.info('cityName: ', cityName);
     const commentsGroup = new FormGroup({});
-    const dates = [...new Set(this.itineraryData.map((item: any) => item.date))];
-    dates.forEach(date => {
-      commentsGroup.addControl(date as string, new FormControl(''));
-    });
-    return this.fb.group({
-      name: this.fb.control<string>(cityName + ' Guide', [ Validators.required ]),
-      summary: this.fb.control<string>('', [ Validators.required ]),
+    if (!this.guide) {
+      const dates = [...new Set(this.itineraryData.map((item: any) => item.date))];
+      dates.forEach(date => {
+        commentsGroup.addControl(date as string, new FormControl(''));
+      });
+    } else {
+      const dates = Object.keys(defaultValues.comments);
+      dates.forEach(date => {
+        const comment = defaultValues.comments[date];
+        console.info('date: ', date, 'comment: ', comment);
+        commentsGroup.addControl(date as string, new 
+          FormControl(comment));
+      });
+    }
+    const guideForm = this.fb.group({
+      name: this.fb.control<string>(defaultValues.title || cityName + ' Guide', [ 
+        Validators.required ]),
+      summary: this.fb.control<string>(defaultValues.summary || '', [ Validators.required ]),
       comments: commentsGroup
     });
+    console.info('guideForm value: ', guideForm.value);
+    return guideForm;
+  }
+
+  transformGuideDataToDefaultValues(guideData: GuideData): any {
+    const defaultValues: { title: string; summary: string; comments: { [day: string]: 
+      string } } = {
+      title: guideData.title,
+      summary: guideData.summary,
+      comments: {}
+    };
+    Object.entries(guideData.guideData).forEach(([day, data]) => {
+      defaultValues.comments[day] = data.comment;
+    });
+    return defaultValues;
+  }
+
+  getDaysFromDates(dates: string[]): string[] {
+    const days = [];
+    for (let i = 0; i < dates.length; i++) {
+      days.push(`Day ${i + 1}`);
+    }
+    return days;
+  }
+
+  getCommentDays(): string[] {
+    return Object.keys(this.guideForm.get('comments')?.value);
   }
 
   getPlacesForDate(date: string): Place[] {
     return this.itineraryData.filter((item: any) => item.date === date);
+  }
+
+  getPlacesForDay(day: string): Place[] {
+    if (this.guide && this.guide.guideData[day]) {
+      console.info('places for day: ', this.guide.guideData[day].places);
+      return this.guide.guideData[day].places;
+    }
+    return [];
   }
 
   goBack() {

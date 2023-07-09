@@ -213,8 +213,10 @@ public class ItineraryController {
                     .toString()
                 );
         }
+        System.out.println("uuid: " + uuid);
         String userId = authUser.get().getId();
         List<FullItinerary> fullItinerary = this.itinerarySvc.getFullItinerary(userId, uuid);
+        System.out.println("full itinerary: " + fullItinerary);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (FullItinerary fullIti : fullItinerary) {
             arrBuilder.add(fullIti.toJSON());
