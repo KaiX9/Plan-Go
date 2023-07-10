@@ -2,6 +2,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
 import { DayData } from '../models/guides.models';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-full-guide',
@@ -11,13 +12,17 @@ import { Router } from '@angular/router';
 export class FullGuideComponent implements OnInit {
   guide: any;
   guidesSvc = inject(GuidesService);
-  authorName!: string;
+  authorName!: string; // Retrieved from selected guide
+  author!: string | null; // Authenticated user
   likeCount!: number;
   router = inject(Router);
+  _location = inject(Location);
 
   ngOnInit(): void {
     this.guide = this.guidesSvc.getSelectedGuide();
     console.info('guide: ', this.guide);
+    this.author = localStorage.getItem('name');
+    console.info('author: ', this.author);
     this.authorName = this.guidesSvc.getAuthorName();
     console.info('author name: ', this.authorName);
     this.likeCount = Math.floor(Math.random() * (350 - 20 + 1)) + 20;
@@ -33,6 +38,6 @@ export class FullGuideComponent implements OnInit {
   }
 
   onBackClick() {
-    this.router.navigate(['/guide/list']);
+    this._location.back();
   }
 }

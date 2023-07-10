@@ -1,10 +1,12 @@
 <div class="container">
   <div class="left-section">
     <div class="top-left-section">
-        <div class="button-container">
-            <button (click)="onBackClick()">Back</button>
-            <button (click)="onEditClick()">Edit</button>
-        </div>
+      <div class="button-container">
+        <button (click)="onBackClick()">Back</button>
+        <button *ngIf="author === authorName" (click)="onEditClick()">
+          Edit
+        </button>
+      </div>
       <h2>{{ guide.title }}</h2>
     </div>
     <div class="bottom-left-section">
@@ -12,8 +14,8 @@
       <div class="author-container">
         <p>By {{ authorName }}</p>
         <div class="likes-container">
-            <mat-icon>favorite</mat-icon>
-            <span>{{ likeCount }}</span>
+          <mat-icon>favorite</mat-icon>
+          <span>{{ likeCount }}</span>
         </div>
       </div>
     </div>
@@ -25,7 +27,7 @@
         <li *ngFor="let place of getDayData(day).places">{{ place }}</li>
       </ul>
       <p>{{ getDayData(day).comment }}</p>
-      <hr *ngIf="!isLast"/>
+      <hr *ngIf="!isLast" />
     </div>
   </div>
 </div>

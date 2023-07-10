@@ -101,4 +101,15 @@ public class GuideController {
             .contentType(MediaType.APPLICATION_JSON)
             .body(guides.toString());
     }
+
+    @GetMapping(path="/user/guides")
+    @ResponseBody
+    public ResponseEntity<String> getGuidesForUser(HttpServletRequest request) {
+        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
+        String userId = authUser.get().getId();
+        List<String> userGuides = this.guideRepo.getGuidesForUsers(userId);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userGuides.toString());
+    }
 }

@@ -9,6 +9,10 @@ public class SQLQueries {
         values (?, ?, ?);        
     """;
 
+    public static final String GET_NAME = """
+        select name from registered where email = ?;        
+    """;
+
     public static final String SIGN_IN_WITH_GOOGLE = """
         insert into registered(name, email)
         values (?, ?);        

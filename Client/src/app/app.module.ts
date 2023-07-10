@@ -34,6 +34,7 @@ import { GuidesService } from './services/guides.service';
 import { GuideListComponent } from './components/guide-list.component';
 import { SavedGuideComponent } from './components/dialogs/saved-guide.component';
 import { FullGuideComponent } from './components/full-guide.component';
+import { UserGuidesComponent } from './components/user-guides.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -59,6 +60,7 @@ const routes: Routes = [
   { path: 'autocomplete', component: AutocompleteComponent },
   { path: 'guide/list', component: GuideListComponent },
   { path: 'guide/:uuid', component: FullGuideComponent },
+  { path: 'user/guides', component: UserGuidesComponent },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
@@ -81,6 +83,7 @@ const routes: Routes = [
     GuideListComponent,
     SavedGuideComponent,
     FullGuideComponent,
+    UserGuidesComponent,
   ],
   imports: [
     BrowserModule, 

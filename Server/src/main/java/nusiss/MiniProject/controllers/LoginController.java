@@ -45,6 +45,7 @@ import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 
 import jakarta.json.Json;
+import jakarta.json.JsonObjectBuilder;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -73,6 +74,8 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
+    public String name = "";
+
     @PostMapping(path="/auth/login")
     @ResponseBody
     public ResponseEntity<?> authenticateLogin(@RequestBody String payload, 
@@ -96,7 +99,7 @@ public class LoginController {
                 Payload idTokenPayload = idToken.getPayload();
                 String email = idTokenPayload.getEmail();
                 boolean emailVerified = Boolean.valueOf(idTokenPayload.getEmailVerified());
-                String name = (String) idTokenPayload.get("name");
+                name = (String) idTokenPayload.get("name");
                 String pictureUrl = (String) idTokenPayload.get("picture");
                 String locale = (String) idTokenPayload.get("locale");
                 String familyName = (String) idTokenPayload.get("family_name");
@@ -106,15 +109,21 @@ public class LoginController {
                     familyName: %s, givenName: %s
                 """, payload, email, emailVerified, name, pictureUrl, locale, familyName, givenName);
                 Optional<Login> existingUser = loginRepo.checkExistingUser(email);
+                List<GrantedAuthority> authorities = new ArrayList<>();
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                UserPrincipal userPrincipal;
                 if (existingUser.isPresent()) {
-                    List<GrantedAuthority> authorities = new ArrayList<>();
-                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-                    UserPrincipal userPrincipal = new UserPrincipal(existingUser.get().getId(), 
+                    userPrincipal = new UserPrincipal(existingUser.get().getId(), 
                         existingUser.get().getEmail(), null, authorities);
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userPrincipal,
-                        null,
-                        authorities
+                } else {
+                    boolean googleSignIn = this.loginRepo.signInWithGoogle(name, email);
+                    System.out.println("added google user: " + googleSignIn);
+                    userPrincipal = new UserPrincipal(null, email, null, authorities);
+                }
+                Authentication authentication = new UsernamePasswordAuthenticationToken(
+                    userPrincipal,
+                    null,
+                    authorities
                 );
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 String jwt = jwtUtils.generateToken(authentication);
@@ -122,24 +131,24 @@ public class LoginController {
                 cookie.setHttpOnly(true);
                 cookie.setPath("/");
                 response.addCookie(cookie);
-                return ResponseEntity.status(HttpStatus.OK)
+                if (!existingUser.isPresent()) {
+                    return ResponseEntity.status(HttpStatus.CREATED)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(Json.createObjectBuilder()
+                            .add("message", "Google user added")
+                            .add("jwt", jwt)
+                            .build()
+                            .toString()
+                    );
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK)
                         .contentType(MediaType.APPLICATION_JSON)
                         .body(Json.createObjectBuilder()
                                 .add("message", "Login authenticated")
                                 .add("jwt", jwt)
                                 .build()
                                 .toString()
-                );
-                } else {
-                    boolean googleSignIn = this.loginRepo.signInWithGoogle(name, email);
-                    System.out.println("added google user: " + googleSignIn);
-                    return ResponseEntity.status(HttpStatus.CREATED)
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(Json.createObjectBuilder()
-                            .add("message", "Google user added")
-                            .build()
-                            .toString()
-                );
+                    );
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -153,6 +162,7 @@ public class LoginController {
         } else {
             Login loginRequest = objectMapper.readValue(payload, Login.class);
             System.out.println("login request: " + loginRequest);
+            name = this.loginRepo.getNameOfUser(loginRequest.getEmail()).get();
             if (loginRequest.getEmail() == null || loginRequest.getEmail().isEmpty()) {
                 return ResponseEntity.badRequest().body("Username is required");
             }
@@ -243,13 +253,15 @@ public class LoginController {
                     .toString()
                 );
         }
+        JsonObjectBuilder responseBuilder = Json.createObjectBuilder()
+            .add("message", "User is authenticated");
+        System.out.println("name: " + name);
+        if (name != null) {
+            responseBuilder.add("name", name);
+        }
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(Json.createObjectBuilder()
-            .add("message", "User is authenticated")
-            .build()
-            .toString()
-        );
+            .body(responseBuilder.build().toString());
     }
 
     @GetMapping(path="/autocomplete")

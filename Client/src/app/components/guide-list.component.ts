@@ -11,7 +11,6 @@ export class GuideListComponent implements OnInit {
   guidesSvc = inject(GuidesService);
   guides: any[] = [];
   imageSources: string[] = [];
-  randomNames: string[] = [];
   viewCounts: number[] = [];
   router = inject(Router);
 
@@ -25,24 +24,15 @@ export class GuideListComponent implements OnInit {
     '/assets/images/image13.jpg', '/assets/images/image14.jpg',
     '/assets/images/image15.jpg'
   ];
-
-  names = [
-    'Mahalia Pugh', 'Rebekka Cisternino', 'Amiran Parisi', 'Amour Aaron', 
-    'Dashiell Nowakowski', 'Xanthos Vencel', 'Michaël Abioye', 'Lutz Hailey', 
-    'Matthieu Rutkowski', 'Regina Royer', 'Esha Piontek', 'Steinunn Bourne',
-    'Karine Suggitt', 'Nioclás Vragi', 'Rusticus Goyathlay'
-  ];
   
   ngOnInit(): void {
     this.guidesSvc.getAllGuides().subscribe(guides => {
       this.guides = guides;
       console.info('guides: ', this.guides);
       this.imageSources = [];
-      this.randomNames = [];
       this.viewCounts = [];
       for (const guide of guides) {
         this.imageSources.push(this.getRandomValue(this.images, this.imageSources));
-        this.randomNames.push(this.getRandomValue(this.names, this.randomNames));
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
     });
@@ -55,8 +45,7 @@ export class GuideListComponent implements OnInit {
 
   onGuideClick(guide: any) {
     console.info('guide clicked: ', guide);
-    const guideIndex = this.guides.indexOf(guide);
-    const authorName = this.randomNames[guideIndex];
+    const authorName = guide.author;
     console.info('author name: ', authorName);
     this.guidesSvc.setAuthorName(authorName);
     this.guidesSvc.setSelectedGuide(guide);

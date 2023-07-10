@@ -7,6 +7,7 @@ import { GuideData, TransformedData } from '../models/guides.models';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SavedGuideComponent } from './dialogs/saved-guide.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-guide-editing',
@@ -25,12 +26,14 @@ export class GuideEditingComponent implements OnInit {
   dialog = inject(MatDialog);
   guide: any;
   saveItinerarySvc = inject(SaveItineraryService);
+  _location = inject(Location);
 
   ngOnInit(): void {
     const guide = history.state.guide;
     console.info('guide', guide);
     if (guide) {
       this.guide = guide;
+      this.selectedUuid = this.guide.uuid;
       const defaultValues = this.transformGuideDataToDefaultValues(guide);
       this.guideForm = this.createGuideForm(defaultValues);
     } else {
@@ -108,7 +111,7 @@ export class GuideEditingComponent implements OnInit {
     return this.itineraryData.filter((item: any) => item.date === date);
   }
 
-  getPlacesForDay(day: string): Place[] {
+  getPlacesForDay(day: string): string[] {
     if (this.guide && this.guide.guideData[day]) {
       console.info('places for day: ', this.guide.guideData[day].places);
       return this.guide.guideData[day].places;
@@ -117,7 +120,7 @@ export class GuideEditingComponent implements OnInit {
   }
 
   goBack() {
-    this.router.navigate(['/guide']);
+    this._location.back();
   }
 
   shareGuide() {
@@ -128,12 +131,16 @@ export class GuideEditingComponent implements OnInit {
     console.info('summary', summary);
     console.info('comments', comments);
     const result = this.transformData(this.dates, comments, this.getPlacesForDate.bind(this));
+    const author = localStorage.getItem('name');
     const data: GuideData = {
       uuid: this.selectedUuid,
       title: title,
       summary: summary,
       guideData: result
     };
+    if (author) {
+      data.author = author;
+    }
     this.guidesSvc.saveGuide(data).subscribe(
       response => {
         console.info('response after saving guide: ', response);
@@ -150,13 +157,23 @@ export class GuideEditingComponent implements OnInit {
   transformData(dates: string[], comments: any, getPlacesForDate: (date: string) 
     => Place[]): TransformedData {
     const result: TransformedData = {};
-    dates.forEach((date, index) => {
-      const day = `Day ${index + 1}`;
-      result[day] = {
-        places: getPlacesForDate(date).map(place => place.name),
-        comment: comments[date]
-      };
-    });
+    if (this.guide) {
+      const days = this.getCommentDays();
+      days.forEach(day => {
+        result[day] = {
+          places: this.getPlacesForDay(day),
+          comment: comments[day]
+        };
+      });
+    } else {
+      dates.forEach((date, index) => {
+        const day = `Day ${index + 1}`;
+        result[day] = {
+          places: getPlacesForDate(date).map(place => place.name),
+          comment: comments[date]
+        };
+      });
+    }
     console.info('result', result);
     return result;
   }

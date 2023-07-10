@@ -87,6 +87,7 @@ export class AppComponent implements OnInit{
       result => {
         console.info(JSON.stringify(result));
         document.cookie = 'userAuthenticated=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+        localStorage.removeItem("name");
         this.router.navigate(['/']).then(() => {
           location.reload();
         });
@@ -129,5 +130,9 @@ export class AppComponent implements OnInit{
 
   viewGuides() {
     this.router.navigate(['/guide/list']);
+  }
+
+  myGuides() {
+    this.router.navigate(['/user/guides']);
   }
 }

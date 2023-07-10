@@ -11,10 +11,13 @@
     <title>Document</title>
   </head>
   <body>
-    <h2>Explore recent guides</h2>
+    <h2>My guides</h2>
     <div class="guides">
-      <div class="guide" *ngFor="let guide of guides; let i = index"
-        (click)="onGuideClick(guide)">
+      <div
+        class="guide"
+        *ngFor="let guide of guides; let i = index"
+        (click)="onGuideClick(guide)"
+      >
         <div class="image-container">
           <img [src]="imageSources[i]" />
         </div>

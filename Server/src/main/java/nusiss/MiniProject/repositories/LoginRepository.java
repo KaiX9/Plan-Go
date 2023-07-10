@@ -39,4 +39,12 @@ public class LoginRepository {
                 email) > 0;
     }
 
+    public Optional<String> getNameOfUser(String email) {
+        SqlRowSet rs = jdbcTemplate.queryForRowSet(GET_NAME, email);
+        if (rs.first()) {
+            return Optional.of(rs.getString("name"));
+        }
+        return Optional.empty();
+    }
+
 }

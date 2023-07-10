@@ -12,4 +12,5 @@ export interface GuideData {
     title: string;
     summary: string;
     guideData: TransformedData;
+    author?: string;
 }

@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 const URL_SAVE_GUIDE = '/save/guide';
 const URL_WRITE_GUIDE_LIST = '/writeguidelist';
 const URL_GET_ALL_GUIDES = '/get/guides';
+const URL_GET_USER_GUIDES = '/user/guides';
 
 @Injectable()
 export class GuidesService {
@@ -63,5 +64,9 @@ export class GuidesService {
 
     getAllGuides(): Observable<any> {
         return this.http.get<any>(URL_GET_ALL_GUIDES);
+    }
+
+    getGuidesForUser(): Observable<any> {
+        return this.http.get<any>(URL_GET_USER_GUIDES);
     }
 }
