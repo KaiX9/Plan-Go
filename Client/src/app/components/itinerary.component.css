@@ -67,6 +67,7 @@
 .bucket-list li span {
     font-size: 11px;
     margin: 2px 8px;
+    flex-grow: 1;
 }
 
 .bucket-list button {
@@ -87,6 +88,26 @@
 .bucket-list button img:hover {
     cursor: pointer;
     background-color: #f0f0f0;
+}
+
+.icon-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    margin: 3px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid;
+    text-align: center;
+    line-height: 24px;
+}
+
+.place-icon {
+    color: white;
+    font-size: 14px;
+    margin-top: 8px;
 }
 
 .dates-list {

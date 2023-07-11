@@ -20,7 +20,6 @@ import nusiss.MiniProject.repositories.LoginRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
-
     @Autowired
     private LoginRepository loginRepo;
 
@@ -42,5 +41,4 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException(email);
         }
     }
-    
 }

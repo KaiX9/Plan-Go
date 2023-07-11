@@ -25,6 +25,13 @@
         cdkDrag
         [cdkDragData]="place"
       >
+        <div class="icon-container" [style.borderColor]="getIconColor(place)">
+          <mat-icon
+            class="place-icon"
+            [ngStyle]="{ color: getIconColor(place) }"
+            >{{ getIconText(place) }}</mat-icon
+          >
+        </div>
         <span>{{ place.name }}</span>
         <button (click)="deletePlace(place.place_id)">
           <img src="/assets/trash.png" />
@@ -64,6 +71,13 @@
           cdkDrag
           class="alpha-list-item"
         >
+          <div class="icon-container" [style.borderColor]="getIconColor(item)">
+            <mat-icon
+              class="place-icon"
+              [ngStyle]="{ color: getIconColor(item) }"
+              >{{ getIconText(item) }}</mat-icon
+            >
+          </div>
           <span>{{ item.name }}</span>
           <div>
             <button

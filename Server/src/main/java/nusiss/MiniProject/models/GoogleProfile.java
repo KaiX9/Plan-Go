@@ -1,7 +1,6 @@
 package nusiss.MiniProject.models;
 
 public class GoogleProfile {
-    
     private String id;
     private String email;
     private boolean verified_email;
@@ -37,5 +36,4 @@ public class GoogleProfile {
         return "GoogleProfile [id=" + id + ", email=" + email + ", verified_email=" + verified_email + ", picture="
                 + picture + "]";
     }
-    
 }

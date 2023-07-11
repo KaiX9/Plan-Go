@@ -25,7 +25,6 @@ import nusiss.MiniProject.services.CustomUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
     

@@ -41,6 +41,8 @@
     font-size: 56px;
     text-transform: uppercase;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    line-height: 1.2;
+    text-align: center;
 }
   
 .bottom-left-section {

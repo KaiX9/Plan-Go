@@ -19,7 +19,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import nusiss.MiniProject.services.CustomUserDetailsService;
 
 public class AuthenticationFilter extends OncePerRequestFilter {
-
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -74,5 +73,4 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         invalidatedTokens.add(jwt);
         System.out.println("invalidatedTokens: " + invalidatedTokens);
     }
-    
 }

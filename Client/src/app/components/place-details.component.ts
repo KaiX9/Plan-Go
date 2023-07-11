@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { PlaceDetailsService } from '../services/place-details.service';
-import { Observable } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { Location } from '@angular/common';
 import { SavedPlacesService } from '../services/saved-places.service';
 
@@ -16,6 +16,7 @@ export class PlaceDetailsComponent implements OnInit {
   Math = Math;
   location = inject(Location);
   savedPlacesSvc = inject(SavedPlacesService);
+  unsubscribe$ = new Subject<void>();
 
   constructor() {}
 
@@ -64,6 +65,13 @@ export class PlaceDetailsComponent implements OnInit {
   }
 
   savePlace(place_id: string, name: string) {
-    this.savedPlacesSvc.savePlace(place_id, name);
+    this.placeDetails$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe(placeDetails => {
+        if (placeDetails) {
+          this.savedPlacesSvc.savePlace(place_id, name, placeDetails.types || []);
+          this.unsubscribe$.next();
+      }
+    });
   }
 }

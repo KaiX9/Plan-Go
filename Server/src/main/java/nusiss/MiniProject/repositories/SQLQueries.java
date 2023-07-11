@@ -1,7 +1,6 @@
 package nusiss.MiniProject.repositories;
 
 public class SQLQueries {
-    
     public static final String AUTHENTICATE_USER = "select * from registered where email = ?";
 
     public static final String REGISTER_USER = """
@@ -47,5 +46,4 @@ public class SQLQueries {
     public static final String GET_ITINERARY_DETAILS = """
         select * from itinerary_list where uuid = ?;        
     """;
-
 }

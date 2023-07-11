@@ -13,8 +13,7 @@ import { PlaceDetailsService } from '../services/place-details.service';
 import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { DirectionsService } from '../services/directions.service';
 import { SaveItineraryService } from '../services/save-itinerary.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { SavedDialogComponent } from './dialogs/saved-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-map',
@@ -60,15 +59,6 @@ export class MapComponent implements OnInit, AfterViewInit {
   group!: MatButtonToggleGroup;
 
   ngOnInit(): void {
-    const showSavedDialog = this.getCookie('showSavedDialog');
-    console.info('showSavedDialog: ', showSavedDialog);
-    if (showSavedDialog === 'true') {
-      const dialogConfig = new MatDialogConfig();
-      dialogConfig.width = '300px';
-      dialogConfig.height = '150px';
-      this.dialog.open(SavedDialogComponent, dialogConfig);
-      document.cookie = 'showSavedDialog=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-    }
     if (this.saveItinerarySvc.itineraryDetails && this.saveItinerarySvc.itineraryDetails.length > 0) {
       const location = this.saveItinerarySvc.city;
       if (location) {
@@ -357,6 +347,39 @@ export class MapComponent implements OnInit, AfterViewInit {
         { outlets: { primary: null, placeDetails: ['place_details', id] } },
       ]);
     }
+  }
+
+  getIconColor(place: any): string {
+    const colors: { [key: string]: string } = {
+      restaurant: 'orange',
+      bar: 'yellow',
+      tourist_attraction: 'lightcoral',
+      shopping_mall: 'purple',
+      lodging: 'blue',
+      cafe: 'lightgreen',
+    };
+    const matchingType = place.types?.find((type: any) => colors.hasOwnProperty(type));
+    if (!matchingType) return '';
+
+    const color = colors[matchingType];
+    return color;
+  }
+
+  getIconText(place: any): string {
+    const icons: { [key: string]: string } = {
+      restaurant: 'restaurant',
+      bar: 'local_bar',
+      tourist_attraction: 'photo_camera',
+      shopping_mall: 'shopping_bag',
+      lodging: 'bed',
+      cafe: 'local_cafe',
+    };
+  
+    const matchingType = place.types?.find((type: any) => icons.hasOwnProperty(type));
+    if (!matchingType) return '';
+  
+    const icon = icons[matchingType];
+    return icon;
   }
 
   createMarkerIcon(iconText: string, color: string): string {

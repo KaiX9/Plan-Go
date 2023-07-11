@@ -35,6 +35,7 @@ import { GuideListComponent } from './components/guide-list.component';
 import { SavedGuideComponent } from './components/dialogs/saved-guide.component';
 import { FullGuideComponent } from './components/full-guide.component';
 import { UserGuidesComponent } from './components/user-guides.component';
+import { OverlappedDatesComponent } from './components/dialogs/overlapped-dates.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -84,6 +85,7 @@ const routes: Routes = [
     SavedGuideComponent,
     FullGuideComponent,
     UserGuidesComponent,
+    OverlappedDatesComponent,
   ],
   imports: [
     BrowserModule, 

@@ -27,7 +27,6 @@ import nusiss.MiniProject.repositories.LoginRepository;
 
 @Component
 public class JwtUtils {
-
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
@@ -110,5 +109,4 @@ public class JwtUtils {
             return null;
         }
     }
-
 }

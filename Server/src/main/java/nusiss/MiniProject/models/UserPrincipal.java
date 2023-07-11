@@ -62,5 +62,4 @@ public class UserPrincipal implements UserDetails {
         return "UserPrincipal [id=" + id + ", email=" + email + ", password=" + password + ", authorities="
                 + authorities + "]";
     }
-    
 }

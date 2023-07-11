@@ -28,7 +28,6 @@ import nusiss.MiniProject.services.ItineraryService;
 @Controller
 @RequestMapping
 public class GuideController {
-
     @Autowired
     private JwtUtils jwtUtils;
 

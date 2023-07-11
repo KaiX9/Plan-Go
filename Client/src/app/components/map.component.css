@@ -130,6 +130,7 @@ body,
     font-weight: bold;
     font-family: 'Open Sans', sans-serif;
     margin-bottom: 5px;
+    text-align: center;
 }
 
 .rating-star {
@@ -162,4 +163,23 @@ body,
     display: flex;
     align-items: center;
     height: 200px;
+}
+
+.icon-container {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid;
+    text-align: center;
+    line-height: 24px;
+}
+
+.place-icon {
+    color: white;
+    font-size: 16px;
+    margin-top: 5px;
 }

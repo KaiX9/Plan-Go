@@ -59,7 +59,6 @@ import nusiss.MiniProject.security.JwtUtils;
 @Controller
 @RequestMapping
 public class LoginController {
-
     @Autowired
     private LoginRepository loginRepo;
 
@@ -240,18 +239,9 @@ public class LoginController {
 
     @GetMapping(path="/dashboard")
     public ResponseEntity<?> getDashboard(HttpServletRequest request) {
-        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
-        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
-        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
-        System.out.println("authUser: " + authUser);
-        if (authUser == null || authUser.isEmpty() || jwt == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Json.createObjectBuilder()
-                    .add("error", "User is not authenticated, please login")
-                    .build()
-                    .toString()
-                );
+        ResponseEntity<?> response = authenticateUser(request);
+        if (response != null) {
+            return response;
         }
         JsonObjectBuilder responseBuilder = Json.createObjectBuilder()
             .add("message", "User is authenticated");
@@ -266,18 +256,54 @@ public class LoginController {
 
     @GetMapping(path="/autocomplete")
     public ResponseEntity<?> goToAutocomplete(HttpServletRequest request) {
-        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
-        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
-        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
-        System.out.println("authUser: " + authUser);
-        if (authUser == null || authUser.isEmpty() || jwt == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(Json.createObjectBuilder()
-                    .add("error", "User is not authenticated, please login")
-                    .build()
-                    .toString()
-                );
+        ResponseEntity<?> response = authenticateUser(request);
+        if (response != null) {
+            return response;
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Json.createObjectBuilder()
+            .add("message", "User is authenticated")
+            .build()
+            .toString()
+        );
+    }
+
+    @GetMapping(path="/guide")
+    public ResponseEntity<?> goToGuide(HttpServletRequest request) {
+        ResponseEntity<?> response = authenticateUser(request);
+        if (response != null) {
+            return response;
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Json.createObjectBuilder()
+            .add("message", "User is authenticated")
+            .build()
+            .toString()
+        );
+    }
+
+    @GetMapping(path="/guide/list")
+    public ResponseEntity<?> goToGuidesList(HttpServletRequest request) {
+        ResponseEntity<?> response = authenticateUser(request);
+        if (response != null) {
+            return response;
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Json.createObjectBuilder()
+            .add("message", "User is authenticated")
+            .build()
+            .toString()
+        );
+    }
+
+    @GetMapping(path="/userGuides")
+    public ResponseEntity<?> goToUserGuides(HttpServletRequest request) {
+        ResponseEntity<?> response = authenticateUser(request);
+        if (response != null) {
+            return response;
         }
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -308,4 +334,20 @@ public class LoginController {
         );
     }
 
+    private ResponseEntity<?> authenticateUser(HttpServletRequest request) {
+        Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
+        Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
+        String jwt = jwtCookie != null ? jwtCookie.getValue() : null;
+        System.out.println("authUser: " + authUser);
+        if (authUser == null || authUser.isEmpty() || jwt == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(Json.createObjectBuilder()
+                    .add("error", "User is not authenticated, please login")
+                    .build()
+                    .toString()
+                );
+        }
+        return null;
+        }
 }

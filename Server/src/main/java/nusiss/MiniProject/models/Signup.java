@@ -1,7 +1,6 @@
 package nusiss.MiniProject.models;
 
 public class Signup {
-    
     private String name;
     private String email;
     private String password;

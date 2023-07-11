@@ -29,7 +29,6 @@ import static nusiss.MiniProject.repositories.SQLQueries.*;
 
 @Repository
 public class ItineraryRepository {
-    
     @Autowired
     private MongoTemplate mongoTemplate;
 

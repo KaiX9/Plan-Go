@@ -8,10 +8,12 @@ const URL_REGISTER = '/register';
 const URL_DASHBOARD = '/dashboard';
 const URL_AUTOCOMPLETE = '/autocomplete';
 const URL_SIGNOUT = '/signout';
+const URL_GUIDE = '/guide';
+const URL_GUIDES_LIST = '/guide/list';
+const URL_USER_GUIDES = 'userGuides';
 
 @Injectable()
 export class LoginService {
-
     http = inject(HttpClient)
 
     authenticateLogin(login: Login): Observable<string> {
@@ -34,4 +36,15 @@ export class LoginService {
         return this.http.get<any>(URL_AUTOCOMPLETE);
     }
 
+    guide(): Observable<any> {
+        return this.http.get<any>(URL_GUIDE);
+    }
+
+    guidesList(): Observable<any> {
+        return this.http.get<any>(URL_GUIDES_LIST);
+    }
+
+    userGuides(): Observable<any> {
+        return this.http.get<any>(URL_USER_GUIDES);
+    }
 }

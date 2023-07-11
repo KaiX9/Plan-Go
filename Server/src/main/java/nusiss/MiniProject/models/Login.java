@@ -3,7 +3,6 @@ package nusiss.MiniProject.models;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 public class Login {
-    
     private String id;
     private String email;
     private String password;
@@ -47,5 +46,4 @@ public class Login {
 
         return l;
     }
-
 }

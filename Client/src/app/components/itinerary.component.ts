@@ -191,11 +191,12 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
   drop(event: CdkDragDrop<Place[]>) {
     if (event.previousContainer === this.bucketList && event.container !== this.bucketList) {
       const item = event.item.data;
-      console.info('Item: ', item);
+      console.info('Dragged Item: ', item);
+      console.info('Bucket list before removing item: ', this.savedPlacesSvc.savedPlaces);
       this.savedPlacesSvc.savedPlaces = this.savedPlacesSvc.savedPlaces.filter(
         (place) => place.place_id !== item.place_id
       );
-      console.info('savedPlaces: ', this.savedPlacesSvc.savedPlaces);
+      console.info('Bucket list after removing item: ', this.savedPlacesSvc.savedPlaces);
       const datesListData = event.container.data;
       datesListData.push(item);
       const dateWithItems = this.datesArray.find(dateWithItems => dateWithItems.items 
@@ -342,5 +343,38 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       `client_id=${encodeURIComponent(clientId)}`;
   
     window.location.href = url;
+  }
+
+  getIconColor(place: any): string {
+    const colors: { [key: string]: string } = {
+      restaurant: 'orange',
+      bar: 'yellow',
+      tourist_attraction: 'lightcoral',
+      shopping_mall: 'purple',
+      lodging: 'blue',
+      cafe: 'lightgreen',
+    };
+    const matchingType = place.types?.find((type: any) => colors.hasOwnProperty(type));
+    if (!matchingType) return '';
+
+    const color = colors[matchingType];
+    return color;
+  }
+
+  getIconText(place: any): string {
+    const icons: { [key: string]: string } = {
+      restaurant: 'restaurant',
+      bar: 'local_bar',
+      tourist_attraction: 'photo_camera',
+      shopping_mall: 'shopping_bag',
+      lodging: 'bed',
+      cafe: 'local_cafe',
+    };
+  
+    const matchingType = place.types?.find((type: any) => icons.hasOwnProperty(type));
+    if (!matchingType) return '';
+  
+    const icon = icons[matchingType];
+    return icon;
   }
 }

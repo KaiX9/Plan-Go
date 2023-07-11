@@ -57,7 +57,6 @@ import nusiss.MiniProject.services.ItineraryService;
 @Controller
 @RequestMapping
 public class ItineraryController {
-
     @Autowired
     private JwtUtils jwtUtils;
 
@@ -129,7 +128,7 @@ public class ItineraryController {
         Cookie cookie = new Cookie("showSavedDialog", "true");
         cookie.setPath("/");
         response.addCookie(cookie);
-        String frontendUrl = "http://localhost:4200/#/map/" + location;
+        String frontendUrl = "http://localhost:4200/#/autocomplete";
         return new RedirectView(frontendUrl);
     }
 

@@ -1,0 +1,14 @@
+h2 {
+    margin: 16px 0;
+    text-align: center;
+}
+
+.button-wrapper {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 16px;
+}
+
+mat-dialog-content p {
+    text-align: center;
+}

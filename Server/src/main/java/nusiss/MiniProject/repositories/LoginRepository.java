@@ -14,7 +14,6 @@ import static nusiss.MiniProject.repositories.SQLQueries.*;
 
 @Repository
 public class LoginRepository {
-    
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -46,5 +45,4 @@ public class LoginRepository {
         }
         return Optional.empty();
     }
-
 }

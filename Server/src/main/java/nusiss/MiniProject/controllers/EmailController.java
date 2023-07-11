@@ -40,7 +40,6 @@ import nusiss.MiniProject.services.GoogleOAuthService;
 @Controller
 @RequestMapping
 public class EmailController {
-    
     @Autowired
     private EmailService emailSvc;
 

@@ -11,6 +11,10 @@ export interface Place {
     name: string
 }
 
+export interface PlaceWithTypes extends Place {
+    types: string[]
+}
+
 export interface DateWithItems {
     date: Date
     items: Place[]

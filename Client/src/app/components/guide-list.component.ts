@@ -1,6 +1,9 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
 import { Router } from '@angular/router';
+import { LoginService } from '../services/login.service';
+import { MatDialog } from '@angular/material/dialog';
+import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 
 @Component({
   selector: 'app-guide-list',
@@ -13,6 +16,8 @@ export class GuideListComponent implements OnInit {
   imageSources: string[] = [];
   viewCounts: number[] = [];
   router = inject(Router);
+  loginSvc = inject(LoginService);
+  dialog = inject(MatDialog);
 
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
@@ -26,6 +31,21 @@ export class GuideListComponent implements OnInit {
   ];
   
   ngOnInit(): void {
+    this.loginSvc.autocomplete().subscribe(
+      result => {
+        console.info(JSON.stringify(result));
+      },
+      error => {
+        if (error) {
+          this.router.navigate(['/']).then(() => {
+            const errorMessage = error.error.error;
+            this.dialog.open(AuthenticateErrorComponent, {
+              data: { message: errorMessage }
+            });
+          });
+        }
+      }
+    );
     this.guidesSvc.getAllGuides().subscribe(guides => {
       this.guides = guides;
       console.info('guides: ', this.guides);

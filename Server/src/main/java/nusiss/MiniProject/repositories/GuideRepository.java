@@ -16,7 +16,6 @@ import com.mongodb.client.result.UpdateResult;
 
 @Repository
 public class GuideRepository {
-    
     @Autowired
     private MongoTemplate mongoTemplate;
 

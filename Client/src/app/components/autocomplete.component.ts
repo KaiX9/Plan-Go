@@ -6,7 +6,10 @@ import { DatesService } from '../services/dates.service';
 import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../services/login.service';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { SavedDialogComponent } from './dialogs/saved-dialog.component';
+import { SaveItineraryService } from '../services/save-itinerary.service';
+import { OverlappedDatesComponent } from './dialogs/overlapped-dates.component';
 
 @Component({
   selector: 'app-autocomplete',
@@ -37,8 +40,18 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
   http = inject(HttpClient);
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
+  saveItinerarySvc = inject(SaveItineraryService);
 
   ngOnInit(): void {
+    const showSavedDialog = this.getCookie('showSavedDialog');
+    console.info('showSavedDialog: ', showSavedDialog);
+    if (showSavedDialog === 'true') {
+      const dialogConfig = new MatDialogConfig();
+      dialogConfig.width = '300px';
+      dialogConfig.height = '150px';
+      this.dialog.open(SavedDialogComponent, dialogConfig);
+      document.cookie = 'showSavedDialog=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    }
     this.loginSvc.autocomplete().subscribe(
       result => {
         console.info(JSON.stringify(result));
@@ -136,13 +149,51 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
   }
 
   onStartExploring() {
-    if (this.invitees.length > 0) {
-      console.info('invitees: ', this.invitees);
-      localStorage.setItem('result', JSON.stringify(this.result));
-      this.authorize();
-    } else if (this.result) {
-      this.ngZone.run(() => {
-        this.router.navigate(['/map', this.result?.address]);
+    const startDateStr = localStorage.getItem('startDate');
+    const endDateStr = localStorage.getItem('endDate');
+    const startDate = startDateStr ? new Date(startDateStr) : null;
+    const endDate = endDateStr ? new Date(endDateStr) : null;
+    console.info('start date: ', startDate);
+    console.info('end date: ', endDate);
+    if (startDate && endDate) {
+      this.saveItinerarySvc.getItineraryList().subscribe(response => {
+        const hasOverlap = response.some((itinerary: any) => {
+          const itineraryStartDate = new Date(itinerary.startDate);
+          const itineraryEndDate = new Date(itinerary.endDate);
+          return (
+            startDate <= itineraryEndDate && endDate >= itineraryStartDate
+          );
+        });
+        if (hasOverlap) {
+          const dialogConfig = new MatDialogConfig();
+          dialogConfig.width = '400px';
+          dialogConfig.height = '250px';
+          const dialogRef = this.dialog.open(OverlappedDatesComponent, dialogConfig);
+          dialogRef.afterClosed().subscribe(result => {
+            if (result === 'reselect') {
+            } else if (result === 'continue') {
+              if (this.invitees.length > 0) {
+                console.info('invitees: ', this.invitees);
+                localStorage.setItem('result', JSON.stringify(this.result));
+                this.authorize();
+              } else if (this.result) {
+                this.ngZone.run(() => {
+                  this.router.navigate(['/map', this.result?.address]);
+                });
+              }
+            }
+          });
+        } else {
+          if (this.invitees.length > 0) {
+            console.info('invitees: ', this.invitees);
+            localStorage.setItem('result', JSON.stringify(this.result));
+            this.authorize();
+          } else if (this.result) {
+            this.ngZone.run(() => {
+              this.router.navigate(['/map', this.result?.address]);
+            });
+          }
+        }
       });
     }
   }
