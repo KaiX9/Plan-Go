@@ -1,30 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
+  </head>
+  <body>
+    <h1>Welcome {{ name }}!</h1>
+    <h2>Recently viewed itineraries</h2>
+    <div
+      class="itineraries"
+      *ngIf="selectedItineraries.length > 0; else noItineraries"
+    >
+      <div
+        class="itinerary"
+        *ngFor="let itinerary of selectedItineraries; let i = index"
+        (click)="
+          onItineraryClick(
+            itinerary.uuid,
+            itinerary.city,
+            itinerary.startDate,
+            itinerary.endDate
+          )
+        "
+      >
+        <div class="image-container">
+          <img [src]="itineraryImageSources[i]" />
+        </div>
+        <div class="title">Trip to {{ itinerary.city }}</div>
+        <div class="summary">
+          {{ itinerary.startDate }} - {{ itinerary.endDate }}
+        </div>
+      </div>
+    </div>
     <h2>Explore</h2>
     <h3>Popular Destinations</h3>
     <div class="guides">
-        <div class="guide" *ngFor="let guide of selectedGuides; let i = index"
-          (click)="onGuideClick(guide)">
-          <div class="image-container">
-            <img [src]="imageSources[i]" />
-          </div>
-          <div class="title">{{ guide.title }}</div>
-          <div class="summary">{{ guide.summary }}</div>
-          <div class="name-container">
-            <div class="name">By {{ guide.author }}</div>
-            <div class="views-container">
-              <mat-icon>visibility</mat-icon>
-              <div class="views">{{ viewCounts[i] }}</div>
-            </div>
+      <div
+        class="guide"
+        *ngFor="let guide of selectedGuides; let i = index"
+        (click)="onGuideClick(guide)"
+      >
+        <div class="image-container">
+          <img [src]="guideImageSources[i]" />
+        </div>
+        <div class="title">{{ guide.title }}</div>
+        <div class="summary">{{ guide.summary }}</div>
+        <div class="name-container">
+          <div class="name">By {{ guide.author }}</div>
+          <div class="views-container">
+            <mat-icon>visibility</mat-icon>
+            <div class="views">{{ viewCounts[i] }}</div>
           </div>
         </div>
       </div>
-</body>
+    </div>
+  </body>
 </html>
+<ng-template #noItineraries>
+  <h4 style="margin: 30px">You have not added any itineraries yet!</h4>
+</ng-template>

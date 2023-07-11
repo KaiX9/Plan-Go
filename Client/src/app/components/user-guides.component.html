@@ -12,7 +12,7 @@
   </head>
   <body>
     <h2>My guides</h2>
-    <div class="guides">
+    <div class="guides" *ngIf="guides.length > 0; else noGuides">
       <div
         class="guide"
         *ngFor="let guide of guides; let i = index"
@@ -34,3 +34,6 @@
     </div>
   </body>
 </html>
+<ng-template #noGuides>
+  <h3 style="margin: 30px">You have not written any guides yet!</h3>
+</ng-template>

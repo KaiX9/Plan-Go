@@ -26,8 +26,8 @@ public class SQLQueries {
     """;
     
     public static final String SAVE_ITINERARY = """
-        insert into itineraries(date, placeId, name, userId, uuid)
-        values (?, ?, ?, ?, ?);     
+        insert into itineraries(date, placeId, name, userId, uuid, types)
+        values (?, ?, ?, ?, ?, ?);     
     """;
 
     public static final String ITINERARY_LIST = """

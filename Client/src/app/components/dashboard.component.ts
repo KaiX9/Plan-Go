@@ -1,24 +1,31 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { GuidesService } from '../services/guides.service';
+import { SaveItineraryService } from '../services/save-itinerary.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent implements OnInit {
+export class DashboardComponent implements OnInit, OnDestroy {
   loginSvc = inject(LoginService);
   router = inject(Router);
   dialog = inject(MatDialog);
   guidesSvc = inject(GuidesService);
-  imageSources: string[] = [];
+  itineraryImageSources: string[] = [];
+  guideImageSources: string[] = [];
   viewCounts: number[] = [];
   selectedGuides: any[] = [];
-
+  selectedItineraries: any[] = [];
+  name: string = '';
+  saveItinerarySvc = inject(SaveItineraryService);
+  sub$!: Subscription;
+  
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
     '/assets/images/image3.jpg', '/assets/images/image4.jpg',
@@ -36,6 +43,7 @@ export class DashboardComponent implements OnInit {
         console.info(JSON.stringify(result));
         if (result.name) {
           localStorage.setItem('name', result.name);
+          this.name = result.name;
         }
       },
       error => {
@@ -50,19 +58,43 @@ export class DashboardComponent implements OnInit {
       }
     );
 
+    this.saveItinerarySvc.getItineraryList().subscribe(itineraries => {
+      let numItineraries = Math.min(4, itineraries.length);
+      for (let i = 0; i < numItineraries; i++) {
+        const randomIndex = Math.floor(Math.random() * itineraries.length);
+        this.selectedItineraries.push(itineraries[randomIndex]);
+        itineraries.splice(randomIndex, 1);
+      }
+      this.itineraryImageSources = [];
+      for (const itinerary of this.selectedItineraries) {
+        this.itineraryImageSources.push(this.getRandomValue(this.images, 
+          this.itineraryImageSources));
+      }
+    });
+
+
     this.guidesSvc.getAllGuides().subscribe(guides => {
-      for (let i = 0; i < 4; i++) {
+      let numGuides = Math.min(4, guides.length);
+      for (let i = 0; i < numGuides; i++) {
         const randomIndex = Math.floor(Math.random() * guides.length);
         this.selectedGuides.push(guides[randomIndex]);
         guides.splice(randomIndex, 1);
       }
-      this.imageSources = [];
+      this.guideImageSources = [];
       this.viewCounts = [];
       for (const guide of this.selectedGuides) {
-        this.imageSources.push(this.getRandomValue(this.images, this.imageSources));
+        let image = this.getRandomValue(this.images, [...this.guideImageSources, 
+          ...this.itineraryImageSources]);
+        this.guideImageSources.push(image);
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub$) {
+      this.sub$.unsubscribe();
+    }
   }
 
   getRandomValue(array: any[], exclude: any[] = []) {
@@ -76,5 +108,22 @@ export class DashboardComponent implements OnInit {
     this.guidesSvc.setAuthorName(authorName);
     this.guidesSvc.setSelectedGuide(guide);
     this.router.navigate(['/guide', guide.uuid]);
+  }
+
+  onItineraryClick(uuid: string, city: string, startDate: string, endDate: string) {
+    console.info('uuid: ', uuid);
+    this.sub$ = this.saveItinerarySvc.getFullItinerary(uuid).subscribe(
+      response => {
+        console.info('response: ', response);
+        this.saveItinerarySvc.uuid = uuid;
+        this.saveItinerarySvc.city = city;
+        this.saveItinerarySvc.startDate = startDate;
+        this.saveItinerarySvc.endDate = endDate;
+        this.saveItinerarySvc.itineraryDetails = response;
+        const config = this.router.config;
+        this.router.resetConfig(config);
+        this.router.navigate(['/map', city]);
+      }
+    );
   }
 }

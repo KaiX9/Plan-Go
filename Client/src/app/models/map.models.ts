@@ -7,6 +7,7 @@ export interface PlaceSearchResult {
 }
 
 export interface Place {
+    types: any
     place_id: string
     name: string
 }

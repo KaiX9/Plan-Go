@@ -1,5 +1,8 @@
 package nusiss.MiniProject.models;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 public class Itinerary {
@@ -9,7 +12,14 @@ public class Itinerary {
     private String name;
     private Integer userId;
     private String uuid;
+    private List<String> types;
     
+    public List<String> getTypes() {
+        return types;
+    }
+    public void setTypes(List<String> types) {
+        this.types = types;
+    }
     public Integer getId() {
         return id;
     }
@@ -50,9 +60,9 @@ public class Itinerary {
     @Override
     public String toString() {
         return "Itinerary [id=" + id + ", date=" + date + ", placeId=" + placeId + ", name=" + name + ", userId="
-                + userId + ", uuid=" + uuid + "]";
+                + userId + ", uuid=" + uuid + ", types=" + types + "]";
     }
-
+    
     public static Itinerary createFromRs(SqlRowSet rs) {
         Itinerary iti = new Itinerary();
         iti.setId(rs.getInt("id"));
@@ -61,6 +71,11 @@ public class Itinerary {
         iti.setName(rs.getString("name"));
         iti.setUserId(rs.getInt("userId"));
         iti.setUuid(rs.getString("uuid"));
+        String typesString = rs.getString("types");
+        List<String> types = Arrays.asList(typesString.split(","));
+        System.out.println("types: " + types);
+        iti.setTypes(types);
+        System.out.println("itinerary: " + iti);
         return iti;
     }
 }

@@ -26,7 +26,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.web.util.WebUtils;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.client.auth.oauth2.AuthorizationCodeFlow;
 import com.google.api.client.auth.oauth2.Credential;
@@ -134,7 +133,7 @@ public class ItineraryController {
 
     @PostMapping(path="/save")
     @ResponseBody
-    public ResponseEntity<?> saveItinerary(@RequestBody String payload, 
+    public ResponseEntity<?> saveItinerary(@RequestBody Map<String, Object> payload, 
         HttpServletRequest request) throws GeneralSecurityException, IOException {
         Optional<Login> authUser = jwtUtils.getUserFromRequest(request);
         Cookie jwtCookie = WebUtils.getCookie(request, "jwt");
@@ -151,12 +150,10 @@ public class ItineraryController {
         }
         System.out.println("payload: " + payload);
         String userId = authUser.get().getId();
-        ObjectMapper objectMapper = new ObjectMapper();
-        JsonNode payloadJson = objectMapper.readTree(payload);
-        JsonNode list = payloadJson.get("list");
+        Map<String, Object> list = (Map<String, Object>) payload.get("list");
         String uuid = null;
-        if (list.has("uuid")) {
-            uuid = list.get("uuid").asText();
+        if (list.containsKey("uuid")) {
+            uuid = (String) list.get("uuid");
             System.out.println("uuid received from client: " + uuid);
         }
         uuid = this.itineraryRepo.saveItinerary(payload, userId, uuid);

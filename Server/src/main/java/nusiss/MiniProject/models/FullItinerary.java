@@ -1,6 +1,9 @@
 package nusiss.MiniProject.models;
 
+import java.util.List;
+
 import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonObject;
 
 public class FullItinerary {
@@ -8,7 +11,14 @@ public class FullItinerary {
     private String placeId;
     private String name;
     private String comment;
+    private List<String> types;
     
+    public List<String> getTypes() {
+        return types;
+    }
+    public void setTypes(List<String> types) {
+        this.types = types;
+    }
     public String getDate() {
         return date;
     }
@@ -36,15 +46,21 @@ public class FullItinerary {
 
     @Override
     public String toString() {
-        return "FullItinerary [date=" + date + ", placeId=" + placeId + ", name=" + name + ", comment=" + comment + "]";
+        return "FullItinerary [date=" + date + ", placeId=" + placeId + ", name=" + name + ", comment=" + comment
+                + ", types=" + types + "]";
     }
 
     public JsonObject toJSON() {
+        JsonArrayBuilder typesArrayBuilder = Json.createArrayBuilder();
+        for (String type : getTypes()) {
+            typesArrayBuilder.add(type);
+        }
         return Json.createObjectBuilder()
             .add("date", getDate())
             .add("placeId", getPlaceId())
             .add("name", getName())
             .add("comment", getComment())
+            .add("types", typesArrayBuilder.build())
             .build();
     }
 }

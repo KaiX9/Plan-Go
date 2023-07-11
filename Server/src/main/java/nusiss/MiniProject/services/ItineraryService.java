@@ -34,6 +34,7 @@ public class ItineraryService {
 
     public List<FullItinerary> getFullItinerary(String userId, String uuid) {
         List<Itinerary> detailsList = this.itineraryRepo.getItineraryListByUserIdAndUuid(userId, uuid);
+        System.out.println("detailsList: " + detailsList);
         List<Document> commentsList = this.itineraryRepo.getCommentsByUuid(uuid);
         List<FullItinerary> fullItineraries = new ArrayList<FullItinerary>();
         for (Itinerary itinerary : detailsList) {
@@ -49,6 +50,7 @@ public class ItineraryService {
             fullItinerary.setPlaceId(itinerary.getPlaceId());
             fullItinerary.setName(itinerary.getName());
             fullItinerary.setComment(comment);
+            fullItinerary.setTypes(itinerary.getTypes());
             fullItineraries.add(fullItinerary);
         }
         return fullItineraries;

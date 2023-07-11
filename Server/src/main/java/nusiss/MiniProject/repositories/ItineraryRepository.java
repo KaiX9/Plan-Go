@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -18,9 +19,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nusiss.MiniProject.models.Itinerary;
 import nusiss.MiniProject.models.ItineraryDetails;
@@ -35,14 +33,9 @@ public class ItineraryRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public String saveItinerary(String payload, String userId, String uuid) 
+    public String saveItinerary(Map<String, Object> payload, String userId, String uuid) 
         throws IOException {
-        JsonNode rootNode = new ObjectMapper().readTree(payload);
-        JsonNode detailsNode = rootNode.get("details");
-        if (detailsNode == null || !detailsNode.isArray()) {
-            throw new IllegalArgumentException("Missing or invalid details property");
-        }
-
+        List<Map<String, Object>> details = (List<Map<String, Object>>) payload.get("details");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         if (uuid == null) {
             uuid = UUID.randomUUID().toString().substring(0, 8);
@@ -51,37 +44,19 @@ public class ItineraryRepository {
             jdbcTemplate.update(DELETE_ITINERARY, userId, uuid);
             mongoTemplate.remove(new Query(Criteria.where("uuid").is(uuid)), "itineraries");
         }
-
-        for (JsonNode detailNode : detailsNode) {
-            JsonNode dateNode = detailNode.get("date");
-            if (dateNode == null) {
-                throw new IllegalArgumentException("Missing date property");
-            }
-            String dateString = dateNode.asText();
-            OffsetDateTime dateTime = OffsetDateTime.parse(dateString);
+        for (Map<String, Object> detail : details) {
+            String dateStr = (String) detail.get("date");
+            OffsetDateTime dateTime = OffsetDateTime.parse(dateStr);
             ZoneId singaporeZone = ZoneId.of("Asia/Singapore");
             ZonedDateTime singaporeDateTime = dateTime.atZoneSameInstant(singaporeZone);
             String formattedDate = singaporeDateTime.format(formatter);
-            JsonNode itemsNode = detailNode.get("items");
-            if (itemsNode == null || !itemsNode.isArray()) {
-                throw new IllegalArgumentException("Missing or invalid items property");
-            }
-
-            for (JsonNode itemNode : itemsNode) {
-                JsonNode placeIdNode = itemNode.get("place_id");
-                if (placeIdNode == null) {
-                    throw new IllegalArgumentException("Missing place_id property");
-                }
-                String placeId = placeIdNode.asText();
-
-                JsonNode nameNode = itemNode.get("name");
-                if (nameNode == null) {
-                    throw new IllegalArgumentException("Missing name property");
-                }
-                String name = nameNode.asText();
-
-                JsonNode commentNode = itemNode.get("comment");
-                String comment = commentNode != null ? commentNode.asText() : "";
+            List<Map<String, Object>> items = (List<Map<String, Object>>) detail.get("items");
+            for (Map<String, Object> item : items) {
+                String placeId = (String) item.get("place_id");
+                String name = (String) item.get("name");
+                String comment = item.get("comment") != null ? (String) item.get("comment") : "";
+                List<String> types = (List<String>) item.get("types");
+                String typesString = String.join(",", types);
 
                 boolean isSaved;
                 isSaved = jdbcTemplate.update(SAVE_ITINERARY,
@@ -89,8 +64,9 @@ public class ItineraryRepository {
                     placeId,
                     name,
                     userId,
-                    uuid) > 0;
-                
+                    uuid,
+                    typesString) > 0;
+
                 if (isSaved) {
                     Document doc = new Document()
                         .append("uuid", uuid)
@@ -103,23 +79,17 @@ public class ItineraryRepository {
                     }
                 } else {
                     throw new RuntimeException("Failed to save data");
-                }             
+                }
             }
         }
-        JsonNode listNode = rootNode.get("list");
-        if (listNode == null) {
-            throw new IllegalArgumentException("Missing list property");
-        }
-        JsonNode locationNode = listNode.get("location");
-        String location = locationNode.asText();
-        JsonNode startDateNode = listNode.get("startDate");
-        String startDateString = startDateNode.asText();
+        Map<String, Object> list = (Map<String, Object>) payload.get("list");
+        String location = (String) list.get("location");
+        String startDateString = (String) list.get("startDate");
         OffsetDateTime startDateTime = OffsetDateTime.parse(startDateString);
         ZoneId singaporeZone = ZoneId.of("Asia/Singapore");
         ZonedDateTime singaporeStartDateTime = startDateTime.atZoneSameInstant(singaporeZone);
         String formattedStartDate = singaporeStartDateTime.format(formatter);
-        JsonNode endDateNode = listNode.get("endDate");
-        String endDateString = endDateNode.asText();
+        String endDateString = (String) list.get("endDate");
         OffsetDateTime endDateTime = OffsetDateTime.parse(endDateString);
         ZonedDateTime singaporeEndDateTime = endDateTime.atZoneSameInstant(singaporeZone);
         String formattedEndDate = singaporeEndDateTime.format(formatter);

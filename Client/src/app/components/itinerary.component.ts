@@ -135,14 +135,18 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         date <= endDate;
         date.setDate(date.getDate() + 1)
       ) {
-        let items = itineraryDetails.filter(detail => detail.date === date.toISOString()
-          .slice(0,10)).map(detail => ({place_id: detail.placeId, name: detail.name, 
-          comment: detail.comment}));
+        let items = itineraryDetails
+          .filter(detail => detail.date === date.toISOString().slice(0,10))
+          .map(detail => ({
+            place_id: detail.placeId, 
+            name: detail.name, 
+            comment: detail.comment,
+            types: detail.types
+          }));
         this.datesArray.push({ date: new Date(date), items: items });
       }
     }
   }
-  
 
   ngOnDestroy(): void {
     console.info('ngOnDestroy called');
@@ -290,7 +294,8 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       ...date, 
       items: date.items.map(item => ({
         ...item, 
-        comment: this.comments.find(c => c.place_id === item.place_id)?.comment || ''
+        comment: this.comments.find(c => c.place_id === item.place_id)?.comment || '',
+        types: item.types
       }))
     }));
     console.info('mergedArray: ', this.mergedArray);
