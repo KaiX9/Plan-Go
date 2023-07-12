@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.util.WebUtils;
 
@@ -110,5 +111,15 @@ public class GuideController {
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(userGuides.toString());
+    }
+
+    @GetMapping(path="search/guides")
+    @ResponseBody
+    public ResponseEntity<String> searchGuides(@RequestParam String searchText) {
+        List<String> guides = this.guideRepo.searchGuides(searchText);
+        System.out.println("guides searched: " + guides);
+        return ResponseEntity.status(HttpStatus.OK)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(guides.toString());
     }
 }

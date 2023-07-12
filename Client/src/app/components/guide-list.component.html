@@ -12,9 +12,34 @@
   </head>
   <body>
     <h2>Explore recent guides</h2>
+    <div class="destination-input">
+      <mat-form-field>
+        <mat-label>Search guides</mat-label>
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          type="text"
+          #searchInput
+          (input)="onSearchInput($event)"
+          (keyup.enter)="onSearchSubmit()"
+          [matAutocomplete]="auto"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option
+            *ngFor="let guide of filteredGuides"
+            [value]="guide.title"
+          >
+            {{ guide.title }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
     <div class="guides">
-      <div class="guide" *ngFor="let guide of guides; let i = index"
-        (click)="onGuideClick(guide)">
+      <div
+        class="guide"
+        *ngFor="let guide of guides; let i = index"
+        (click)="onGuideClick(guide)"
+      >
         <div class="image-container">
           <img [src]="imageSources[i]" />
         </div>

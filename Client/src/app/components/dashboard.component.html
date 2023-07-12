@@ -8,7 +8,7 @@
   </head>
   <body>
     <h1>Welcome {{ name }}!</h1>
-    <h2>Recently viewed itineraries</h2>
+    <h3>Recently viewed itineraries</h3>
     <div
       class="itineraries"
       *ngIf="selectedItineraries.length > 0; else noItineraries"
@@ -30,9 +30,43 @@
         </div>
         <div class="title">Trip to {{ itinerary.city }}</div>
         <div class="summary">
-          {{ itinerary.startDate }} - {{ itinerary.endDate }}
+          {{ itinerary.startDate | date : "MMM d" }} -
+          {{ itinerary.endDate | date : "d" }}
         </div>
       </div>
+    </div>
+    <h3 class="review-title">Hear from our happy travelers</h3>
+    <div class="reviews-container">
+      <button
+        class="scroll-button scroll-left"
+        (click)="scrollReviews(-1)"
+        [ngClass]="{ hidden: isScrolledLeft }"
+      >
+        <
+      </button>
+      <div class="reviews" (scroll)="onReviewsScroll($event)">
+        <div class="review" *ngFor="let review of reviews">
+          <div class="review-content">{{ review.content }}</div>
+          <div class="review-footer">
+            <div class="review-author">{{ review.author }}</div>
+            <div class="review-rating">
+              <span
+                *ngFor="let star of [1, 2, 3, 4, 5]"
+                [class.filled]="star <= review.rating"
+              >
+                ★
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="scroll-button scroll-right"
+        (click)="scrollReviews(1)"
+        [ngClass]="{ hidden: isScrolledRight }"
+      >
+        >
+      </button>
     </div>
     <h2>Explore</h2>
     <h3>Popular Destinations</h3>

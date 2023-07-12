@@ -66,4 +66,14 @@ public class GuideRepository {
             .collect(Collectors.toList());
         return jsonList;
     }
+
+    public List<String> searchGuides(String searchText) {
+        Query query = new Query();
+        query.addCriteria(Criteria.where("title").regex(searchText, "i"));
+        List<Document> guides = mongoTemplate.find(query, Document.class, "guides");
+        List<String> jsonList = guides.stream()
+            .map(Document::toJson)
+            .collect(Collectors.toList());
+        return jsonList;
+    }
 }

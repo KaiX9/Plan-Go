@@ -6,6 +6,7 @@ import { AuthenticateErrorComponent } from './dialogs/authenticate-error.compone
 import { GuidesService } from '../services/guides.service';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Subscription } from 'rxjs';
+import { Review } from '../models/dashboard.models';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +26,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   name: string = '';
   saveItinerarySvc = inject(SaveItineraryService);
   sub$!: Subscription;
+  isScrolledLeft = true;
+  isScrolledRight = false;
   
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
@@ -35,6 +38,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
     '/assets/images/image11.jpg', '/assets/images/image12.jpg',
     '/assets/images/image13.jpg', '/assets/images/image14.jpg',
     '/assets/images/image15.jpg'
+  ];
+
+  reviews: Review[] = [
+    {
+      content:
+        'I recently used this travel app to plan my trip to Europe and it was a lifesaver! It helped me organize my itinerary, keep track of my expenses, and collaborate with my friends. I highly recommend it to anyone planning a trip.',
+      author: 'John.D',
+      rating: 5,
+    },
+    {
+      content:
+        'This travel app made planning my road trip so much easier. I was able to map out my route, find the best places to visit, and keep track of all my reservations in one place. It\'s a must-have for any traveler.',
+      author: 'Jane.S',
+      rating: 5,
+    },
+    {
+      content: 
+        'I was blown away by how easy it was to plan my trip using this travel app. The interface is intuitive and the features are incredibly helpful. I especially loved being able to collaborate with my friends and family on our itinerary. Highly recommend!',
+      author: 'Amelia.P',
+      rating: 5,
+    },
+    {
+      content: 
+        'I’ve tried a lot of travel apps, but this one is by far the best. It’s packed with useful features and makes planning a trip a breeze. I love being able to see all my reservations in one place and collaborate with my travel companions. A must-have for any traveler.',
+      author: 'Marc.J',
+      rating: 5,
+    },
+    {
+      content: 
+        'I can’t say enough good things about this travel app. It’s made planning my trips so much easier and more enjoyable. The interface is user-friendly and the features are top-notch. I highly recommend it to anyone planning a trip.',
+        author: 'Emily.S',
+        rating: 5,
+    },
+    {
+      content: 
+        'If you’re looking for a travel app that has it all, look no further. This app has everything you need to plan the perfect trip, from organizing your itinerary to finding the best places to visit. It’s a must-have for any traveler.',
+      author: 'Carmen.M',
+      rating: 5,
+    },
   ];
 
   ngOnInit(): void {
@@ -125,5 +167,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.router.navigate(['/map', city]);
       }
     );
+  }
+
+  scrollReviews(direction: number) {
+    const reviewsElement = document.querySelector('.reviews');
+    if (reviewsElement) {
+      reviewsElement.scrollBy({ left: direction * reviewsElement.clientWidth, 
+        behavior: 'smooth' });
+    }
+  }
+
+  onReviewsScroll(event: Event) {
+    const target = event.target as HTMLElement;
+    this.isScrolledLeft = target.scrollLeft === 0;
+    this.isScrolledRight = target.scrollLeft + target.clientWidth === target.scrollWidth;
   }
 }

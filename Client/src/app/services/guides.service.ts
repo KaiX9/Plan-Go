@@ -1,4 +1,4 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { GuideData } from "../models/guides.models";
 import { Observable } from "rxjs";
@@ -7,6 +7,7 @@ const URL_SAVE_GUIDE = '/save/guide';
 const URL_WRITE_GUIDE_LIST = '/writeguidelist';
 const URL_GET_ALL_GUIDES = '/get/guides';
 const URL_GET_USER_GUIDES = '/user/guides';
+const URL_SEARCH_GUIDES = '/search/guides';
 
 @Injectable()
 export class GuidesService {
@@ -68,5 +69,10 @@ export class GuidesService {
 
     getGuidesForUser(): Observable<any> {
         return this.http.get<any>(URL_GET_USER_GUIDES);
+    }
+
+    searchGuides(searchText: string): Observable<any> {
+        const params = new HttpParams().set('searchText', searchText);
+        return this.http.get<any>(URL_SEARCH_GUIDES, { params });
     }
 }

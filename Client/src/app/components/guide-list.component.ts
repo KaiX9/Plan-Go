@@ -1,9 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
+import { GuideData } from '../models/guides.models';
 
 @Component({
   selector: 'app-guide-list',
@@ -18,6 +19,10 @@ export class GuideListComponent implements OnInit {
   router = inject(Router);
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
+  filteredGuides: GuideData[] = [];
+
+  @ViewChild('searchInput')
+  searchInput!: ElementRef<HTMLInputElement>;
 
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
@@ -70,5 +75,20 @@ export class GuideListComponent implements OnInit {
     this.guidesSvc.setAuthorName(authorName);
     this.guidesSvc.setSelectedGuide(guide);
     this.router.navigate(['/guide', guide.uuid]);
+  }
+
+  onSearchInput(event: Event) {
+    const searchText = (event.target as HTMLInputElement).value;
+    if (searchText) {
+      this.guidesSvc.searchGuides(searchText).subscribe((guides) => {
+        this.filteredGuides = guides;
+      });
+    } else {
+      this.filteredGuides = [];
+    }
+  }
+
+  onSearchSubmit() {
+    this.guides = this.filteredGuides;
   }
 }

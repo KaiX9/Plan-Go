@@ -27,6 +27,8 @@ export class AppComponent implements OnInit{
         const logoElement = document.querySelector('.logo') as HTMLElement;
         const navbarLinks = document.querySelectorAll('.navbar ul li a') as 
           NodeListOf<HTMLAnchorElement>;
+        const dropdownContentElement = document.querySelector('.dropdown-content') as 
+          HTMLElement;
         const isLoggedIn = this.isUserLoggedIn();
         if (isLoggedIn) {
           if (logoutButton) {
@@ -53,7 +55,10 @@ export class AppComponent implements OnInit{
                 link.style.transition = '0.5s';
                 link.style.color = 'white';
               });
-            })
+            });
+            if (dropdownContentElement) {
+              dropdownContentElement.style.backgroundColor = 'none';
+            }
           } else {
             bannerElement.style.backgroundImage = 'none';
             logoElement.style.color = 'black';
@@ -70,6 +75,9 @@ export class AppComponent implements OnInit{
                 link.style.color = 'black';
               });
             });
+            if (dropdownContentElement) {
+              dropdownContentElement.style.backgroundColor = 'white';
+            }
           }
         }
       });
@@ -102,7 +110,9 @@ export class AppComponent implements OnInit{
   }
 
   clickHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/']).then(() => {
+      location.reload();
+    });
   }
 
   toDashboard() {

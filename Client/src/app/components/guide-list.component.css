@@ -1,9 +1,20 @@
 h2 {
+    text-align: center;
     font-weight: bold;
-    margin-left: 30px;
     margin-top: 20px;
+    margin-bottom: 30px;
     font-size: 40px;
     font-family: "Lato", sans-serif;
+}
+
+.destination-input {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.destination-input mat-form-field {
+    width: 500px;
 }
 
 .guides {

@@ -101,3 +101,89 @@ h3 {
     margin-left: 5px;
     margin-right: 20px;
 }
+
+.reviews-container {
+    position: relative;
+}
+
+.review-title {
+    text-align: center;
+    font-size: 42px;
+    margin-top: 200px;
+}
+
+.reviews {
+    display: flex;
+    overflow-x: hidden;
+    padding-bottom: 200px;
+}
+
+.review {
+    flex: 0 0 auto;
+    width: calc(30% - 40px);
+    margin: 30px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+}
+
+.review-content {
+    font-size: 22px;
+    line-height: 1.5;
+    color: grey;
+    height: 310px;
+    text-align: justify;
+}
+
+.review-author {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.review-rating {
+    font-size: 20px;
+}
+
+.review-rating span {
+    color: lightgray;
+}
+
+.review-rating span.filled {
+    color: gold;
+}
+
+.scroll-button {
+    position: absolute;
+    top: 10px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: white;
+    border: 1px solid lightgray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
+
+.scroll-left {
+    left: 18px;
+}
+
+.scroll-right {
+    right: 18px;
+}
+
+.scroll-button:hover {
+    background-color: lightgray;
+    cursor: pointer;
+}
+
+.hidden {
+    display: none;
+}

@@ -37,6 +37,16 @@
     margin: 30px;
 }
 
+.guide-edit-button {
+    display: flex;
+    align-items: center;
+}
+
+.guide-edit-button img {
+    height: 17px;
+    margin-right: 16px;
+}
+
 .top-left-section h2 {
     font-size: 56px;
     text-transform: uppercase;
