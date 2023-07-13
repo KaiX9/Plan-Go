@@ -100,3 +100,70 @@ li a:hover {
 .dropdown:hover .dropdown-content {
     display: block;
 }
+
+footer {
+    position: static;
+    background-color: #f0f0f0;
+    margin-top: 30px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    margin: 0 20px;
+    margin-right: 80px;
+}
+
+.footer-column h3 {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.footer-column a {
+    display: block;
+    margin-bottom: 30px;
+    text-decoration: none;
+    color: black;
+    font-size: 16px;
+}
+
+.footer-column a:hover {
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: left;
+    padding: 10px;
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.button-column {
+    margin-bottom: 10px;
+}
+
+.apple-button img {
+    width: 150px;
+    height: 46px;
+    margin-left: 8px;
+}
+
+.google-button img {
+    width: 168px;
+    height: 62px;
+}
+
+.apple-button:hover,
+.google-button:hover {
+    cursor: pointer;
+}

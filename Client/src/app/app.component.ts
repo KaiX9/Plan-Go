@@ -145,4 +145,18 @@ export class AppComponent implements OnInit{
   myGuides() {
     this.router.navigate(['/user/guides']);
   }
+
+  isFooterVisible() {
+    const visibleRoutes = ['dashboard', 'guide', 'autocomplete', 'guide/list', 
+      'user/guides'];
+    const currentRoute = this.router.url.split('/')[1];
+    if (currentRoute === 'guide') {
+      const subRoute = this.router.url.split('/')[2];
+      return !subRoute || subRoute === 'list';
+    } else if (currentRoute === 'user') {
+      const subRoute = this.router.url.split('/')[2];
+      return subRoute === 'guides';
+    }
+    return visibleRoutes.includes(currentRoute);
+  }
 }

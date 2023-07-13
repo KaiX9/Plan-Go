@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
 import { Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
@@ -11,7 +11,7 @@ import { GuideData } from '../models/guides.models';
   templateUrl: './guide-list.component.html',
   styleUrls: ['./guide-list.component.css']
 })
-export class GuideListComponent implements OnInit {
+export class GuideListComponent implements OnInit, OnDestroy {
   guidesSvc = inject(GuidesService);
   guides: any[] = [];
   imageSources: string[] = [];
@@ -61,6 +61,24 @@ export class GuideListComponent implements OnInit {
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
     });
+
+    window.addEventListener('scroll', this.onScroll);
+  }
+
+  ngOnDestroy(): void {
+      window.removeEventListener('scroll', this.onScroll);
+  }
+
+  onScroll = () => {
+    const scrollToTopButton = document.getElementById('scrollToTopButton') as 
+      HTMLButtonElement;
+    if (scrollToTopButton) {
+      if (window.scrollY > 50) {
+        scrollToTopButton.style.display = 'block';
+      } else {
+        scrollToTopButton.style.display = 'none';
+      }
+    };
   }
 
   getRandomValue(array: any[], exclude: any[] = []) {
@@ -90,5 +108,9 @@ export class GuideListComponent implements OnInit {
 
   onSearchSubmit() {
     this.guides = this.filteredGuides;
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

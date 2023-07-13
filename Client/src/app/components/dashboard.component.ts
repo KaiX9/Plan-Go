@@ -100,6 +100,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       }
     );
 
+    window.addEventListener('scroll', this.onScroll);
+
     this.saveItinerarySvc.getItineraryList().subscribe(itineraries => {
       let numItineraries = Math.min(4, itineraries.length);
       for (let i = 0; i < numItineraries; i++) {
@@ -133,10 +135,24 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  onScroll = () => {
+    const scrollToTopButton = document.getElementById('scrollToTopButton') as 
+      HTMLButtonElement;
+    if (scrollToTopButton) {
+      if (window.scrollY > 100) {
+        scrollToTopButton.style.display = 'block';
+      } else {
+        scrollToTopButton.style.display = 'none';
+      }
+    }
+  }
+
   ngOnDestroy(): void {
     if (this.sub$) {
       this.sub$.unsubscribe();
     }
+
+    window.removeEventListener('scroll', this.onScroll);
   }
 
   getRandomValue(array: any[], exclude: any[] = []) {
@@ -172,7 +188,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   scrollReviews(direction: number) {
     const reviewsElement = document.querySelector('.reviews');
     if (reviewsElement) {
-      reviewsElement.scrollBy({ left: direction * reviewsElement.clientWidth, 
+      reviewsElement.scrollBy({ left: direction * reviewsElement.clientWidth * 0.7, 
         behavior: 'smooth' });
     }
   }
@@ -181,5 +197,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     const target = event.target as HTMLElement;
     this.isScrolledLeft = target.scrollLeft === 0;
     this.isScrolledRight = target.scrollLeft + target.clientWidth === target.scrollWidth;
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }
