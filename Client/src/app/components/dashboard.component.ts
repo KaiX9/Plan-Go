@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { LoginService } from '../services/login.service';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,6 +7,7 @@ import { GuidesService } from '../services/guides.service';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Subscription } from 'rxjs';
 import { Review } from '../models/dashboard.models';
+import { WeatherService } from '../services/weather.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -28,6 +29,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   sub$!: Subscription;
   isScrolledLeft = true;
   isScrolledRight = false;
+  weatherData: any;
+  earliestDay: any;
+  city!: string;
+  weatherSvc = inject(WeatherService);
+
+  @ViewChild('cityInput')
+  cityInput!: ElementRef;
   
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
@@ -99,6 +107,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         }
       }
     );
+
+    this.getWeatherData();
 
     window.addEventListener('scroll', this.onScroll);
 
@@ -201,5 +211,70 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  getWeatherData() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        const lat = position.coords.latitude;
+        const lon = position.coords.longitude;
+        console.info('lat: ', lat);
+        console.info('lon: ', lon);
+        this.weatherSvc.getWeatherByLocation(lat, lon).subscribe(data => {
+          this.weatherData = data;
+          this.processWeatherData();
+          console.info('earliestDay: ', this.earliestDay);
+          console.info('weather data: ', this.weatherData);
+        });
+      });
+    } else {
+      const lat = 1.3521;
+      const lon = 103.8198;
+      this.weatherSvc.getWeatherByLocation(lat, lon).subscribe(data => {
+        this.weatherData = data;
+        this.processWeatherData();
+        console.info('earliestDay: ', this.earliestDay);
+        console.info('weather data: ', this.weatherData);
+      });
+    }
+  }
+
+  searchWeatherByCity() {
+    const city = this.cityInput.nativeElement.value;
+    console.info('city: ', city);
+    this.cityInput.nativeElement.value = '';
+    this.weatherSvc.searchWeatherByCity(city).subscribe(data => {
+      this.weatherData = data;
+      this.processWeatherData();
+      console.info('earliestDay: ', this.earliestDay);
+      console.info('weather data: ', this.weatherData);
+    });
+  }
+
+  processWeatherData() {
+    this.weatherData.weatherData.sort((a: any, b: any) => new 
+      Date(a.weather_timestamp).getTime() - new Date(b.weather_timestamp).getTime());
+    
+    this.earliestDay = this.weatherData.weatherData.shift();
+    this.earliestDay.city = this.weatherData.city;
+    this.earliestDay.description = this.formatDayOfWeek(this.earliestDay.weather_timestamp);
+    this.earliestDay.icon = this.earliestDay.weather[0].icon;
+    this.earliestDay.sunrise = this.weatherData.sunrise;
+    this.earliestDay.sunset = this.weatherData.sunset;
+
+    for (let day of this.weatherData.weatherData) {
+      day.dayOfWeekShort = this.formatDayOfWeekShort(day.weather_timestamp);
+      day.icon = day.weather[0].icon;
+    }
+  }
+
+  formatDayOfWeek(timestamp: string): string {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', { weekday: 'long' });
+  }
+
+  formatDayOfWeekShort(timestamp: string): string {
+    const date = new Date(timestamp);
+    return date.toLocaleDateString('en-US', { weekday: 'short' });
   }
 }

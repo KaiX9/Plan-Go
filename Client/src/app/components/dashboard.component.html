@@ -8,6 +8,83 @@
   </head>
   <body>
     <h1>Welcome {{ name }}!</h1>
+    <h3>Weather forecast</h3>
+    <div class="input-container">
+      <mat-form-field>
+        <input
+          matInput
+          #cityInput
+          placeholder="Or search for a city"
+          (keyup.enter)="searchWeatherByCity()"
+        />
+        <button mat-icon-button matSuffix (click)="searchWeatherByCity()">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div *ngIf="weatherData" class="weather-container">
+      <div class="weather" *ngIf="earliestDay">
+        <div class="top">
+          <div>
+            <p class="city">{{ earliestDay.city }}</p>
+            <br />
+            <p class="weather-description">{{ earliestDay.description }}</p>
+          </div>
+          <img [src]="earliestDay.icon" class="weather-icon" />
+        </div>
+        <div class="bottom">
+          <p class="temperature">{{ earliestDay.temperature | round }}°C</p>
+          <div class="details">
+            <div class="parameter-row">
+              <span class="parameter-label">Feels like</span>
+              <span class="parameter-value"
+                >{{ earliestDay.feels_like | round }}°C</span
+              >
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Min</span>
+              <span class="parameter-value"
+                >{{ earliestDay.minimum_temperature | round }}°C</span
+              >
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Max</span>
+              <span class="parameter-value"
+                >{{ earliestDay.maximum_temperature | round }}°C</span
+              >
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Wind</span>
+              <span class="parameter-value"
+                >{{ earliestDay.wind_speed | round }}m/s</span
+              >
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Humidity</span>
+              <span class="parameter-value">{{ earliestDay.humidity }}%</span>
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Sunrise</span>
+              <span class="parameter-value">{{
+                earliestDay.sunrise | time
+              }}</span>
+            </div>
+            <div class="parameter-row">
+              <span class="parameter-label">Sunset</span>
+              <span class="parameter-value">{{
+                earliestDay.sunset | time
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="other-days" *ngFor="let day of weatherData.weatherData">
+        <p class="short-day">{{ day.dayOfWeekShort }}</p>
+        <hr />
+        <img [src]="day.icon" class="weather-icon-small" />
+        <p class="other-days-temp">{{ day.temperature | round }}°C</p>
+      </div>
+    </div>
     <h3>Recently viewed itineraries</h3>
     <div
       class="itineraries"

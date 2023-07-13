@@ -36,6 +36,9 @@ import { SavedGuideComponent } from './components/dialogs/saved-guide.component'
 import { FullGuideComponent } from './components/full-guide.component';
 import { UserGuidesComponent } from './components/user-guides.component';
 import { OverlappedDatesComponent } from './components/dialogs/overlapped-dates.component';
+import { WeatherService } from './services/weather.service';
+import { RoundPipe } from './round.pipe';
+import { TimePipe } from './time.pipe';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -86,6 +89,8 @@ const routes: Routes = [
     FullGuideComponent,
     UserGuidesComponent,
     OverlappedDatesComponent,
+    RoundPipe,
+    TimePipe,
   ],
   imports: [
     BrowserModule, 
@@ -106,6 +111,7 @@ const routes: Routes = [
     DirectionsService,
     SaveItineraryService,
     GuidesService,
+    WeatherService,
     { provide: HTTP_INTERCEPTORS, useClass: WithCredentialsInterceptor, multi:true }
   ],
   bootstrap: [AppComponent]
