@@ -88,6 +88,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.isToolbarClicked = isClicked;
     });
     this.directionsSvc.distanceMatrixRequest$.subscribe((request) => {
+      console.info('request: ', request);
       if (request) {
         this.getDistances(request.origins, request.destinations);
       }
@@ -192,8 +193,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         const destinationName = locations[index + 1];
         distMatrixService.getDistanceMatrix(
           {
-            origins: [originName],
-            destinations: [destinationName],
+            origins: [{placeId: originName}],
+            destinations: [{placeId: destinationName}],
             travelMode: google.maps.TravelMode.DRIVING,
           },
           (response, status) => {

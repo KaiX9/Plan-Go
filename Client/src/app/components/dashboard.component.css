@@ -221,13 +221,14 @@ h3 {
     width: 300px;
     border-radius: 30px;
     box-shadow: 10px -2px 20px 2px rgb(0 0 0 / 30%);
-    color: #fff;
-    background-color: #333;
+    color: black;
+    background-color: rgb(156, 227, 244);
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left: 30px;
     margin-right: 10px;
     padding: 0 20px 20px 20px;
+    cursor: pointer;
 }
 
 .top,
@@ -244,6 +245,7 @@ h3 {
     margin-top: 30px;
     margin-left: 15px;
     letter-spacing: 1px;
+    white-space: nowrap;
 }
 
 .weather-description {
@@ -258,10 +260,10 @@ h3 {
 }
 
 .temperature {
-    font-weight: 600;
-    font-size: 70px;
+    font-weight: 500;
+    font-size: 50px;
     width: auto;
-    letter-spacing: -5px;
+    letter-spacing: -6px;
     margin: 10px 0;
 }
 
@@ -308,7 +310,7 @@ h3 {
     border-radius: 30px;
     box-shadow: 10px -2px 20px 2px rgb(0 0 0 / 30%);
     color: #fff;
-    background-color: #333;
+    background-color: rgb(68, 68, 68);
     margin-left: 10px;
     margin-right: 10px;
     padding: 0 10px 10px 10px;
@@ -317,6 +319,7 @@ h3 {
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
+    cursor: pointer;
 }
 
 .other-days:last-child {
@@ -338,4 +341,9 @@ h3 {
 .input-container {
     display: flex;
     justify-content: center;
+}
+
+.weather.clicked, 
+.other-days.clicked {
+    transform: translateY(2px);
 }

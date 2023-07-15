@@ -125,7 +125,7 @@ public class WeatherService {
             for (Map<String, String> conditionValues : (List<Map<String, String>>) dataPoint.get("conditions")) {
                 Condition condition = new Condition();
                 condition.setDescription(conditionValues.get("description"));
-                condition.setIcon("https://openweathermap.org/img/wn/%s@2x.png".formatted(conditionValues.get("icon")));
+                condition.setIcon(conditionValues.get("icon"));
                 conditions.add(condition);
             }
             weather.setConditions(conditions);

@@ -22,7 +22,11 @@
         </button>
       </mat-form-field>
     </div>
-    <div *ngIf="weatherData" class="weather-container">
+    <div 
+      *ngIf="weatherData" 
+      class="weather-container"
+      (click)="onWeatherClick($event)"
+    >
       <div class="weather" *ngIf="earliestDay">
         <div class="top">
           <div>
@@ -30,7 +34,7 @@
             <br />
             <p class="weather-description">{{ earliestDay.description }}</p>
           </div>
-          <img [src]="earliestDay.icon" class="weather-icon" />
+          <img [src]="getIconPath(earliestDay.icon)" class="weather-icon" />
         </div>
         <div class="bottom">
           <p class="temperature">{{ earliestDay.temperature | round }}°C</p>
@@ -78,10 +82,14 @@
           </div>
         </div>
       </div>
-      <div class="other-days" *ngFor="let day of weatherData.weatherData">
+      <div 
+        class="other-days" 
+        *ngFor="let day of weatherData.weatherData"
+        (click)="onOtherDayClick($event, day)"
+      >
         <p class="short-day">{{ day.dayOfWeekShort }}</p>
         <hr />
-        <img [src]="day.icon" class="weather-icon-small" />
+        <img [src]="getIconPath(day.icon)" class="weather-icon-small" />
         <p class="other-days-temp">{{ day.temperature | round }}°C</p>
       </div>
     </div>

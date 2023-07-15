@@ -255,8 +255,8 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
         optimizeWaypoints: true
       };
       this.directionsSvc.changeRequest(request);
-      const origins = [items[0].name];
-      const destinations = items.slice(1).map((item) => item.name);
+      const origins = [items[0].place_id];
+      const destinations = items.slice(1).map((item) => item.place_id);
       this.directionsSvc.updateDistanceMatrixRequest({ origins, destinations });
     }
   }

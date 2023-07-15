@@ -251,6 +251,31 @@ export class DashboardComponent implements OnInit, OnDestroy {
     });
   }
 
+  getIconPath(icon: string): string {
+    const iconMap: { [key: string]: string } = {
+      '01d': 'clear_day.svg',
+      '01n': 'clear_night.svg',
+      '02d': 'partly_cloudy_day.svg',
+      '02n': 'partly_cloudy_night.svg',
+      '03d': 'cloudy.svg',
+      '03n': 'cloudy.svg',
+      '04d': 'overcast.svg',
+      '04n': 'overcast.svg',
+      '09d': 'rain.svg',
+      '09n': 'rain.svg',
+      '10d': 'partly_cloudy_day_rain.svg',
+      '10n': 'partly_cloudy_night_rain.svg',
+      '11d': 'thunderstorms_day.svg',
+      '11n': 'thunderstorms_night.svg',
+      '13d': 'snow.svg',
+      '13n': 'snow.svg',
+      '50d': 'mist.svg',
+      '50n': 'mist.svg',
+    };
+    const svgFileName = iconMap[icon];
+    return `assets/weather_icons/${svgFileName}`;
+  }
+
   processWeatherData() {
     this.weatherData.weatherData.sort((a: any, b: any) => new 
       Date(a.weather_timestamp).getTime() - new Date(b.weather_timestamp).getTime());
@@ -276,5 +301,26 @@ export class DashboardComponent implements OnInit, OnDestroy {
   formatDayOfWeekShort(timestamp: string): string {
     const date = new Date(timestamp);
     return date.toLocaleDateString('en-US', { weekday: 'short' });
+  }
+
+  onWeatherClick(event: MouseEvent) {
+    event.stopPropagation();
+    if (event.currentTarget) {
+      const weatherElement = (event.currentTarget as HTMLElement).querySelector('.weather');
+      weatherElement?.classList.add('clicked');
+      setTimeout(() => {
+        weatherElement?.classList.remove('clicked');
+      }, 100);
+    }
+  }
+
+  onOtherDayClick(event: MouseEvent, day: any) {
+    event.stopPropagation();
+    const otherDayElement = event.currentTarget as HTMLElement;
+    otherDayElement.classList.add('clicked');
+
+    setTimeout(() => {
+      otherDayElement.classList.remove('clicked');
+    }, 100);
   }
 }
