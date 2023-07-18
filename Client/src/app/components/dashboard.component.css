@@ -109,7 +109,7 @@ h3 {
 .review-title {
     text-align: center;
     font-size: 36px;
-    margin-top: 100px;
+    margin-top: 50px;
     font-weight: bold;
     font-family: 'Montserrat', sans-serif;
 }
@@ -117,7 +117,7 @@ h3 {
 .reviews {
     display: flex;
     overflow-x: hidden;
-    padding-bottom: 100px;
+    padding-bottom: 50px;
 }
 
 .review {
@@ -130,11 +130,11 @@ h3 {
 }
 
 .review-content {
-    font-size: 22px;
+    font-size: 18px;
     line-height: 1.5;
     color: grey;
-    height: 310px;
-    text-align: justify;
+    height: 230px;
+    text-align: left;
 }
 
 .review-author {
@@ -343,4 +343,8 @@ h3 {
 .input-container {
     display: flex;
     justify-content: center;
+}
+
+.input-container mat-form-field {
+    width: 45%;
 }
