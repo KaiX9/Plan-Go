@@ -5,6 +5,7 @@ import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { GuideData } from '../models/guides.models';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-guide-list',
@@ -20,6 +21,7 @@ export class GuideListComponent implements OnInit, OnDestroy {
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
   filteredGuides: GuideData[] = [];
+  spinner = inject(NgxSpinnerService);
 
   @ViewChild('searchInput')
   searchInput!: ElementRef<HTMLInputElement>;
@@ -36,6 +38,7 @@ export class GuideListComponent implements OnInit, OnDestroy {
   ];
   
   ngOnInit(): void {
+    this.openSpinner();
     this.loginSvc.autocomplete().subscribe(
       result => {
         console.info(JSON.stringify(result));
@@ -67,6 +70,13 @@ export class GuideListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
       window.removeEventListener('scroll', this.onScroll);
+  }
+
+  openSpinner() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 2000);
   }
 
   onScroll = () => {

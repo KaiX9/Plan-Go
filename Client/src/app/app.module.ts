@@ -39,6 +39,7 @@ import { OverlappedDatesComponent } from './components/dialogs/overlapped-dates.
 import { WeatherService } from './services/weather.service';
 import { RoundPipe } from './round.pipe';
 import { TimePipe } from './time.pipe';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 const routes: Routes = [
   { path: '', component: LoginComponent },
@@ -100,6 +101,7 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forRoot(routes, { useHash: true }),
     BrowserAnimationsModule,
+    NgxSpinnerModule,
     DragDropModule,
     MatDialogModule
   ],

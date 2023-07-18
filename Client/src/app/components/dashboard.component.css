@@ -4,7 +4,7 @@ h1 {
     margin-left: 30px;
     margin-top: 20px;
     margin-bottom: 50px;
-    font-size: 48px;
+    font-size: 36px;
     font-weight: bold;
     font-family: 'Montserrat', sans-serif;
 }
@@ -108,14 +108,16 @@ h3 {
 
 .review-title {
     text-align: center;
-    font-size: 42px;
-    margin-top: 150px;
+    font-size: 36px;
+    margin-top: 100px;
+    font-weight: bold;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .reviews {
     display: flex;
     overflow-x: hidden;
-    padding-bottom: 150px;
+    padding-bottom: 100px;
 }
 
 .review {
@@ -215,6 +217,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 100px;
 }
 
 .weather {
@@ -229,6 +232,7 @@ h3 {
     margin-right: 10px;
     padding: 0 20px 20px 20px;
     cursor: pointer;
+    transition: width 0.3s linear;
 }
 
 .top,
@@ -289,11 +293,6 @@ h3 {
     font-size: 12px;
 }
 
-.other-days {
-    text-align: center;
-    margin-left: 20px;
-}
-
 .weather-icon-small {
     width: 100px;
 }
@@ -320,13 +319,16 @@ h3 {
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
+    text-align: center;
+    margin-left: 20px;
+    transition: width 0.3s linear;
 }
 
 .other-days:last-child {
     margin-right: 30px;
 }
 
-.other-days hr {
+.hori-line {
     border-color: white;
     width: 60%;
 }
@@ -341,9 +343,4 @@ h3 {
 .input-container {
     display: flex;
     justify-content: center;
-}
-
-.weather.clicked, 
-.other-days.clicked {
-    transform: translateY(2px);
 }

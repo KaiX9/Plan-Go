@@ -7,6 +7,7 @@ import { GuidesService } from '../services/guides.service';
 import { LoginService } from '../services/login.service';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-guide',
@@ -23,8 +24,10 @@ export class GuideComponent implements OnInit, OnDestroy {
   saveItinerarySvc = inject(SaveItineraryService);
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
+  spinner = inject(NgxSpinnerService);
 
   ngOnInit(): void {
+    this.openSpinner();
     this.loginSvc.autocomplete().subscribe(
       result => {
         console.info(JSON.stringify(result));
@@ -47,6 +50,13 @@ export class GuideComponent implements OnInit, OnDestroy {
     if (this.fullItinerary$) {
       this.fullItinerary$.unsubscribe();
     }
+  }
+
+  openSpinner() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   onSelectionChange(event: MatSelectChange) {

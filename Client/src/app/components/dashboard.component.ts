@@ -8,6 +8,7 @@ import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Subscription } from 'rxjs';
 import { Review } from '../models/dashboard.models';
 import { WeatherService } from '../services/weather.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-dashboard',
@@ -33,6 +34,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   earliestDay: any;
   city!: string;
   weatherSvc = inject(WeatherService);
+  selectedDay: any = null;
+  spinner = inject(NgxSpinnerService);
 
   @ViewChild('cityInput')
   cityInput!: ElementRef;
@@ -88,6 +91,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ];
 
   ngOnInit(): void {
+    this.openSpinner();
     this.loginSvc.dashboard().subscribe(
       result => {
         console.info(JSON.stringify(result));
@@ -143,6 +147,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
     });
+  }
+
+  openSpinner() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 2000);
   }
 
   onScroll = () => {
@@ -287,9 +298,14 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.earliestDay.sunrise = this.weatherData.sunrise;
     this.earliestDay.sunset = this.weatherData.sunset;
 
+    this.selectedDay = this.earliestDay;
+
+    this.earliestDay.dayOfWeekShort = this.formatDayOfWeekShort(this.earliestDay.weather_timestamp);
+
     for (let day of this.weatherData.weatherData) {
       day.dayOfWeekShort = this.formatDayOfWeekShort(day.weather_timestamp);
       day.icon = day.weather[0].icon;
+      day.description = this.formatDayOfWeek(day.weather_timestamp);
     }
   }
 
@@ -308,6 +324,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     if (event.currentTarget) {
       const weatherElement = (event.currentTarget as HTMLElement).querySelector('.weather');
       weatherElement?.classList.add('clicked');
+      this.selectedDay = this.earliestDay;
       setTimeout(() => {
         weatherElement?.classList.remove('clicked');
       }, 100);
@@ -318,6 +335,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     event.stopPropagation();
     const otherDayElement = event.currentTarget as HTMLElement;
     otherDayElement.classList.add('clicked');
+    this.selectedDay = day;
 
     setTimeout(() => {
       otherDayElement.classList.remove('clicked');

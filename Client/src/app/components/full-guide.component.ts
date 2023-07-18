@@ -3,11 +3,18 @@ import { GuidesService } from '../services/guides.service';
 import { DayData } from '../models/guides.models';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-full-guide',
   templateUrl: './full-guide.component.html',
-  styleUrls: ['./full-guide.component.css']
+  styleUrls: ['./full-guide.component.css'],
+  animations: [
+    trigger('fadeIn', [
+      state('void', style({ opacity: 0 })),
+      transition(':enter', [animate('700ms', style({ opacity: 1 }))]),
+    ]),
+  ],
 })
 export class FullGuideComponent implements OnInit {
   guide: any;

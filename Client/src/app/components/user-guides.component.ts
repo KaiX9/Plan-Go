@@ -4,6 +4,7 @@ import { GuidesService } from '../services/guides.service';
 import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-user-guides',
@@ -18,6 +19,7 @@ export class UserGuidesComponent implements OnInit {
   viewCounts: number[] = [];
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
+  spinner = inject(NgxSpinnerService);
 
   images = [
     '/assets/images/image1.jpg', '/assets/images/image2.jpg',
@@ -31,6 +33,7 @@ export class UserGuidesComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.openSpinner();
     this.loginSvc.autocomplete().subscribe(
       result => {
         console.info(JSON.stringify(result));
@@ -56,6 +59,13 @@ export class UserGuidesComponent implements OnInit {
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
     });
+  }
+
+  openSpinner() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 2000);
   }
 
   getRandomValue(array: any[], exclude: any[] = []) {

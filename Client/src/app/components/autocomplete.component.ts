@@ -10,6 +10,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SavedDialogComponent } from './dialogs/saved-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { OverlappedDatesComponent } from './dialogs/overlapped-dates.component';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-autocomplete',
@@ -41,8 +42,10 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
   loginSvc = inject(LoginService);
   dialog = inject(MatDialog);
   saveItinerarySvc = inject(SaveItineraryService);
+  spinner = inject(NgxSpinnerService);
 
   ngOnInit(): void {
+    this.openSpinner();
     const showSavedDialog = this.getCookie('showSavedDialog');
     console.info('showSavedDialog: ', showSavedDialog);
     if (showSavedDialog === 'true') {
@@ -94,6 +97,13 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
       }
       console.info(this.result);
     });
+  }
+
+  openSpinner() {
+    this.spinner.show();
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
   }
 
   getCookie(name: string): string | null {

@@ -8,11 +8,18 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SavedGuideComponent } from './dialogs/saved-guide.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Location } from '@angular/common';
+import { trigger, state, style, transition, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-guide-editing',
   templateUrl: './guide-editing.component.html',
-  styleUrls: ['./guide-editing.component.css']
+  styleUrls: ['./guide-editing.component.css'],
+  animations: [
+    trigger('slideIn', [
+      state('void', style({ transform: 'translateX(100%)' })),
+      transition(':enter', [animate('500ms', style({ transform: 'translateX(0)' }))]),
+    ]),
+  ],
 })
 export class GuideEditingComponent implements OnInit {
   guideForm!: FormGroup;

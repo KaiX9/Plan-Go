@@ -1,3 +1,11 @@
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="default"
+  color="#fff"
+  type="square-jelly-box"
+  [fullScreen]="true"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,75 +30,148 @@
         </button>
       </mat-form-field>
     </div>
-    <div 
-      *ngIf="weatherData" 
+    <div
+      *ngIf="weatherData"
       class="weather-container"
       (click)="onWeatherClick($event)"
     >
-      <div class="weather" *ngIf="earliestDay">
-        <div class="top">
-          <div>
-            <p class="city">{{ earliestDay.city }}</p>
-            <br />
-            <p class="weather-description">{{ earliestDay.description }}</p>
+      <div
+        [class]="selectedDay !== earliestDay ? 'other-days' : 'weather'"
+        *ngIf="earliestDay"
+      >
+        <ng-container
+          *ngIf="selectedDay === earliestDay; else earliestDayNotSelected"
+        >
+          <div class="top">
+            <div>
+              <p class="city">{{ earliestDay.city }}</p>
+              <br />
+              <p class="weather-description">{{ earliestDay.description }}</p>
+            </div>
+            <img [src]="getIconPath(earliestDay.icon)" class="weather-icon" />
           </div>
-          <img [src]="getIconPath(earliestDay.icon)" class="weather-icon" />
-        </div>
-        <div class="bottom">
-          <p class="temperature">{{ earliestDay.temperature | round }}°C</p>
-          <div class="details">
-            <div class="parameter-row">
-              <span class="parameter-label">Feels like</span>
-              <span class="parameter-value"
-                >{{ earliestDay.feels_like | round }}°C</span
-              >
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Min</span>
-              <span class="parameter-value"
-                >{{ earliestDay.minimum_temperature | round }}°C</span
-              >
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Max</span>
-              <span class="parameter-value"
-                >{{ earliestDay.maximum_temperature | round }}°C</span
-              >
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Wind</span>
-              <span class="parameter-value"
-                >{{ earliestDay.wind_speed | round }}m/s</span
-              >
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Humidity</span>
-              <span class="parameter-value">{{ earliestDay.humidity }}%</span>
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Sunrise</span>
-              <span class="parameter-value">{{
-                earliestDay.sunrise | time
-              }}</span>
-            </div>
-            <div class="parameter-row">
-              <span class="parameter-label">Sunset</span>
-              <span class="parameter-value">{{
-                earliestDay.sunset | time
-              }}</span>
+          <div class="bottom">
+            <p class="temperature">{{ earliestDay.temperature | round }}°C</p>
+            <div class="details">
+              <div class="parameter-row">
+                <span class="parameter-label">Feels like</span>
+                <span class="parameter-value"
+                  >{{ earliestDay.feels_like | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Min</span>
+                <span class="parameter-value"
+                  >{{ earliestDay.minimum_temperature | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Max</span>
+                <span class="parameter-value"
+                  >{{ earliestDay.maximum_temperature | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Wind</span>
+                <span class="parameter-value"
+                  >{{ earliestDay.wind_speed | round }}m/s</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Humidity</span>
+                <span class="parameter-value">{{ earliestDay.humidity }}%</span>
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Sunrise</span>
+                <span class="parameter-value">{{
+                  earliestDay.sunrise | time
+                }}</span>
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Sunset</span>
+                <span class="parameter-value">{{
+                  earliestDay.sunset | time
+                }}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </ng-container>
+        <ng-template class="not-selected" #earliestDayNotSelected>
+          <p class="short-day">{{ earliestDay.dayOfWeekShort }}</p>
+          <hr class="hori-line" />
+          <img
+            [src]="getIconPath(earliestDay.icon)"
+            class="weather-icon-small"
+          />
+          <p class="other-days-temp">{{ earliestDay.temperature | round }}°C</p>
+        </ng-template>
       </div>
-      <div 
-        class="other-days" 
+      <div
+        [class]="day === selectedDay ? 'weather' : 'other-days'"
         *ngFor="let day of weatherData.weatherData"
         (click)="onOtherDayClick($event, day)"
       >
-        <p class="short-day">{{ day.dayOfWeekShort }}</p>
-        <hr />
-        <img [src]="getIconPath(day.icon)" class="weather-icon-small" />
-        <p class="other-days-temp">{{ day.temperature | round }}°C</p>
+        <ng-container *ngIf="day === selectedDay; else notSelected">
+          <div class="top">
+            <div>
+              <p class="city">{{ earliestDay.city }}</p>
+              <br />
+              <p class="weather-description">{{ day.description }}</p>
+            </div>
+            <img [src]="getIconPath(day.icon)" class="weather-icon" />
+          </div>
+          <div class="bottom">
+            <p class="temperature">{{ day.temperature | round }}°C</p>
+            <div class="details">
+              <div class="parameter-row">
+                <span class="parameter-label">Feels like</span>
+                <span class="parameter-value"
+                  >{{ day.feels_like | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Min</span>
+                <span class="parameter-value"
+                  >{{ day.minimum_temperature | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Max</span>
+                <span class="parameter-value"
+                  >{{ day.maximum_temperature | round }}°C</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Wind</span>
+                <span class="parameter-value"
+                  >{{ day.wind_speed | round }}m/s</span
+                >
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Humidity</span>
+                <span class="parameter-value">{{ day.humidity }}%</span>
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Sunrise</span>
+                <span class="parameter-value">{{
+                  earliestDay.sunrise | time
+                }}</span>
+              </div>
+              <div class="parameter-row">
+                <span class="parameter-label">Sunset</span>
+                <span class="parameter-value">{{
+                  earliestDay.sunset | time
+                }}</span>
+              </div>
+            </div>
+          </div>
+        </ng-container>
+        <ng-template #notSelected>
+          <p class="short-day">{{ day.dayOfWeekShort }}</p>
+          <hr class="hori-line" />
+          <img [src]="getIconPath(day.icon)" class="weather-icon-small" />
+          <p class="other-days-temp">{{ day.temperature | round }}°C</p>
+        </ng-template>
       </div>
     </div>
     <h3>Recently viewed itineraries</h3>
@@ -153,7 +234,7 @@
         >
       </button>
     </div>
-    <h2>Explore</h2>
+    <h1>Explore</h1>
     <h3>Popular Destinations</h3>
     <div class="guides">
       <div
