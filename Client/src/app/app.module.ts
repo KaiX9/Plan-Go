@@ -42,11 +42,12 @@ import { TimePipe } from './time.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
 
 const routes: Routes = [
-  { path: '', component: LoginComponent },
-  { path: 'dashboard', component: DashboardComponent },
+  { path: '', component: LoginComponent, data: { title: 'Plan&Go' } },
+  { path: 'dashboard', component: DashboardComponent, data: { title: 'Dashboard' } },
   {
     path: 'map/:location',
     component: MapComponent,
+    data: { title: 'Itinerary Planning' },
     children: [
       {
         path: 'place_details/:placeId',
@@ -60,12 +61,12 @@ const routes: Routes = [
       },
     ],
   },
-  { path: 'guide', component: GuideComponent },
-  { path: 'guide/edit', component: GuideEditingComponent },
-  { path: 'autocomplete', component: AutocompleteComponent },
-  { path: 'guide/list', component: GuideListComponent },
-  { path: 'guide/:uuid', component: FullGuideComponent },
-  { path: 'user/guides', component: UserGuidesComponent },
+  { path: 'guide', component: GuideComponent, data: { title: 'Write A Guide' } },
+  { path: 'guide/edit', component: GuideEditingComponent, data: { title: 'Guide Editing' } },
+  { path: 'autocomplete', component: AutocompleteComponent, data: { title: 'Plan An Itinerary' } },
+  { path: 'guide/list', component: GuideListComponent, data: { title: 'Guides List' } },
+  { path: 'guide/:uuid', component: FullGuideComponent, data: { title: 'Full Guide' } },
+  { path: 'user/guides', component: UserGuidesComponent, data: { title: 'My Guides' } },
   { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 

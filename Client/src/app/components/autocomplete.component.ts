@@ -11,6 +11,7 @@ import { SavedDialogComponent } from './dialogs/saved-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { OverlappedDatesComponent } from './dialogs/overlapped-dates.component';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-autocomplete',
@@ -96,6 +97,12 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
         iconUrl: place?.icon
       }
       console.info(this.result);
+    });
+  }
+
+  constructor(private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
     });
   }
 

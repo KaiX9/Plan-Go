@@ -27,7 +27,7 @@ public class ItineraryService {
         List<ItineraryDetails> itineraryDetails = new ArrayList<ItineraryDetails>();
         for (String uuid : uuidList) {
             Optional<ItineraryDetails> details = this.itineraryRepo.getItineraryDetails(uuid);
-            itineraryDetails.add(details.get());
+            details.ifPresent(itineraryDetails::add);
         }
         return itineraryDetails;
     }

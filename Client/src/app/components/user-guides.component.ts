@@ -1,10 +1,11 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GuidesService } from '../services/guides.service';
 import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-guides',
@@ -58,6 +59,12 @@ export class UserGuidesComponent implements OnInit {
         this.imageSources.push(this.getRandomValue(this.images, this.imageSources));
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
+    });
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
     });
   }
 

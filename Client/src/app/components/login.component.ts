@@ -2,7 +2,8 @@ import { Component, NgZone, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Login, Register } from '../models/login.models';
 import { LoginService } from '../services/login.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-login',
@@ -65,6 +66,12 @@ export class LoginComponent implements OnInit {
         console.error('error from /auth/login: ', error);
       });
     }
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
   }
 
   createSignUpForm(): FormGroup {

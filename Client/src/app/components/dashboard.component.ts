@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { LoginService } from '../services/login.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { GuidesService } from '../services/guides.service';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { Review } from '../models/dashboard.models';
 import { WeatherService } from '../services/weather.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dashboard',
@@ -117,6 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     window.addEventListener('scroll', this.onScroll);
 
     this.saveItinerarySvc.getItineraryList().subscribe(itineraries => {
+      console.info('itineraries: ', itineraries);
       let numItineraries = Math.min(4, itineraries.length);
       for (let i = 0; i < numItineraries; i++) {
         const randomIndex = Math.floor(Math.random() * itineraries.length);
@@ -132,6 +134,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
     this.guidesSvc.getAllGuides().subscribe(guides => {
+      console.info('guides: ', guides);
       let numGuides = Math.min(4, guides.length);
       for (let i = 0; i < numGuides; i++) {
         const randomIndex = Math.floor(Math.random() * guides.length);
@@ -146,6 +149,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.guideImageSources.push(image);
         this.viewCounts.push(Math.floor(Math.random() * (30000 - 100 + 1)) + 100);
       }
+    });
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
     });
   }
 

@@ -1,11 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { LoginService } from '../services/login.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { GuideData } from '../models/guides.models';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-guide-list',
@@ -70,6 +71,12 @@ export class GuideListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
       window.removeEventListener('scroll', this.onScroll);
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
   }
 
   openSpinner() {

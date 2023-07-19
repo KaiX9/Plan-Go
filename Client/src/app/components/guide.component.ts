@@ -2,12 +2,13 @@ import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Observable, Subscription } from 'rxjs';
 import { MatSelectChange } from '@angular/material/select';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GuidesService } from '../services/guides.service';
 import { LoginService } from '../services/login.service';
 import { AuthenticateErrorComponent } from './dialogs/authenticate-error.component';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-guide',
@@ -50,6 +51,12 @@ export class GuideComponent implements OnInit, OnDestroy {
     if (this.fullItinerary$) {
       this.fullItinerary$.unsubscribe();
     }
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
   }
 
   openSpinner() {

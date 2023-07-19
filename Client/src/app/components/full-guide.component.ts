@@ -1,9 +1,10 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { GuidesService } from '../services/guides.service';
 import { DayData } from '../models/guides.models';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-full-guide',
@@ -33,6 +34,12 @@ export class FullGuideComponent implements OnInit {
     this.authorName = this.guidesSvc.getAuthorName();
     console.info('author name: ', this.authorName);
     this.likeCount = Math.floor(Math.random() * (350 - 20 + 1)) + 20;
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
   }
 
   getDayData(day: any): DayData {

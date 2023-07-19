@@ -2,13 +2,14 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { GuidesService } from '../services/guides.service';
 import { Place } from '../models/map.models';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GuideData, TransformedData } from '../models/guides.models';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { SavedGuideComponent } from './dialogs/saved-guide.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { Location } from '@angular/common';
 import { trigger, state, style, transition, animate } from '@angular/animations';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-guide-editing',
@@ -56,6 +57,12 @@ export class GuideEditingComponent implements OnInit {
       this.guideForm = this.createGuideForm();
       console.info('guideForm: ', this.guideForm);
     }
+  }
+
+  constructor(private activatedRoute: ActivatedRoute, private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
   }
 
   createGuideForm(defaultValues: any = {}): FormGroup {

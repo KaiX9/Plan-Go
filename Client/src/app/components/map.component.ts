@@ -14,6 +14,7 @@ import { MatButtonToggleGroup } from '@angular/material/button-toggle';
 import { DirectionsService } from '../services/directions.service';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { MatDialog } from '@angular/material/dialog';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-map',
@@ -104,7 +105,11 @@ export class MapComponent implements OnInit, AfterViewInit {
     }, 1000);
   }
 
-  constructor() {}
+  constructor(private titleService: Title) {
+    this.activatedRoute.data.subscribe((data) => {
+      this.titleService.setTitle(data['title']);
+    });
+  }
 
   getCookie(name: string): string | null {
     const cookies = document.cookie.split(';');
