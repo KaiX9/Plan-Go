@@ -11,6 +11,8 @@ import { NotesDialogComponent } from './dialogs/notes-dialog.component';
 import { SaveItineraryService } from '../services/save-itinerary.service';
 import { ItiList, Merged } from '../models/save.models';
 import { ItineraryListComponent } from './dialogs/itinerary-list.component';
+import { CalendarDialogComponent } from './dialogs/calendar-dialog.component';
+import { SavedDialogComponent } from './dialogs/saved-dialog.component';
 
 @Component({
   selector: 'app-itinerary',
@@ -309,12 +311,31 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
       endDate: this.endDate,
       uuid: this.uuid
     }
-    this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(
-      response => {
-        console.info('resp: ', response);
-        this.authorize(list);
+
+    const calDialogConfig = new MatDialogConfig();
+    calDialogConfig.width = '400px';
+    calDialogConfig.height = '220px';
+    calDialogConfig.data = { message: 'Do you want to save this itinerary to your Google Calendar?' };
+    let dialogRef = this.dialog.open(CalendarDialogComponent, calDialogConfig);
+    dialogRef.afterClosed().subscribe(result => {
+      if (result === 'yes') {
+        this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(response => {
+          console.info('resp: ', response);
+          this.authorize(list);
+        });
+      } else {
+        this.saveItinerarySvc.saveItinerary(this.mergedArray, list).subscribe(response => {
+          console.info('resp: ', response);
+          const dialogConfig = new MatDialogConfig();
+          dialogConfig.width = '300px';
+          dialogConfig.height = '150px';
+          let savedDialogRef = this.dialog.open(SavedDialogComponent, dialogConfig);
+          savedDialogRef.afterClosed().subscribe(() => {
+            this.router.navigate(['/autocomplete']);
+          });
+        });
       }
-    );
+    });
   }
 
   getItiList() {

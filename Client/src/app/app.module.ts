@@ -40,6 +40,7 @@ import { WeatherService } from './services/weather.service';
 import { RoundPipe } from './round.pipe';
 import { TimePipe } from './time.pipe';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { CalendarDialogComponent } from './components/dialogs/calendar-dialog.component';
 
 const routes: Routes = [
   { path: '', component: LoginComponent, data: { title: 'Plan&Go' } },
@@ -93,6 +94,7 @@ const routes: Routes = [
     OverlappedDatesComponent,
     RoundPipe,
     TimePipe,
+    CalendarDialogComponent,
   ],
   imports: [
     BrowserModule, 

@@ -68,7 +68,7 @@ public class ItineraryController {
     @Value("${client.secret}")
     private String clientSecret;
 
-    private static final String APPLICATION_NAME = "angular login";
+    private static final String APPLICATION_NAME = "Plan&Go";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
     // private static final String redirectUri = "http://localhost:8080/save/calendar";

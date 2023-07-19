@@ -49,7 +49,7 @@ public class EmailController {
     @Value("${client.secret}")
     private String clientSecret;
 
-    static final String APPLICATION_NAME = "angular login";
+    static final String APPLICATION_NAME = "Plan&Go";
     static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     
     @GetMapping(path="/invite")
