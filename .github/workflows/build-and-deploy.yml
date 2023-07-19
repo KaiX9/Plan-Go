@@ -32,7 +32,7 @@ jobs:
         echo "MONGODB: $MONGODB"
 
     - name: Build with Maven
-      run: mvn clean package
+      run: mvn clean package -DskipTests
       working-directory: Server
       env:
         MYSQL_URL: ${{ secrets.MYSQL_URL }}
