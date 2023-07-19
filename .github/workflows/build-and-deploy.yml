@@ -20,6 +20,7 @@ jobs:
 
     - name: Build with Maven
       run: mvn clean package
+      working-directory: Server
 
     - name: Install Railway CLI
       run: curl -sL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
