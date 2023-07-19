@@ -217,7 +217,8 @@ export class AutocompleteComponent implements AfterViewInit, OnInit {
 
   authorize = () => {
     const clientId = '40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/invite';
+    // const redirectUri = 'http://localhost:8080/invite';
+    const redirectUri = 'https://planandgo-production.up.railway.app/invite';
     const scope = 'https://www.googleapis.com/auth/gmail.send';
     const state = JSON.stringify({
       invitees: this.invitees,

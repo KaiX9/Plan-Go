@@ -330,7 +330,8 @@ export class ItineraryComponent implements OnInit, OnDestroy, AfterViewInit, Aft
 
   authorize = (list: ItiList) => {
     const clientId = '40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com';
-    const redirectUri = 'http://localhost:8080/save/calendar';
+    // const redirectUri = 'http://localhost:8080/save/calendar';
+    const redirectUri = 'https://planandgo-production.up.railway.app/save/calendar';
     const scope = 'https://www.googleapis.com/auth/calendar';
     const state = JSON.stringify({
       location: list.location,
