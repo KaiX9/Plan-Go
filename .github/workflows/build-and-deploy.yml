@@ -18,6 +18,19 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
+    - name: Print environment variables
+      run: |
+        echo "MYSQL_URL: $MYSQL_URL"
+        echo "MYSQL_USERNAME: $MYSQL_USERNAME"
+        echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
+        echo "CLIENTSECRET: $CLIENTSECRET"
+        echo "OPEN_WEATHER_KEY: $OPEN_WEATHER_KEY"
+        echo "MONGOHOST: $MONGOHOST"
+        echo "MONGOPORT: $MONGOPORT"
+        echo "MONGOUSER: $MONGOUSER"
+        echo "MONGOPASSWORD: $MONGOPASSWORD"
+        echo "MONGODB: $MONGODB"
+
     - name: Build with Maven
       run: mvn clean package
       working-directory: Server
@@ -32,19 +45,6 @@ jobs:
         MONGOUSER: ${{ secrets.MONGOUSER }}
         MONGOPASSWORD: ${{ secrets.MONGOPASSWORD }}
         MONGODB: ${{ secrets.MONGODB }}
-    
-    - name: Print environment variables
-      run: |
-        echo "MYSQL_URL: $MYSQL_URL"
-        echo "MYSQL_USERNAME: $MYSQL_USERNAME"
-        echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
-        echo "CLIENTSECRET: $CLIENTSECRET"
-        echo "OPEN_WEATHER_KEY: $OPEN_WEATHER_KEY"
-        echo "MONGOHOST: $MONGOHOST"
-        echo "MONGOPORT: $MONGOPORT"
-        echo "MONGOUSER: $MONGOUSER"
-        echo "MONGOPASSWORD: $MONGOPASSWORD"
-        echo "MONGODB: $MONGODB"
 
     - name: Install Railway CLI
       run: curl -sL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh
