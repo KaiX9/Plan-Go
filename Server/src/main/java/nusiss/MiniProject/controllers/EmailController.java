@@ -71,7 +71,8 @@ public class EmailController {
         System.out.println("address: " + address);
             
         String clientId = "40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com";
-        String redirectUri = "http://localhost:8080/invite";
+        // String redirectUri = "http://localhost:8080/invite";
+        String redirectUri = "https://planandgo-production.up.railway.app/invite";
         System.out.println("Obtaining access token with code: " + code);
         String accessToken = googleOAuthSvc.getAccessToken(code, clientId, clientSecret, redirectUri);
         System.out.println("Access token at controller: " + accessToken);
@@ -99,7 +100,8 @@ public class EmailController {
         Cookie cookie = new Cookie("emailSent", "true");
         cookie.setPath("/");
         response.addCookie(cookie);
-        String frontendUrl = "http://localhost:4200/#/autocomplete";
+        // String frontendUrl = "http://localhost:4200/#/autocomplete";
+        String frontendUrl = "https://planandgo-production.up.railway.app/#/autocomplete";
         return new RedirectView(frontendUrl);
     }
 }

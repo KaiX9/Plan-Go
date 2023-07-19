@@ -71,7 +71,8 @@ public class ItineraryController {
     private static final String APPLICATION_NAME = "angular login";
     private static final JsonFactory JSON_FACTORY = GsonFactory.getDefaultInstance();
     private static final NetHttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-    private static final String redirectUri = "http://localhost:8080/save/calendar";
+    // private static final String redirectUri = "http://localhost:8080/save/calendar";
+    private static final String redirectUri = "https://planandgo-production.up.railway.app/save/calendar";
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     @GetMapping(path="/save/calendar")
@@ -127,7 +128,8 @@ public class ItineraryController {
         Cookie cookie = new Cookie("showSavedDialog", "true");
         cookie.setPath("/");
         response.addCookie(cookie);
-        String frontendUrl = "http://localhost:4200/#/autocomplete";
+        // String frontendUrl = "http://localhost:4200/#/autocomplete";
+        String frontendUrl = "https://planandgo-production.up.railway.app/#/autocomplete";
         return new RedirectView(frontendUrl);
     }
 
