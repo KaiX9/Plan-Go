@@ -90,7 +90,7 @@ export class LoginComponent implements OnInit {
     };
     this.loginSvc.registerUser(signupData).subscribe(
       result => {
-        alert(JSON.stringify(result));
+        console.info('result: ', result);
         this.router.navigate(['/']).then(() => {
           location.reload();
         });
@@ -118,7 +118,7 @@ export class LoginComponent implements OnInit {
       };
       this.loginSvc.authenticateLogin(loginData).subscribe(
         result => {
-          alert(JSON.stringify(result));
+          console.info('result: ', result);
           document.cookie = 'userAuthenticated=true; path=/; expires=Tue, 19 Jan 2038 03:14:07 UTC';
           this.router.navigate(['/dashboard']);
         },
@@ -127,6 +127,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/']);
           location.reload();
         }
-        )      
+      )      
   };
 }

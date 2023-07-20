@@ -201,6 +201,28 @@
         </div>
       </div>
     </div>
+    <h1>Explore</h1>
+    <h3>Popular Destinations</h3>
+    <div class="guides">
+      <div
+        class="guide"
+        *ngFor="let guide of selectedGuides; let i = index"
+        (click)="onGuideClick(guide)"
+      >
+        <div class="image-container">
+          <img [src]="guideImageSources[i]" />
+        </div>
+        <div class="title">{{ guide.title }}</div>
+        <div class="summary">{{ guide.summary }}</div>
+        <div class="name-container">
+          <div class="name">By {{ guide.author }}</div>
+          <div class="views-container">
+            <mat-icon>visibility</mat-icon>
+            <div class="views">{{ viewCounts[i] }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
     <h3 class="review-title">Hear from our happy travelers</h3>
     <div class="reviews-container">
       <button
@@ -233,28 +255,6 @@
       >
         >
       </button>
-    </div>
-    <h1>Explore</h1>
-    <h3>Popular Destinations</h3>
-    <div class="guides">
-      <div
-        class="guide"
-        *ngFor="let guide of selectedGuides; let i = index"
-        (click)="onGuideClick(guide)"
-      >
-        <div class="image-container">
-          <img [src]="guideImageSources[i]" />
-        </div>
-        <div class="title">{{ guide.title }}</div>
-        <div class="summary">{{ guide.summary }}</div>
-        <div class="name-container">
-          <div class="name">By {{ guide.author }}</div>
-          <div class="views-container">
-            <mat-icon>visibility</mat-icon>
-            <div class="views">{{ viewCounts[i] }}</div>
-          </div>
-        </div>
-      </div>
     </div>
     <button
       id="scrollToTopButton"

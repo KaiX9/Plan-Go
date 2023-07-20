@@ -30,6 +30,7 @@ h3 {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    margin-bottom: 50px;
 }
 
 .guide,
@@ -117,7 +118,6 @@ h3 {
 .reviews {
     display: flex;
     overflow-x: hidden;
-    padding-bottom: 50px;
 }
 
 .review {

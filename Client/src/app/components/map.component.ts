@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
+import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { GM_STYLES } from '../gm.styles';
 import { filter } from 'rxjs';
@@ -29,7 +29,7 @@ import { Title } from '@angular/platform-browser';
     ]),
   ],
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
   map!: google.maps.Map;
   service!: google.maps.places.PlacesService;
   infowindow!: google.maps.InfoWindow;
@@ -99,12 +99,6 @@ export class MapComponent implements OnInit, AfterViewInit {
     })
   }
 
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.removeFilters();
-    }, 1000);
-  }
-
   constructor(private titleService: Title) {
     this.activatedRoute.data.subscribe((data) => {
       this.titleService.setTitle(data['title']);
@@ -156,7 +150,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   showDirections(request: any) {
     this.map = new google.maps.Map(document.getElementById('map')!, {
-      zoom: 15,
+      zoom: 13,
       center: this.map.getCenter(),
       styles: GM_STYLES.mapStyles,
     });
@@ -238,7 +232,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       document.getElementById('map') as HTMLElement,
       {
         center: sydney,
-        zoom: 15,
+        zoom: 13,
         styles: GM_STYLES.mapStyles,
       }
     );
@@ -292,7 +286,7 @@ export class MapComponent implements OnInit, AfterViewInit {
           status: google.maps.places.PlacesServiceStatus
         ) => {
           if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-            for (let i = 0; i < Math.min(2, results.length); i++) {
+            for (let i = 0; i < Math.min(3, results.length); i++) {
               if (results[i].place_id) {
                 requestsMade++;
                 const placeId = results[i].place_id as string;
@@ -328,7 +322,17 @@ export class MapComponent implements OnInit, AfterViewInit {
                     }
                   }
                   if (responsesReceived === requestsMade) {
-                      this.onToggleChange();
+                    this.nearbyPlaces.sort((a, b) => {
+                      if (!a.types || !b.types) return 0;
+                      const aTypeIndex = this.getPlaceTypeIndex(a, types);
+                      const bTypeIndex = this.getPlaceTypeIndex(b, types);
+                      if (aTypeIndex < bTypeIndex) return -1;
+                      if (aTypeIndex > bTypeIndex) return 1;
+                      if (a.rating === undefined) return 1;
+                      if (b.rating === undefined) return -1;
+                      return b.rating - a.rating;
+                    });
+                    this.onToggleChange();
                   }
                 });
                 this.createCustomMarker(results[i]);
@@ -339,6 +343,15 @@ export class MapComponent implements OnInit, AfterViewInit {
         }
       );
     }
+  }
+
+  getPlaceTypeIndex(place: google.maps.places.PlaceResult, types: string[]) {
+    if (!place.types) return types.length;
+    for (const type of place.types) {
+      const index = types.indexOf(type);
+      if (index !== -1) return index;
+    }
+    return types.length;
   }
 
   viewPlaceDetails(location: string, id?: string) {
@@ -459,7 +472,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   updateMarkers() {
     console.info('updateMarkers called');
     const newMap = new google.maps.Map(document.getElementById('map')!, {
-      zoom: 15,
+      zoom: 13,
       center: this.map.getCenter(),
       styles: GM_STYLES.mapStyles,
     });

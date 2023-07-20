@@ -107,12 +107,6 @@ export class AppComponent implements OnInit{
     );
   }
 
-  clickLogo() {
-    this.router.navigate(['/']).then(() => {
-      location.reload();
-    });
-  }
-
   clickHome() {
     const isLoggedIn = this.isUserLoggedIn();
     if (isLoggedIn) {
@@ -122,10 +116,6 @@ export class AppComponent implements OnInit{
         location.reload();
       });
     }
-  }
-
-  toDashboard() {
-    this.router.navigate(['/dashboard']);
   }
 
   toAutocomplete() {
