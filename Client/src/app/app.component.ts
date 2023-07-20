@@ -27,8 +27,8 @@ export class AppComponent implements OnInit{
         const logoElement = document.querySelector('.logo') as HTMLElement;
         const navbarLinks = document.querySelectorAll('.navbar ul li a') as 
           NodeListOf<HTMLAnchorElement>;
-        const dropdownContentElement = document.querySelector('.dropdown-content') as 
-          HTMLElement;
+        const dropdownContentElement = document.querySelectorAll('.dropdown-content') as 
+          NodeListOf<HTMLAnchorElement>;
         const isLoggedIn = this.isUserLoggedIn();
         if (isLoggedIn) {
           if (logoutButton) {
@@ -57,7 +57,9 @@ export class AppComponent implements OnInit{
               });
             });
             if (dropdownContentElement) {
-              dropdownContentElement.style.backgroundColor = 'none';
+              dropdownContentElement.forEach(element => {
+                element.style.backgroundColor = 'none';
+              });
             }
           } else {
             bannerElement.style.backgroundImage = 'none';
@@ -76,7 +78,9 @@ export class AppComponent implements OnInit{
               });
             });
             if (dropdownContentElement) {
-              dropdownContentElement.style.backgroundColor = 'white';
+              dropdownContentElement.forEach(element => {
+                element.style.backgroundColor = 'white';
+              });
             }
           }
         }
@@ -110,9 +114,14 @@ export class AppComponent implements OnInit{
   }
 
   clickHome() {
-    this.router.navigate(['/']).then(() => {
-      location.reload();
-    });
+    const isLoggedIn = this.isUserLoggedIn();
+    if (isLoggedIn) {
+      this.router.navigate(['/dashboard']);
+    } else {
+      this.router.navigate(['/']).then(() => {
+        location.reload();
+      });
+    }
   }
 
   toDashboard() {

@@ -88,6 +88,10 @@
     margin: 15px;
 }
 
+.right-section ul li {
+    color: blue;
+}
+
 .right-section p {
     margin: 15px;
 }

@@ -246,15 +246,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
           console.info('earliestDay: ', this.earliestDay);
           console.info('weather data: ', this.weatherData);
         });
-      });
-    } else {
-      const lat = 1.3521;
-      const lon = 103.8198;
-      this.weatherSvc.getWeatherByLocation(lat, lon).subscribe(data => {
-        this.weatherData = data;
-        this.processWeatherData();
-        console.info('earliestDay: ', this.earliestDay);
-        console.info('weather data: ', this.weatherData);
+      },
+      error => {
+        if (error.code === error.PERMISSION_DENIED) {
+          const lat = 1.2899175;
+          const lon = 103.8519072;
+          this.weatherSvc.getWeatherByLocation(lat, lon).subscribe(data => {
+            this.weatherData = data;
+            this.processWeatherData();
+            console.info('earliestDay: ', this.earliestDay);
+            console.info('weather data: ', this.weatherData);
+          });
+        }
       });
     }
   }
