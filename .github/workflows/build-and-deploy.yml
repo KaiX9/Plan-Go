@@ -18,25 +18,9 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    - name: Print environment variables
-      run: |
-        echo "MYSQL_URL: $MYSQL_URL"
-        echo "MYSQL_USERNAME: $MYSQL_USERNAME"
-        echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
-        echo "CLIENTSECRET: $CLIENTSECRET"
-        echo "OPEN_WEATHER_KEY: $OPEN_WEATHER_KEY"
-        echo "MONGOURI: $MONGOURI"
-
     - name: Build with Maven
       run: mvn clean package -DskipTests
       working-directory: Server
-      env:
-        MYSQL_URL: ${{ secrets.MYSQL_URL }}
-        MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
-        MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        CLIENTSECRET: ${{ secrets.CLIENTSECRET }}
-        OPEN_WEATHER_KEY: ${{ secrets.OPEN_WEATHER_KEY }}
-        MONGOURI: ${{ secrets.MONGOURI }}
 
     - name: Install Railway CLI
       run: curl -sL https://raw.githubusercontent.com/railwayapp/cli/master/install.sh | sh

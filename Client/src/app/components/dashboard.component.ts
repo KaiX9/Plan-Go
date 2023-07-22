@@ -97,7 +97,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
       result => {
         console.info(JSON.stringify(result));
         if (result.name) {
-          localStorage.setItem('name', result.name);
           this.name = result.name;
         }
       },

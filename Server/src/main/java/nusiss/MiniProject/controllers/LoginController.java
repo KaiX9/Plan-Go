@@ -98,16 +98,17 @@ public class LoginController {
                 Payload idTokenPayload = idToken.getPayload();
                 String email = idTokenPayload.getEmail();
                 boolean emailVerified = Boolean.valueOf(idTokenPayload.getEmailVerified());
-                name = (String) idTokenPayload.get("name");
+                String googleName = (String) idTokenPayload.get("name");
                 String pictureUrl = (String) idTokenPayload.get("picture");
                 String locale = (String) idTokenPayload.get("locale");
                 String familyName = (String) idTokenPayload.get("family_name");
                 String givenName = (String) idTokenPayload.get("given_name");
                 System.out.printf("""
-                    payload: %s, email: %s, emailVerified: %b, name: %s, pictureUrl: %s, locale: %s, 
+                    payload: %s, email: %s, emailVerified: %b, googleName: %s, pictureUrl: %s, locale: %s, 
                     familyName: %s, givenName: %s
-                """, payload, email, emailVerified, name, pictureUrl, locale, familyName, givenName);
+                """, payload, email, emailVerified, googleName, pictureUrl, locale, familyName, givenName);
                 Optional<Login> existingUser = loginRepo.checkExistingUser(email);
+                name = this.loginRepo.getNameOfUser(email).get();
                 List<GrantedAuthority> authorities = new ArrayList<>();
                 authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
                 UserPrincipal userPrincipal;
