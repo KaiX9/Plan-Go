@@ -96,8 +96,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.loginSvc.dashboard().subscribe(
       result => {
         console.info(JSON.stringify(result));
-        if (result.name) {
+        const name = localStorage.getItem('name');
+        if (name) {
+          this.name = name;
+        } else {
           this.name = result.name;
+          localStorage.setItem('name', result.name);
         }
       },
       error => {
