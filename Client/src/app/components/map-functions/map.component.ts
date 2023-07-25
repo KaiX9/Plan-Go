@@ -70,7 +70,7 @@ export class MapComponent implements OnInit {
     }
     setTimeout(() => {
       this.initMap();
-    }, 1000);
+    }, 800);
     this.filteredPlaces = this.nearbyPlaces;
     this.updateShowContent();
     this.router.events
