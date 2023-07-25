@@ -82,7 +82,6 @@ public class GuideController {
                     .toString()
                 );
         }
-        System.out.println("payload: " + payload);
         this.guideRepo.saveGuide(payload);
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
@@ -96,7 +95,6 @@ public class GuideController {
     @ResponseBody
     public ResponseEntity<String> getAllGuides() {
         List<String> guides = this.guideRepo.getAllGuides();
-        System.out.println("guides: " + guides);
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(guides.toString());
@@ -117,7 +115,6 @@ public class GuideController {
     @ResponseBody
     public ResponseEntity<String> searchGuides(@RequestParam String searchText) {
         List<String> guides = this.guideRepo.searchGuides(searchText);
-        System.out.println("guides searched: " + guides);
         return ResponseEntity.status(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON)
             .body(guides.toString());

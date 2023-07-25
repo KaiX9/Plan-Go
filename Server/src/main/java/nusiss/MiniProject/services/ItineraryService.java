@@ -34,7 +34,6 @@ public class ItineraryService {
 
     public List<FullItinerary> getFullItinerary(String userId, String uuid) {
         List<Itinerary> detailsList = this.itineraryRepo.getItineraryListByUserIdAndUuid(userId, uuid);
-        System.out.println("detailsList: " + detailsList);
         List<Document> commentsList = this.itineraryRepo.getCommentsByUuid(uuid);
         List<FullItinerary> fullItineraries = new ArrayList<FullItinerary>();
         for (Itinerary itinerary : detailsList) {
@@ -61,7 +60,6 @@ public class ItineraryService {
         List<String> guidesUuid = this.guideRepo.getDistinctUuids();
         List<String> result = new ArrayList<String>(uuidList);
         result.removeAll(guidesUuid);
-        System.out.println("filtered list of uuids: " + result);
         List<ItineraryDetails> itineraryDetails = new ArrayList<ItineraryDetails>();
         for (String uuid : result) {
             Optional<ItineraryDetails> details = this.itineraryRepo.getItineraryDetails(uuid);

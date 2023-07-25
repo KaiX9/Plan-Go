@@ -19,8 +19,6 @@ export class SaveItineraryService {
     http = inject(HttpClient);
 
     saveItinerary(details: Merged[], list: ItiList): Observable<any> {
-        console.info('details from mergedArray: ', details);
-        console.info('list: ', list);
         const payload = {
             details,
             list

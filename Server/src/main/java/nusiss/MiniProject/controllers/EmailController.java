@@ -66,16 +66,11 @@ public class EmailController {
         }
         String body = "<h1>Hi there!</h1> You are invited to join the " + address + "'s Itinerary trip plan:\n\n" +
         "<br><h2 style=\"color: blue; text-decoration: underline;\">Go to the trip!</h2>";
-        System.out.println("code: " + code);
-        System.out.println("invitees: " + invitees);
-        System.out.println("address: " + address);
             
         String clientId = "40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com";
         // String redirectUri = "http://localhost:8080/invite";
         String redirectUri = "https://planandgo-production.up.railway.app/invite";
-        System.out.println("Obtaining access token with code: " + code);
         String accessToken = googleOAuthSvc.getAccessToken(code, clientId, clientSecret, redirectUri);
-        System.out.println("Access token at controller: " + accessToken);
         String email = googleOAuthSvc.getEmailFromAccessToken(accessToken);
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         GoogleCredentials credentials = GoogleCredentials.create(new AccessToken(accessToken, 
@@ -95,7 +90,6 @@ public class EmailController {
             Message message = new Message();
             message.setRaw(encodedEmail);
             message  = service.users().messages().send(email, message).execute();
-            System.out.println("Message id: " + message.getId());
         }
         Cookie cookie = new Cookie("emailSent", "true");
         cookie.setPath("/");

@@ -84,9 +84,6 @@ public class ItineraryController {
         String startDate = (String) stateData.get("startDate");
         String endDate = (String) stateData.get("endDate");
         String uuid = (String) stateData.get("uuid");
-        System.out.println("startDate: " + startDate);
-        System.out.println("endDate: " + endDate);
-        System.out.println("uuid: " + uuid);
         if (uuid == null) {
             GoogleClientSecrets clientSecrets = new GoogleClientSecrets()
             .setInstalled(new GoogleClientSecrets.Details()
@@ -150,7 +147,6 @@ public class ItineraryController {
                     .toString()
                 );
         }
-        System.out.println("payload: " + payload);
         String userId = authUser.get().getId();
         Map<String, Object> list = (Map<String, Object>) payload.get("list");
         String uuid = null;
@@ -211,10 +207,8 @@ public class ItineraryController {
                     .toString()
                 );
         }
-        System.out.println("uuid: " + uuid);
         String userId = authUser.get().getId();
         List<FullItinerary> fullItinerary = this.itinerarySvc.getFullItinerary(userId, uuid);
-        System.out.println("full itinerary: " + fullItinerary);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (FullItinerary fullIti : fullItinerary) {
             arrBuilder.add(fullIti.toJSON());

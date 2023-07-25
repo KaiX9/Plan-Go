@@ -1,23 +1,23 @@
 export interface Merged {
-    date: Date
-    items: SavedDetails[]
+    date: Date;
+    items: SavedDetails[];
 }
 
 export interface SavedDetails {
-    place_id: string
-    name: string
-    comment: string
+    place_id: string;
+    name: string;
+    comment: string;
 }
 
 export interface Itinerary {
-    date: Date
-    items: SavedDetails[]
-    uuid: string
+    date: Date;
+    items: SavedDetails[];
+    uuid: string;
 }
 
 export interface ItiList {
-    location: string
-    startDate: Date
-    endDate: Date
+    location: string;
+    startDate: Date;
+    endDate: Date;
     uuid?: string | undefined;
 }

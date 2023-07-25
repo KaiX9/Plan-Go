@@ -80,12 +80,10 @@ public class LoginController {
     public ResponseEntity<?> authenticateLogin(@RequestBody String payload, 
         HttpServletResponse response) throws FileNotFoundException, IOException, 
         GeneralSecurityException {
-        System.out.println("payload: " + payload);
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(payload);
         if (jsonNode.has("credential")) {
             String idTokenString = jsonNode.get("credential").asText();
-            System.out.println("credential: " + idTokenString);
             HttpTransport transport = new NetHttpTransport();
             JsonFactory jsonFactory = new GsonFactory();
             String CLIENT_ID = "40217998435-iumv53hsu529dfcmcjbe25gopo9j0d31.apps.googleusercontent.com";
@@ -207,16 +205,12 @@ public class LoginController {
     @ResponseBody
     public ResponseEntity<?> registerUser(@RequestBody String payload) 
         throws JsonMappingException, JsonProcessingException {
-        System.out.println("payload: " + payload);
         ObjectMapper objMapper = new ObjectMapper();
         Signup signupData = objMapper.readValue(payload, Signup.class);
-        System.out.println("signupData: " + signupData);
         PasswordEncoder pwEncoder = new BCryptPasswordEncoder();
         String encodedPassword = pwEncoder.encode(signupData.getPassword());
-        System.out.println("encodedPW: " + encodedPassword);
         signupData.setPassword(encodedPassword);
         Optional<Login> checkExistingUser = this.loginRepo.checkExistingUser(signupData.getEmail());
-        System.out.println("user exists?: " + checkExistingUser);
         if (checkExistingUser.isEmpty()) {
             boolean registerUser = this.loginRepo.registerUser(signupData);
             System.out.println("User registered?: " + registerUser);

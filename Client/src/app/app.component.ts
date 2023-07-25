@@ -129,7 +129,6 @@ export class AppComponent implements OnInit{
   savedItineraries() {
     this.saveItinerarySvc.getItineraryList().subscribe(
       response => {
-        console.info('list: ', response);
         this.dialog.open(ItineraryListComponent, {
           data: { itineraries: response }
         });

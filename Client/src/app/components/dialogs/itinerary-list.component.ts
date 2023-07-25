@@ -27,7 +27,6 @@ export class ItineraryListComponent implements OnDestroy {
     console.info('uuid: ', uuid);
     this.sub$ = this.saveItinerarySvc.getFullItinerary(uuid).subscribe(
       response => {
-        console.info('response: ', response);
         this.saveItinerarySvc.uuid = uuid;
         this.saveItinerarySvc.city = city;
         this.saveItinerarySvc.startDate = startDate;

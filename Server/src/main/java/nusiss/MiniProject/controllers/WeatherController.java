@@ -33,7 +33,6 @@ public class WeatherController {
         throws JsonMappingException, JsonProcessingException {
         Map<String, Object> weatherData = this.weatherSvc.searchWeatherByCity(city);
         List<Weather> weatherList = (List<Weather>) weatherData.get("weatherData");
-        System.out.println("weather list: " + weatherList);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (Weather w : weatherList) {
             arrBuilder.add(w.toJSON());
@@ -46,8 +45,6 @@ public class WeatherController {
             .add("timezone", (Long) weatherData.get("timezone"))
             .add("weatherData", arrBuilder)
             .build();
-
-        System.out.println("result: " + result);
 
         return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)
@@ -59,7 +56,6 @@ public class WeatherController {
         throws JsonMappingException, JsonProcessingException {
         Map<String, Object> weatherData = this.weatherSvc.getWeatherByLocation(lat, lon);
         List<Weather> weatherList = (List<Weather>) weatherData.get("weatherData");
-        System.out.println("weather list: " + weatherList);
         JsonArrayBuilder arrBuilder = Json.createArrayBuilder();
         for (Weather w : weatherList) {
             arrBuilder.add(w.toJSON());
@@ -72,8 +68,6 @@ public class WeatherController {
             .add("timezone", (Long) weatherData.get("timezone"))
             .add("weatherData", arrBuilder)
             .build();
-
-        System.out.println("result: " + result);
         
         return ResponseEntity.status(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON)

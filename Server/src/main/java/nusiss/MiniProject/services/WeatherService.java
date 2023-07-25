@@ -8,7 +8,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,12 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import nusiss.MiniProject.models.Condition;
 import nusiss.MiniProject.models.Weather;
-// import nusiss.MiniProject.repositories.WeatherRepository;
 
 @Service
 public class WeatherService {
-    // @Autowired
-    // private WeatherRepository weatherRepo;
 
     @Value("${open.weather.key}")
     private String openWeatherKey;

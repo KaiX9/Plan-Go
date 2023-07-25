@@ -16,8 +16,6 @@ export class NotesDialogComponent {
     }
 
   save() {
-    console.info('dialogRef: ', this.dialogRef);
-    console.info('notesControl: ', this.notesControl);
     this.dialogRef.close(this.notesControl.value);
   }
 }

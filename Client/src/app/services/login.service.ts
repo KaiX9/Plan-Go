@@ -14,7 +14,7 @@ const URL_USER_GUIDES = 'userGuides';
 
 @Injectable()
 export class LoginService {
-    http = inject(HttpClient)
+    http = inject(HttpClient);
 
     authenticateLogin(login: Login): Observable<string> {
         return this.http.post<string>(URL_LOGIN, login);
