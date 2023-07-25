@@ -43,7 +43,7 @@ jobs:
 
     - name: Copy Angular build files to Server static directory
       run: |
-        cp -r Client/dist/* Server/src/main/resources/static/
+        cp -r Client/dist/client/* Server/src/main/resources/static/
 
     - name: Install Railway CLI
       run: npm i -g @railway/cli
