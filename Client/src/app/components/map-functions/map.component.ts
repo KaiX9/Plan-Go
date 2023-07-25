@@ -122,12 +122,14 @@ export class MapComponent implements OnInit {
   }
 
   applyFilters() {
+    const types = ['restaurant', 'bar', 'tourist_attraction', 'shopping_mall', 'lodging', 'cafe'];
     if (this.appliedFilters.length === 0) {
       this.filteredPlaces = this.nearbyPlaces;
     } else {
-      this.filteredPlaces = this.nearbyPlaces.filter(place => 
-        place.types?.some(type => this.appliedFilters.includes(type))
-      );
+      this.filteredPlaces = this.nearbyPlaces.filter(place => {
+        const placeTypeIndex = this.getPlaceTypeIndex(place, types);
+        return this.appliedFilters.includes(types[placeTypeIndex]);
+      });
     }
     this.updateMarkers();
   }
@@ -145,7 +147,7 @@ export class MapComponent implements OnInit {
 
   showDirections(request: any) {
     this.map = new google.maps.Map(document.getElementById('map')!, {
-      zoom: 13,
+      zoom: 14,
       center: this.map.getCenter(),
       styles: GM_STYLES.mapStyles,
     });
@@ -456,7 +458,7 @@ export class MapComponent implements OnInit {
 
   updateMarkers() {
     const newMap = new google.maps.Map(document.getElementById('map')!, {
-      zoom: 13,
+      zoom: 15,
       center: this.map.getCenter(),
       styles: GM_STYLES.mapStyles,
     });
